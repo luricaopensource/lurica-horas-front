@@ -10,13 +10,13 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component'
 import { MatTableModule } from '@angular/material/table'
 import { MatCardModule } from '@angular/material/card'
 import { MatPaginatorModule } from '@angular/material/paginator'
-import { MatSortModule } from '@angular/material/sort';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
+import { MatSortModule } from '@angular/material/sort'
+import { NavbarComponent } from './shared/components/navbar/navbar.component'
+import { LayoutModule } from '@angular/cdk/layout'
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatButtonModule } from '@angular/material/button'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatIconModule } from '@angular/material/icon'
 import { MatListModule } from '@angular/material/list'
 
 @NgModule({
