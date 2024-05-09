@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     return this.router.url.includes('register');
   }
 
-  login() { }
+  login() {}
+  register() {}
 
-  register() { }
 }
