@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/shared/models/users/user'
 import { LoginService } from 'src/app/shared/services/login/login.service'
 
@@ -9,22 +10,19 @@ import { LoginService } from 'src/app/shared/services/login/login.service'
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private loginService: LoginService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private loginService: LoginService) { }
 
-  ngOnInit(): void {
-    const user = new User(
-      "Julio",
-      "Dechert",
-      "juliodechert",
-      "admin",
-      "julio.dechert@lurica.us",
-      "admin"
-    )
+  ngOnInit(): void { }
 
-    this.loginService.register(user)
+  isLoginPage(): boolean {
+    return this.router.url.includes('login');
   }
 
-  login() {
-
+  isRegisterPage(): boolean {
+    return this.router.url.includes('register');
   }
+
+  login() { }
+
+  register() { }
 }
