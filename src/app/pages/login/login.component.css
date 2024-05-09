@@ -45,3 +45,13 @@ button {
   width: 100%;
   font-size: 1.2rem;
 }
+
+header { 
+  background-color: #f44336;
+}
+
+header h1 {
+  color: #fff;
+  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
+  padding: 16px 56px;
+}
