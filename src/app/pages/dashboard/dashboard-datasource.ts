@@ -8,7 +8,8 @@ import { DashboardService } from '../../shared/services/dashboard/dashboard.serv
 // TODO: Replace this with your own data model type
 export interface DashboardItem {
   id: number
-  date: Date
+  date: string
+  createdAt: Date
   project: string
   description: string
   hours: number
@@ -31,7 +32,14 @@ export class DashboardDataSource extends DataSource<DashboardItem> {
 
   constructor(private readonly dashboardService: DashboardService) {
     super()
-    this.dashboardService.getDashboardData().then(data => this.data = data)
+    this.dashboardService.getDashboardData().then((data) => {
+      this.data = data
+
+      this.data.forEach((item: DashboardItem) => {
+        const date = new Date(item.createdAt)
+        item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+      })
+    })
   }
 
   /**

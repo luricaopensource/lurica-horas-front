@@ -4,8 +4,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="#">Crear nueva tarea</a>
-      <a mat-list-item href="#">Administrar Usuarios</a>
-      <a mat-list-item href="#"></a>
+      <a *ngIf="isAdmin()" mat-list-item href="#">Administrar Usuarios</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

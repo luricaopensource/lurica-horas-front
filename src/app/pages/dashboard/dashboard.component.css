@@ -1,3 +1,9 @@
 .full-width-table {
   width: 100%;
 }
+
+.btn:hover {
+  cursor: default;
+  background-color: #4050b5;
+  color: white;
+}
