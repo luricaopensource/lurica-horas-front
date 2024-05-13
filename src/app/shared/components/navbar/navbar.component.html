@@ -3,18 +3,36 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <mat-dialog-actions>
-        <button mat-list-item (click)="openDialog()">Crear nueva tarea</button>
-      </mat-dialog-actions>
-      <a *ngIf="isAdmin()" mat-list-item>Administrar Usuarios</a>
+      <div class="top-buttons-container">
+        <mat-dialog-actions>
+          <button mat-list-item (click)="openDialog()">Crear nueva tarea</button>
+        </mat-dialog-actions>
+
+        <a *ngIf="isAdmin()" mat-list-item>Administrar Usuarios</a>
+      </div>
+
+      <div class="bottom-buttons-container">
+        <mat-dialog-actions>
+          <div class="logout-btn-container">
+            <button class="logout-btn" mat-list-item (click)="logout()">
+              <span class="logout-text">Cerrar sesión</span>
+              <mat-icon>
+                <span class="material-icons-outlined">
+                  logout
+                </span>
+              </mat-icon>
+            </button>
+          </div>
+        </mat-dialog-actions>
+      </div>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="warn">
+    <mat-toolbar style="background-color: #be0926;">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
       </button>
-      <span>Lurica Horas</span>
+      <span style="color: white;">Lurica Horas</span>
     </mat-toolbar>
     <!-- Add Content Here -->
     <ng-content></ng-content>

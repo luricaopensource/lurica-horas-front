@@ -5,6 +5,7 @@ import { map, shareReplay } from 'rxjs/operators'
 import { User } from '../../models/users/user'
 import { DialogComponent } from '../dialog/dialog.component'
 import { MatDialog } from '@angular/material/dialog'
+import { LoginService } from '../../services/login/login.service'
 
 @Component({
   selector: 'app-navbar',
@@ -28,14 +29,14 @@ export class NavbarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver, private matDialog: MatDialog) {
+  constructor(private breakpointObserver: BreakpointObserver, private matDialog: MatDialog, private authService: LoginService) {
     this.user = {
       firstName: 'Julio',
       lastName: 'Dechert',
       username: 'jdechert',
       password: 'admin',
       email: 'julio.dechert@lurica.us',
-      role: 'employee'
+      role: 'admin'
     }
   }
 
@@ -47,5 +48,9 @@ export class NavbarComponent {
     this.matDialog.open(DialogComponent, {
       width: '25vw'
     })
+  }
+
+  logout() {
+    this.authService.logout()
   }
 }
