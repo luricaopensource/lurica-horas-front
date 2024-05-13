@@ -18,11 +18,7 @@ export class LoginService {
     return firstValueFrom(this.http.post<ILoginData>(`${this.BASE_URL}/auth/login`, { username, password }))
   }
 
-  public register(user: User): void {
-    const json: string = JSON.stringify(user)
-
-    console.log(json)
-
-    // return this.http.post('http://localhost:3000/users/register', json)
+  public register(user: User): Promise<any> {
+    return firstValueFrom(this.http.post('http://localhost:3000/auth/register', user))
   }
 }

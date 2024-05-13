@@ -18,7 +18,7 @@
 </form>
 
 
-<form *ngIf="isRegisterPage()" (submit)="register()" autocapitalize="new-password">
+<form *ngIf="isRegisterPage()" (ngSubmit)="register($event)" autocapitalize="new-password">
   <h1>Register</h1>
 
   <div class="form-group">

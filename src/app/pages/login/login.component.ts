@@ -49,5 +49,7 @@ export class LoginComponent implements OnInit {
     console.log(response)
   }
 
-  register() { }
+  register(event: Event): void {
+    return
+  }
 }
