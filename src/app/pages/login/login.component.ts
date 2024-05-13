@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute, Router } from '@angular/router'
-import { User } from 'src/app/shared/models/users/user'
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
 import { LoginService } from 'src/app/shared/services/login/login.service'
 
 @Component({
@@ -10,8 +9,11 @@ import { LoginService } from 'src/app/shared/services/login/login.service'
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('triggerForm', { static: false })
+  triggerForm: NgForm | null = null
   public form: FormGroup = new FormGroup({})
-  constructor(private route: ActivatedRoute,
+
+  constructor(
     private router: Router,
     private loginService: LoginService,
     private formBuilder: FormBuilder
@@ -21,10 +23,20 @@ export class LoginComponent implements OnInit {
     this.buildForm()
   }
 
+  triggerSubmit() {
+    if (!this.triggerForm) {
+      console.warn('triggerForm not assigned a value')
+    } else {
+      if (this.triggerForm.valid) {
+        this.triggerForm.ngSubmit.emit()
+      }
+    }
+  }
+
   private buildForm(): void {
     this.form = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required, Validators.minLength(5)]]
     })
   }
 
@@ -36,8 +48,7 @@ export class LoginComponent implements OnInit {
     return this.router.url.includes('register')
   }
 
-  login(event: Event): void {
-    event.preventDefault()
+  async login(): Promise<void> {
     if (this.form.invalid) return
 
     const formValue = this.form.value
@@ -45,8 +56,11 @@ export class LoginComponent implements OnInit {
     const username = formValue.username
     const password = formValue.password
 
-    const response = this.loginService.login(username, password)
-    console.log(response)
+    const response = await this.loginService.login(username, password)
+    if (response.access_token) {
+      localStorage.setItem('access_token', response.access_token)
+      this.router.navigate(['/dashboard'])
+    }
   }
 
   register(event: Event): void {

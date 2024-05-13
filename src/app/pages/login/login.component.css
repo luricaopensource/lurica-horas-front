@@ -1,9 +1,11 @@
-form {
-  max-width: 600px;
-  margin: 150px auto;
-  padding: 16px 16px 24px;
-  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
+header {
+  background-color: #be0926;
+}
+
+header h1 {
+  color: #fff;
+  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
+  padding: 16px 56px;
 }
 
 h1 {
@@ -11,6 +13,14 @@ h1 {
   color: #555;
   padding-bottom: 4px;
   border-bottom: 1px solid #ccc;
+}
+
+form {
+  max-width: 600px;
+  margin: 150px auto;
+  padding: 16px 16px 24px;
+  box-shadow: 0 2px 32px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
 }
 
 .form-group {
@@ -38,20 +48,12 @@ h1 {
 }
 
 button {
-  background-color: #bd0a26;
+  background-color: #be0926;
   color: #fff;
   padding: 8px 24px;
   border-radius: 4px;
+  border: 1px solid lightgray;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   width: 100%;
   font-size: 1.2rem;
-}
-
-header { 
-  background-color: #f44336;
-}
-
-header h1 {
-  color: #fff;
-  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
-  padding: 16px 56px;
 }
