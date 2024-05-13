@@ -3,6 +3,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
 import { User } from '../../models/users/user'
+import { DialogComponent } from '../dialog/dialog.component'
+import { MatDialog } from '@angular/material/dialog'
 
 @Component({
   selector: 'app-navbar',
@@ -26,7 +28,7 @@ export class NavbarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(private breakpointObserver: BreakpointObserver, private matDialog: MatDialog) {
     this.user = {
       firstName: 'Julio',
       lastName: 'Dechert',
@@ -39,5 +41,11 @@ export class NavbarComponent {
 
   isAdmin(): boolean {
     return this.user.role === 'admin'
+  }
+
+  openDialog() {
+    this.matDialog.open(DialogComponent, {
+      width: '25vw'
+    })
   }
 }

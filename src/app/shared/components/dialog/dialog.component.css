@@ -1,0 +1,44 @@
+.dialog-container {
+  min-width: 5vw;
+}
+
+.mat-radio-button {
+  margin: 0 12px;
+}
+
+.mat-dialog-content div {
+  margin: 20px 0;
+}
+
+.mat-form-field {
+  width: 15vw;
+}
+
+.ars-span,
+.usd-span {
+  color: white;
+  border-radius: 9999px;
+  min-width: 18px;
+  padding: 1.5px;
+  height: 18px;
+  line-height: 1.4;
+  font-size: 13px;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+.ars-span {
+  background-color: blue;
+  border: 2px solid blue;
+}
+
+.usd-span {
+  background-color: green;
+  border: 2px solid green;
+}
+
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+  width: 17vw;
+}

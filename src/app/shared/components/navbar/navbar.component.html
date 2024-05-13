@@ -3,8 +3,10 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="#">Crear nueva tarea</a>
-      <a *ngIf="isAdmin()" mat-list-item href="#">Administrar Usuarios</a>
+      <mat-dialog-actions>
+        <button mat-list-item (click)="openDialog()">Crear nueva tarea</button>
+      </mat-dialog-actions>
+      <a *ngIf="isAdmin()" mat-list-item>Administrar Usuarios</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
