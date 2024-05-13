@@ -32,14 +32,18 @@ export class DashboardDataSource extends DataSource<DashboardItem> {
 
   constructor(private readonly dashboardService: DashboardService) {
     super()
-    this.dashboardService.getDashboardData().then((data) => {
-      this.data = data
+    this.dashboardService.getDashboardData()
+      .then((data) => {
+        this.data = data
 
-      this.data.forEach((item: DashboardItem) => {
-        const date = new Date(item.createdAt)
-        item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+        this.data.forEach((item: DashboardItem) => {
+          const date = new Date(item.createdAt)
+          item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+        })
       })
-    })
+      .catch(() => {
+        return
+      })
   }
 
   /**
