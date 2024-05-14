@@ -23,6 +23,22 @@
       </mat-form-field>
     </div>
 
+    <mat-form-field>
+      <mat-label>Fecha desde</mat-label>
+      <input matInput type="datetime-local">
+      <!-- <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker> -->
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fecha hasta</mat-label>
+      <input matInput type="datetime-local">
+      <!-- <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker> -->
+    </mat-form-field>
+
     <div>
       <label>
         <h4>Tipo</h4>
@@ -50,22 +66,9 @@
         </mat-radio-button>
       </mat-radio-group>
     </div>
-
-    <div>
-      <mat-form-field>
-        <input matInput placeholder="Descripción">
-      </mat-form-field>
-    </div>
-
-    <div>
-      <mat-form-field>
-        <input matInput placeholder="Descripción">
-      </mat-form-field>
-    </div>
-
   </mat-dialog-content>
   <mat-dialog-actions align="center">
     <button mat-raised-button color="warn" matDialogClose>Cancelar</button>
-    <button mat-raised-button color="primary">Guardar</button>
+    <button mat-raised-button color="primary" (click)="createTask()">Guardar</button>
   </mat-dialog-actions>
 </div>

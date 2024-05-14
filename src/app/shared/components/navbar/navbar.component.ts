@@ -6,6 +6,8 @@ import { User } from '../../models/users/user'
 import { DialogComponent } from '../dialog/dialog.component'
 import { MatDialog } from '@angular/material/dialog'
 import { LoginService } from '../../services/login/login.service'
+import { DashboardDataSource } from 'src/app/pages/dashboard/dashboard-datasource'
+import { DashboardService } from '../../services/dashboard/dashboard.service'
 
 @Component({
   selector: 'app-navbar',
@@ -29,7 +31,11 @@ export class NavbarComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver, private matDialog: MatDialog, private authService: LoginService) {
+  constructor(private breakpointObserver: BreakpointObserver,
+    private matDialog: MatDialog,
+    private authService: LoginService,
+    private dashboardService: DashboardService
+  ) {
     this.user = {
       firstName: 'Julio',
       lastName: 'Dechert',
