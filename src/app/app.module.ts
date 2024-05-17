@@ -13,6 +13,8 @@ import { DialogComponent } from './shared/components/dialog/dialog.component'
 import { MaterialModule } from './shared/material/material.module'
 import { HttpConfigInterceptor } from './shared/services/HttpConfigInterceptor'
 
+
+
 @NgModule({
   declarations: [
     AppComponent,

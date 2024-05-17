@@ -1,74 +1,78 @@
 <div class="dialog-container" align="center">
-  <button mat-icon-button style=" float: right;">
-    <mat-icon matDialogClose>close</mat-icon>
+  <button matDialogClose mat-icon-button style=" float: right;">
+    <mat-icon>close</mat-icon>
   </button>
-  <mat-dialog-content>
-    <header>
-      <h1>Nueva tarea</h1>
-    </header>
-    <div>
+  <form [formGroup]="form" (ngSubmit)="createTask()">
+    <mat-dialog-content>
+      <header>
+        <h1>Nueva tarea</h1>
+      </header>
+      <div>
+        <mat-form-field>
+          <mat-label>Proyecto</mat-label>
+          <mat-select formControlName="project">
+            <mat-option value=1>MacroPagos</mat-option>
+            <mat-option value=2>Facturbo</mat-option>
+            <mat-option value=3>VIM</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input matInput placeholder="Descripción" formControlName="description">
+        </mat-form-field>
+      </div>
+
       <mat-form-field>
-        <mat-label>Proyecto</mat-label>
-        <mat-select>
-          <mat-option value="one">MacroPagos</mat-option>
-          <mat-option value="two">Facturbo</mat-option>
-          <mat-option value="three">VIM</mat-option>
-        </mat-select>
+        <input matInput [ngxMatDatetimePicker]="pickerCustomIcon" placeholder="Choose a date"
+          formControlName="dateFrom">
+        <ngx-mat-datepicker-toggle matSuffix [for]="pickerCustomIcon"></ngx-mat-datepicker-toggle>
+        <ngx-mat-datetime-picker #pickerCustomIcon [stepHour]="1" [stepMinute]="1" [stepSecond]="1">
+          <ngx-mat-datepicker-actions>
+            <button mat-button ngxMatDatepickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
+          </ngx-mat-datepicker-actions>
+        </ngx-mat-datetime-picker>
       </mat-form-field>
-    </div>
 
-    <div>
       <mat-form-field>
-        <input matInput placeholder="Descripción">
+        <mat-label>Fecha hasta</mat-label>
+        <input matInput type="datetime-local" formControlName="dateTo">
+
       </mat-form-field>
-    </div>
 
-    <mat-form-field>
-      <mat-label>Fecha desde</mat-label>
-      <input matInput type="datetime-local">
-      <!-- <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
-      <mat-datepicker #fromPicker></mat-datepicker> -->
-    </mat-form-field>
+      <div>
+        <mat-form-field>
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="type">
+            <mat-option value=1>Desarrollo</mat-option>
+            <mat-option value=2>Customizing</mat-option>
+            <mat-option value=3>Arquitectura</mat-option>
+            <mat-option value=4>Pre Venta</mat-option>
+            <mat-option value=5>Otros</mat-option>
+            <mat-option value=6>Gerencia</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-    <mat-form-field>
-      <mat-label>Fecha hasta</mat-label>
-      <input matInput type="datetime-local">
-      <!-- <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
-      <mat-datepicker #toPicker></mat-datepicker> -->
-    </mat-form-field>
-
-    <div>
       <label>
-        <h4>Tipo</h4>
+        <h4>Moneda</h4>
       </label>
-      <ul align="left">
-        <li><mat-checkbox>Desarrollo</mat-checkbox></li>
-        <li><mat-checkbox>Customizing</mat-checkbox></li>
-        <li><mat-checkbox>Arquitectura</mat-checkbox></li>
-        <li><mat-checkbox>Pre Venta</mat-checkbox></li>
-        <li><mat-checkbox>Otros</mat-checkbox></li>
-        <li><mat-checkbox>Gerencia</mat-checkbox></li>
-      </ul>
-    </div>
-
-    <label>
-      <h4>Moneda</h4>
-    </label>
-    <div>
-      <mat-radio-group>
-        <mat-radio-button value="ars">
-          <span class="ars-span">ARS</span>
-        </mat-radio-button>
-        <mat-radio-button value="usd">
-          <span class="usd-span">USD</span>
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button mat-raised-button color="warn" matDialogClose>Cancelar</button>
-    <button mat-raised-button color="primary" (click)="createTask()">Guardar</button>
-  </mat-dialog-actions>
+      <div>
+        <mat-radio-group formControlName="currency">
+          <mat-radio-button value="ars">
+            <span class="ars-span">ARS</span>
+          </mat-radio-button>
+          <mat-radio-button value="usd">
+            <span class="usd-span">USD</span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+      <button mat-raised-button color="warn" matDialogClose>Cancelar</button>
+      <button mat-raised-button color="primary" type="submit">Guardar</button>
+    </mat-dialog-actions>
+  </form>
 </div>

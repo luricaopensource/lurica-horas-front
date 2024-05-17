@@ -17,6 +17,11 @@ import { MatTableModule } from "@angular/material/table"
 import { MatToolbarModule } from "@angular/material/toolbar"
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from "@angular/material/core"
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatNativeDateModule,
+  NgxMatTimepickerModule
+} from '@angular-material-components/datetime-picker'
 
 
 @NgModule({
@@ -40,7 +45,10 @@ import { MatNativeDateModule } from "@angular/material/core"
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule
   ],
   exports: [
     MatDialogModule,
@@ -60,7 +68,10 @@ import { MatNativeDateModule } from "@angular/material/core"
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule
   ]
 })
 export class MaterialModule { }

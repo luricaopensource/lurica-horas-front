@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { User } from '../../models/users/user'
+import { IUser } from '../../models/users/user'
 import { firstValueFrom } from 'rxjs'
 import { ILoginData } from '../../models/login/login'
 import { environment } from 'src/environments/environment'
@@ -19,7 +19,7 @@ export class LoginService {
     return firstValueFrom(this.http.post<ILoginData>(`${this.BASE_URL}/auth/login`, { username, password }))
   }
 
-  register(user: User): Promise<any> {
+  register(user: IUser): Promise<any> {
     return firstValueFrom(this.http.post('http://localhost:3000/auth/register', user))
   }
 

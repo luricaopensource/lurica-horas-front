@@ -2,12 +2,10 @@ import { Component } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
-import { User } from '../../models/users/user'
+import { IUser } from '../../models/users/user'
 import { DialogComponent } from '../dialog/dialog.component'
 import { MatDialog } from '@angular/material/dialog'
 import { LoginService } from '../../services/login/login.service'
-import { DashboardDataSource } from 'src/app/pages/dashboard/dashboard-datasource'
-import { DashboardService } from '../../services/dashboard/dashboard.service'
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +14,7 @@ import { DashboardService } from '../../services/dashboard/dashboard.service'
 })
 export class NavbarComponent {
 
-  public user: User = {
+  public user: IUser = {
     firstName: '',
     lastName: '',
     username: '',
@@ -33,8 +31,7 @@ export class NavbarComponent {
 
   constructor(private breakpointObserver: BreakpointObserver,
     private matDialog: MatDialog,
-    private authService: LoginService,
-    private dashboardService: DashboardService
+    private authService: LoginService
   ) {
     this.user = {
       firstName: 'Julio',
@@ -52,7 +49,7 @@ export class NavbarComponent {
 
   openDialog() {
     this.matDialog.open(DialogComponent, {
-      width: '25vw'
+      width: '30vw'
     })
   }
 

@@ -1,31 +1,34 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
+    <mat-toolbar class="mat-toolbar">Menu</mat-toolbar>
+    <mat-action-list class="action-list">
       <div class="top-buttons-container">
-        <mat-dialog-actions>
-          <button mat-list-item (click)="openDialog()">Crear nueva tarea</button>
+        <mat-dialog-actions mat-list-item>
+          <button mat-list-item (click)="openDialog()" class="task-btn">Crear nueva tarea</button>
         </mat-dialog-actions>
 
         <a *ngIf="isAdmin()" mat-list-item>Administrar Usuarios</a>
+        <mat-dialog-actions *ngIf="isAdmin()">
+          <button mat-list-item>Administrar Proyectos</button>
+        </mat-dialog-actions>
       </div>
 
       <div class="bottom-buttons-container">
         <mat-dialog-actions>
-          <div class="logout-btn-container">
-            <button class="logout-btn" mat-list-item (click)="logout()">
+          <button class="logout-btn" mat-list-item (click)="logout()">
+            <div class="logout-text-icon-container">
               <span class="logout-text">Cerrar sesión</span>
               <mat-icon>
                 <span class="material-icons-outlined">
                   logout
                 </span>
               </mat-icon>
-            </button>
-          </div>
+            </div>
+          </button>
         </mat-dialog-actions>
       </div>
-    </mat-nav-list>
+    </mat-action-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar style="background-color: #be0926;">
