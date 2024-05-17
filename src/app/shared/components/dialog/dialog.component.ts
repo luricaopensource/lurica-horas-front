@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { TaskService } from '../../services/task/task.service'
 import { MatDialogRef } from '@angular/material/dialog'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ITask } from '../../models/tasks/tasks'
+import { MatDatepicker } from '@angular/material/datepicker'
 
 @Component({
   selector: 'app-dialog',
@@ -45,8 +46,8 @@ export class DialogComponent implements OnInit {
     const task: ITask = {
       project,
       description,
-      dateFrom: new Date(dateFrom).toISOString(),
-      dateTo: new Date(dateTo).toISOString(),
+      dateFrom: new Date(dateFrom).toLocaleTimeString(),
+      dateTo: new Date(dateTo).toLocaleTimeString(),
       hours,
       type,
       paid: false,

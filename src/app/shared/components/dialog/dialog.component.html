@@ -25,21 +25,29 @@
       </div>
 
       <mat-form-field>
-        <input matInput [ngxMatDatetimePicker]="pickerCustomIcon" placeholder="Choose a date"
-          formControlName="dateFrom">
-        <ngx-mat-datepicker-toggle matSuffix [for]="pickerCustomIcon"></ngx-mat-datepicker-toggle>
-        <ngx-mat-datetime-picker #pickerCustomIcon [stepHour]="1" [stepMinute]="1" [stepSecond]="1">
-          <ngx-mat-datepicker-actions>
-            <button mat-button ngxMatDatepickerCancel>Cancel</button>
-            <button mat-raised-button color="primary" ngxMatDatepickerApply>Apply</button>
-          </ngx-mat-datepicker-actions>
-        </ngx-mat-datetime-picker>
+        <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom">
+        <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker"></ngx-mat-datepicker-toggle>
+        <div class="datetime-picker-container">
+          <ngx-mat-datetime-picker #dateFromPicker [stepHour]="1" [stepMinute]="10">
+            <ngx-mat-datepicker-actions>
+              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+              <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
+            </ngx-mat-datepicker-actions>
+          </ngx-mat-datetime-picker>
+        </div>
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Fecha hasta</mat-label>
-        <input matInput type="datetime-local" formControlName="dateTo">
-
+        <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo">
+        <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker"></ngx-mat-datepicker-toggle>
+        <div class="datetime-picker-container">
+          <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [stepHour]="1" [stepMinute]="10">
+            <ngx-mat-datepicker-actions>
+              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+              <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
+            </ngx-mat-datepicker-actions>
+          </ngx-mat-datetime-picker>
+        </div>
       </mat-form-field>
 
       <div>

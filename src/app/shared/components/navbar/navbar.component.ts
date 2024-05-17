@@ -6,6 +6,7 @@ import { IUser } from '../../models/users/user'
 import { DialogComponent } from '../dialog/dialog.component'
 import { MatDialog } from '@angular/material/dialog'
 import { LoginService } from '../../services/login/login.service'
+import { NoopScrollStrategy } from '@angular/cdk/overlay'
 
 @Component({
   selector: 'app-navbar',
@@ -49,7 +50,8 @@ export class NavbarComponent {
 
   openDialog() {
     this.matDialog.open(DialogComponent, {
-      width: '30vw'
+      width: '35vw',
+      panelClass: 'custom-modalbox'
     })
   }
 

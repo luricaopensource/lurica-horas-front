@@ -59,3 +59,9 @@ s .sidenav .mat-toolbar {
 .logout-text {
   color: rgb(80, 80, 80);
 }
+
+.custom-modalbox {
+  mat-dialog-container {
+    padding: 0;
+  }
+}
