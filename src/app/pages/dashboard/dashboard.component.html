@@ -1,6 +1,6 @@
 <app-navbar>
   <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table" [dataSource]="dataSource.data" matSort aria-label="Elements">
+    <table #tasksTable mat-table class="full-width-table" [dataSource]="dataSource.data" matSort aria-label="Elements">
       <!-- Id Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>

@@ -2,44 +2,54 @@
   <h1>Lurica Horas</h1>
 </header>
 
-<form [formGroup]="form" *ngIf="isLoginPage()" #triggerForm="ngForm" (keydown.enter)="triggerSubmit()"
+<form [formGroup]="form" *ngIf="isLoginPage" #triggerForm="ngForm" (keydown.enter)="triggerSubmit()"
   (ngSubmit)="login()">
   <h1>Login</h1>
 
-  <div class="form-group">
-    <input placeholder=lionel_messi type="text" id="username" name="username" formControlName="username">
-  </div>
+  <mat-form-field class="login-form-field">
+    <mat-label>Usuario</mat-label>
+    <input type="text" matInput formControlName="username" [errorStateMatcher]="errorMatcher"
+      placeholder="lionel_messi">
+    <mat-error *ngIf="this.form.get('username')?.hasError('required')">El nombre de usuario es
+      <strong>requerido</strong></mat-error>
+  </mat-form-field>
 
-  <div class="form-group">
-    <input required placeholder="********" type="password" id="password" name="password" autocomplete="new-password"
-      formControlName="password">
-  </div>
-
+  <mat-form-field class="login-form-field password-field">
+    <mat-label>Contraseña</mat-label>
+    <input type="password" matInput formControlName="password" [errorStateMatcher]="errorMatcher" placeholder="******">
+    <mat-error *ngIf="this.form.get('password')?.hasError('required')">La contraseña es
+      <strong>requerida</strong></mat-error>
+  </mat-form-field>
   <button type="submit">Login &#8594;</button>
 </form>
 
 
-<form *ngIf="isRegisterPage()" (ngSubmit)="register($event)" autocapitalize="new-password">
+<form [formGroup]="form" *ngIf="!isLoginPage" (ngSubmit)="register()" autocapitalize="new-password">
   <h1>Register</h1>
 
   <div class="form-group">
-    <input required placeholder="First Name" type="text" id="firstname" name="firstname" autocomplete="new-password">
+    <input required placeholder="First Name" type="text" id="firstname" name="firstname" autocomplete="new-password"
+      formControlName="firstName">
   </div>
 
   <div class="form-group">
-    <input required placeholder="Last Name" type="text" id="lastname" name="lastname" autocomplete="new-password">
+    <input required placeholder="Last Name" type="text" id="lastname" name="lastname" autocomplete="new-password"
+      formControlName="lastName">
   </div>
 
   <div class="form-group">
-    <input required placeholder="Username" type="text" id="username" name="username" autocomplete="new-password">
+    <input required placeholder="Username" type="text" id="username" name="username" autocomplete="new-password"
+      formControlName="username">
   </div>
 
   <div class="form-group">
-    <input required placeholder="Password" type="password" id="password" name="password" autocomplete="new-password">
+    <input required placeholder="Password" type="password" id="password" name="password" autocomplete="new-password"
+      formControlName="password">
   </div>
 
   <div class="form-group">
-    <input required placeholder="Email" type="email" id="email" name="email" autocomplete="new-password">
+    <input required placeholder="Email" type="email" id="email" name="email" autocomplete="new-password"
+      formControlName="email">
   </div>
 
   <button type="submit">Register &#8594;</button>

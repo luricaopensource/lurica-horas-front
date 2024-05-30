@@ -12,8 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DialogComponent } from './shared/components/dialog/dialog.component'
 import { MaterialModule } from './shared/material/material.module'
 import { HttpConfigInterceptor } from './shared/services/HttpConfigInterceptor'
-
-
+import { ModalModule } from './shared/components/modal/modal.module'
 
 @NgModule({
   declarations: [
@@ -30,7 +29,8 @@ import { HttpConfigInterceptor } from './shared/services/HttpConfigInterceptor'
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    ModalModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpConfigInterceptor, multi: true }

@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms'
+import { ErrorStateMatcher } from '@angular/material/core'
 import { Router } from '@angular/router'
+import { IUser } from 'src/app/shared/models/users/user'
 import { LoginService } from 'src/app/shared/services/login/login.service'
 
 @Component({
@@ -12,15 +14,24 @@ export class LoginComponent implements OnInit {
   @ViewChild('triggerForm', { static: false })
   triggerForm: NgForm | null = null
   public form: FormGroup = new FormGroup({})
+  public errorMatcher: ErrorStateMatcher
+  public isLoginPage: boolean = true
+  private PASSWORD_MIN_LENGTH = 6
+  private USERNAME_MIN_LENGTH = 5
 
   constructor(
     private router: Router,
     private loginService: LoginService,
     private formBuilder: FormBuilder
-  ) { }
+  ) {
+    this.errorMatcher = new ErrorStateMatcher()
+  }
 
   ngOnInit(): void {
-    this.buildForm()
+    this.isLoginPage = this.router.url.includes('login')
+
+    if (this.isLoginPage) this.buildForm()
+    else this.buildRegisterForm()
   }
 
   triggerSubmit() {
@@ -35,17 +46,19 @@ export class LoginComponent implements OnInit {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(5)]]
+      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH)]],
+      password: ['', [Validators.required, Validators.minLength(this.PASSWORD_MIN_LENGTH)]]
     })
   }
 
-  isLoginPage(): boolean {
-    return this.router.url.includes('login')
-  }
-
-  isRegisterPage(): boolean {
-    return this.router.url.includes('register')
+  private buildRegisterForm(): void {
+    this.form = this.formBuilder.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.minLength(this.USERNAME_MIN_LENGTH)]],
+      password: ['', [Validators.required, Validators.minLength(this.PASSWORD_MIN_LENGTH)]],
+      email: ['', [Validators.required, Validators.email]]
+    })
   }
 
   async login(): Promise<void> {
@@ -63,7 +76,21 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  register(event: Event): void {
-    return
+  async register(): Promise<void> {
+    if (this.form.invalid) return
+
+    const formValue = this.form.value
+
+    const user: IUser = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      username: formValue.username,
+      password: formValue.password,
+      email: formValue.email,
+      role: 'employee'
+    }
+
+    const response = await this.loginService.register(user)
+    if (response.id) this.router.navigate(['/login'])
   }
 }

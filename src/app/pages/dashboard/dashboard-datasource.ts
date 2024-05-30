@@ -10,6 +10,7 @@ export interface DashboardItem {
   id: number
   date: string
   createdAt: Date
+  dateTo: string
   project: string
   description: string
   hours: number
@@ -37,7 +38,7 @@ export class DashboardDataSource extends DataSource<DashboardItem> {
         this.data = data
 
         this.data.forEach((item: DashboardItem) => {
-          const date = new Date(item.createdAt)
+          const date = new Date(item.dateTo)
           item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
         })
       })

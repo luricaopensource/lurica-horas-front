@@ -31,13 +31,24 @@
     </mat-action-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar style="background-color: #be0926;">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
-      </button>
-      <span style="color: white;">Lurica Horas</span>
+
+    <mat-toolbar class="header-toolbar" style="background-color: #be0926;">
+      <div class="menu-actions-container">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
+        </button>
+        <span style="color: white;">Lurica Horas</span>
+      </div>
+      <div class="user-container" (click)="openModal(modalTemplate)">
+        <h3>{{user.username}}</h3>
+        <h4>29-05-2024 15:45:30</h4>
+      </div>
     </mat-toolbar>
+
     <!-- Add Content Here -->
+    <ng-template #modalTemplate>
+      <div>This is a modal</div>
+    </ng-template>
     <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>

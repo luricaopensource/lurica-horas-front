@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, TemplateRef } from '@angular/core'
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
@@ -6,7 +6,9 @@ import { IUser } from '../../models/users/user'
 import { DialogComponent } from '../dialog/dialog.component'
 import { MatDialog } from '@angular/material/dialog'
 import { LoginService } from '../../services/login/login.service'
-import { NoopScrollStrategy } from '@angular/cdk/overlay'
+import { ModalService } from '../../services/modal/modal.service'
+import { NgTemplateOutlet } from '@angular/common'
+import { ModalComponent } from '../modal/modal.component'
 
 @Component({
   selector: 'app-navbar',
@@ -32,7 +34,8 @@ export class NavbarComponent {
 
   constructor(private breakpointObserver: BreakpointObserver,
     private matDialog: MatDialog,
-    private authService: LoginService
+    private authService: LoginService,
+    private modalService: ModalService
   ) {
     this.user = {
       firstName: 'Julio',
@@ -44,6 +47,14 @@ export class NavbarComponent {
     }
   }
 
+  public openModal(modalTemplate: TemplateRef<ModalComponent>) {
+    this.modalService
+      .open(modalTemplate, { size: 'lg', title: 'Editar Usuario' })
+      .subscribe((action: any) => {
+        console.log('modalAction', action)
+      })
+  }
+
   isAdmin(): boolean {
     return this.user.role === 'admin'
   }
@@ -51,7 +62,7 @@ export class NavbarComponent {
   openDialog() {
     this.matDialog.open(DialogComponent, {
       width: '35vw',
-      panelClass: 'custom-modalbox'
+      height: '80vh',
     })
   }
 

@@ -24,31 +24,35 @@
         </mat-form-field>
       </div>
 
-      <mat-form-field>
-        <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom">
-        <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker"></ngx-mat-datepicker-toggle>
-        <div class="datetime-picker-container">
-          <ngx-mat-datetime-picker #dateFromPicker [stepHour]="1" [stepMinute]="10">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </div>
-      </mat-form-field>
+      <div>
+        <mat-form-field>
+          <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom">
+          <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker"></ngx-mat-datepicker-toggle>
+          <div class="datetime-picker-container">
+            <ngx-mat-datetime-picker #dateFromPicker [stepHour]="1" [stepMinute]="10">
+              <ngx-mat-datepicker-actions>
+                <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+                <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
+              </ngx-mat-datepicker-actions>
+            </ngx-mat-datetime-picker>
+          </div>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field>
-        <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo">
-        <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker"></ngx-mat-datepicker-toggle>
-        <div class="datetime-picker-container">
-          <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [stepHour]="1" [stepMinute]="10">
-            <ngx-mat-datepicker-actions>
-              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-              <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
-            </ngx-mat-datepicker-actions>
-          </ngx-mat-datetime-picker>
-        </div>
-      </mat-form-field>
+      <div>
+        <mat-form-field>
+          <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo">
+          <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker"></ngx-mat-datepicker-toggle>
+          <div class="datetime-picker-container">
+            <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [stepHour]="1" [stepMinute]="10">
+              <ngx-mat-datepicker-actions>
+                <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+                <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
+              </ngx-mat-datepicker-actions>
+            </ngx-mat-datetime-picker>
+          </div>
+        </mat-form-field>
+      </div>
 
       <div>
         <mat-form-field>
@@ -77,8 +81,10 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
+      <p *ngIf="formStatus" style="color: red">Por favor complete todos los campos.
+      </p>
     </mat-dialog-content>
-    <mat-dialog-actions align="center">
+    <mat-dialog-actions>
       <button mat-raised-button color="warn" matDialogClose>Cancelar</button>
       <button mat-raised-button color="primary" type="submit">Guardar</button>
     </mat-dialog-actions>

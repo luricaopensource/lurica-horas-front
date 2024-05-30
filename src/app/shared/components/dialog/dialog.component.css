@@ -1,5 +1,5 @@
 .dialog-container {
-  min-width: 5vw;
+  min-width: 15vw;
 }
 
 .mat-radio-button {
@@ -10,7 +10,7 @@
   margin: 20px 0;
 }
 
-.mat-form-field {
+mat-form-field {
   width: 15vw;
 }
 
@@ -43,6 +43,11 @@ ul {
   width: 17vw;
 }
 
-/* .datetime-picker-container {
-  background-color: white;
-} */
+mat-dialog-content {
+  height: 100%;
+}
+
+mat-dialog-actions {
+  display: flex;
+  justify-content: center;
+}
