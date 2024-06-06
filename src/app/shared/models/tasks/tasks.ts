@@ -4,7 +4,7 @@ export interface ITask {
   dateFrom: string,
   dateTo: string,
   hours: number,
-  type: string,
+  type?: string,
   paid: boolean,
   status: string,
   userId: number
