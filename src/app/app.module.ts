@@ -12,7 +12,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { DialogComponent } from './shared/components/dialog/dialog.component'
 import { MaterialModule } from './shared/material/material.module'
 import { HttpConfigInterceptor } from './shared/services/HttpConfigInterceptor'
-import { ModalModule } from './shared/components/modal/modal.module'
+import { ModalModule } from './shared/components/modal/modal.module';
+import { ProjectsComponent } from './pages/projects/projects.component';
+import { UsersComponent } from './pages/users/users.component'
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ModalModule } from './shared/components/modal/modal.module'
     LoginComponent,
     DashboardComponent,
     NavbarComponent,
-    DialogComponent
+    DialogComponent,
+    ProjectsComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

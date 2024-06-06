@@ -33,7 +33,6 @@ export class NavbarComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver,
-    private matDialog: MatDialog,
     private authService: LoginService,
     private modalService: ModalService
   ) {
@@ -47,23 +46,14 @@ export class NavbarComponent {
     }
   }
 
-  public openModal(modalTemplate: TemplateRef<ModalComponent>) {
+  public openModal(modalTemplate: TemplateRef<any>) {
     this.modalService
-      .open(modalTemplate, { size: 'lg', title: 'Editar Usuario' })
-      .subscribe((action: any) => {
-        console.log('modalAction', action)
-      })
+      .open(modalTemplate, { size: 'lg', title: 'Crear tarea' })
+      .subscribe()
   }
 
   isAdmin(): boolean {
     return this.user.role === 'admin'
-  }
-
-  openDialog() {
-    this.matDialog.open(DialogComponent, {
-      width: '35vw',
-      height: '80vh',
-    })
   }
 
   logout() {

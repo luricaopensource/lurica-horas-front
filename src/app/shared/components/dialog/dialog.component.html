@@ -1,92 +1,36 @@
-<div class="dialog-container" align="center">
-  <button matDialogClose mat-icon-button style=" float: right;">
-    <mat-icon>close</mat-icon>
-  </button>
-  <form [formGroup]="form" (ngSubmit)="createTask()">
-    <mat-dialog-content>
-      <header>
-        <h1>Nueva tarea</h1>
-      </header>
-      <div>
-        <mat-form-field>
-          <mat-label>Proyecto</mat-label>
-          <mat-select formControlName="project">
-            <mat-option value=1>MacroPagos</mat-option>
-            <mat-option value=2>Facturbo</mat-option>
-            <mat-option value=3>VIM</mat-option>
-          </mat-select>
-        </mat-form-field>
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <form [formGroup]="form" #createTaskForm (ngSubmit)="createTask()">
+      <div class="form-group">
+        <label for="projectSelect">Proyecto</label>
+        <select id="projectSelect">
+          <option value="project1">Project 1</option>
+          <option value="project2">Project 2</option>
+          <option value="project3">Project 3</option>
+        </select>
       </div>
-
-      <div>
-        <mat-form-field>
-          <input matInput placeholder="Descripción" formControlName="description">
-        </mat-form-field>
+      <div class="form-group">
+        <label for="milestoneSelect">Hito</label>
+        <select id="milestoneSelect">
+          <option value="milestone1">Milestone 1</option>
+          <option value="milestone2">Milestone 2</option>
+          <option value="milestone3">Milestone 3</option>
+        </select>
       </div>
-
-      <div>
-        <mat-form-field>
-          <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom">
-          <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker"></ngx-mat-datepicker-toggle>
-          <div class="datetime-picker-container">
-            <ngx-mat-datetime-picker #dateFromPicker [stepHour]="1" [stepMinute]="10">
-              <ngx-mat-datepicker-actions>
-                <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
-              </ngx-mat-datepicker-actions>
-            </ngx-mat-datetime-picker>
-          </div>
-        </mat-form-field>
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" rows="4"></textarea>
       </div>
-
-      <div>
-        <mat-form-field>
-          <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo">
-          <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker"></ngx-mat-datepicker-toggle>
-          <div class="datetime-picker-container">
-            <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [stepHour]="1" [stepMinute]="10">
-              <ngx-mat-datepicker-actions>
-                <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                <button mat-raised-button color="primary" ngxMatDatepickerApply>Aplicar</button>
-              </ngx-mat-datepicker-actions>
-            </ngx-mat-datetime-picker>
-          </div>
-        </mat-form-field>
+      <div class="form-group">
+        <label for="dateFrom">Fecha desde</label>
+        <input type="date" id="dateFrom">
       </div>
-
-      <div>
-        <mat-form-field>
-          <mat-label>Tipo</mat-label>
-          <mat-select formControlName="type">
-            <mat-option value=1>Desarrollo</mat-option>
-            <mat-option value=2>Customizing</mat-option>
-            <mat-option value=3>Arquitectura</mat-option>
-            <mat-option value=4>Pre Venta</mat-option>
-            <mat-option value=5>Otros</mat-option>
-            <mat-option value=6>Gerencia</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="form-group">
+        <label for="dateTo">Fecha hasta</label>
+        <input type="date" id="dateTo">
       </div>
-
-      <label>
-        <h4>Moneda</h4>
-      </label>
-      <div>
-        <mat-radio-group formControlName="currency">
-          <mat-radio-button value="ars">
-            <span class="ars-span">ARS</span>
-          </mat-radio-button>
-          <mat-radio-button value="usd">
-            <span class="usd-span">USD</span>
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <p *ngIf="formStatus" style="color: red">Por favor complete todos los campos.
-      </p>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-      <button mat-raised-button color="warn" matDialogClose>Cancelar</button>
-      <button mat-raised-button color="primary" type="submit">Guardar</button>
-    </mat-dialog-actions>
-  </form>
+      <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
+      <button class="submit-btn" type="submit">Submit</button>
+    </form>
+  </div>
 </div>

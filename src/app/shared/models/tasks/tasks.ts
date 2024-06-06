@@ -7,7 +7,6 @@ export interface ITask {
   type: string,
   paid: boolean,
   status: string,
-  currency: string,
   userId: number
 }
 

@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core'
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core'
 import { TaskService } from '../../services/task/task.service'
-import { MatDialogRef } from '@angular/material/dialog'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ITask } from '../../models/tasks/tasks'
-import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component'
+import { ModalComponent } from '../modal/modal.component'
+import { ModalService } from '../../services/modal/modal.service'
 
 
 @Component({
@@ -14,32 +14,31 @@ import { DashboardComponent } from 'src/app/pages/dashboard/dashboard.component'
 export class DialogComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
   public formStatus: boolean = false
-  @ViewChild(DashboardComponent, { static: false }) private dashboardComponent: DashboardComponent | undefined
+  public formSubmitted: boolean = false
 
   constructor(
-    private dialogRef: MatDialogRef<DialogComponent>,
     private taskService: TaskService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private modalService: ModalService
+  ) { }
 
   ngOnInit(): void {
     this.buildForm()
   }
 
-
   private buildForm(): void {
     this.form = this.formBuilder.group({
       project: ['', [Validators.required]],
+      milestone: ['', [Validators.required]],
       description: ['', [Validators.required]],
       dateFrom: [null, [Validators.required]],
-      dateTo: [null, [Validators.required]],
-      type: ['', [Validators.required]],
-      currency: ['', [Validators.required]]
+      dateTo: [null, [Validators.required]]
     })
   }
 
   public async createTask(): Promise<void> {
     if (this.form.invalid) {
-      this.formStatus = true
+      this.formSubmitted = true
       return
     }
 
@@ -60,14 +59,13 @@ export class DialogComponent implements OnInit {
       type,
       paid: false,
       status: 'Pendiente',
-      currency,
       userId: 1 // FIXME: Change this to use the authService function to get the current user from localstorage
     }
 
-    this.dialogRef.close()
     const response = await this.taskService.createTask(task)
     // if (response.taskId)
     this.taskService.taskAdded.next(true)
+    this.modalService.close()
   }
 
   private getHours(dateFrom: Date, dateTo: Date): number {

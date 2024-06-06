@@ -1,17 +1,15 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar class="mat-toolbar">Menu</mat-toolbar>
+    <mat-toolbar class="mat-toolbar"><a routerLink="/dashboard">Lurica Horas</a></mat-toolbar>
     <mat-action-list class="action-list">
       <div class="top-buttons-container">
         <mat-dialog-actions mat-list-item>
-          <button mat-list-item (click)="openDialog()" class="task-btn">Crear nueva tarea</button>
+          <button mat-list-item (click)="openModal(createTaskTemplate)" class="task-btn">Crear nueva tarea</button>
         </mat-dialog-actions>
 
-        <a *ngIf="isAdmin()" mat-list-item>Administrar Usuarios</a>
-        <mat-dialog-actions *ngIf="isAdmin()">
-          <button mat-list-item>Administrar Proyectos</button>
-        </mat-dialog-actions>
+        <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Administrar Usuarios</a>
+        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Administrar Proyectos</a>
       </div>
 
       <div class="bottom-buttons-container">
@@ -37,18 +35,22 @@
         <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
           <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
         </button>
-        <span style="color: white;">Lurica Horas</span>
       </div>
-      <div class="user-container" (click)="openModal(modalTemplate)">
+      <div class="user-container" (click)="openModal(editUserTemplate)">
         <h3>{{user.username}}</h3>
         <h4>29-05-2024 15:45:30</h4>
       </div>
     </mat-toolbar>
 
-    <!-- Add Content Here -->
-    <ng-template #modalTemplate>
+    <!-- Add Modal Content Here -->
+    <ng-template #editUserTemplate>
       <div>This is a modal</div>
     </ng-template>
+
+    <ng-template #createTaskTemplate>
+      <app-dialog></app-dialog>
+    </ng-template>
+
     <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>
