@@ -1,0 +1,39 @@
+<app-navbar>
+  <div class="container">
+    <h1>Empresas</h1>
+    <button (click)="openNewCompanyModal(createCompanyTemplate)">+ Añadir empresa</button>
+  </div>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of companies">
+          <td>{{company.id}}</td>
+          <td>{{company.name}}</td>
+          <td><button class="edit-btn">Editar</button></td>
+          <td><button class="delete-btn">Borrar</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <p *ngIf="!companies.length"><b>No hay empresas para mostrar.</b></p>
+  </div>
+</app-navbar>
+
+<ng-template #createCompanyTemplate>
+  <form [formGroup]="form" (ngSubmit)="createCompany()">
+    <label for="firstname">Nombre</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
+      <input required type="text" id="name" name="name" formControlName="name">
+    </div>
+
+    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
+    <button type="submit" class="submit-btn">Crear</button>
+  </form>
+</ng-template>
