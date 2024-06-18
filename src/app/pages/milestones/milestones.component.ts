@@ -19,11 +19,11 @@ export class MilestonesComponent {
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
-    this.getProjects()
+    this.getMilestones()
   }
 
-  private async getProjects(): Promise<void> {
-    const milestones = await this.milestoneService.getCompanies()
+  private async getMilestones(): Promise<void> {
+    const milestones = await this.milestoneService.getMilestones()
 
     this.milestones = milestones
   }
@@ -60,10 +60,33 @@ export class MilestonesComponent {
 
     const response = await this.milestoneService.createMilestone(milestone)
     if (response.id) {
-      this.getProjects()
+      this.getMilestones()
       this.modalService.close()
       this.resetForm()
     }
+  }
+
+  public async editMilestone(milestoneId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+    this.resetForm()
+
+    const milestone = this.milestones.find(milestone => milestone.id === milestoneId)
+
+    if (!milestone) return
+
+    this.form.patchValue({
+      name: milestone.name,
+      totalAmount: milestone.totalAmount,
+      paidAmount: milestone.paidAmount,
+      surplusAmount: milestone.surplusAmount
+    })
+
+    this.openModal(modalTemplate, { size: 'lg', title: 'Editar Hito' })
+  }
+
+  public async deleteMilestone(milestoneId: number): Promise<void> {
+    const response = await this.milestoneService.deleteMilestone(milestoneId);
+
+    if (response.id) { this.getMilestones() }
   }
 
   public isInvalidInput(inputName: string): boolean {

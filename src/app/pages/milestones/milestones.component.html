@@ -17,8 +17,8 @@
         <tr *ngFor="let milestone of milestones">
           <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
+          <td><button class="edit-btn" (click)="editMilestone(milestone.id!, createMilestoneTemplate)">Editar</button></td>
+          <td><button class="delete-btn" (click)="deleteMilestone(milestone.id!)">Borrar</button></td>
         </tr>
       </tbody>
     </table>

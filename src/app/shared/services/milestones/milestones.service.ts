@@ -16,14 +16,14 @@ export class MilestoneService {
   }
 
   createMilestone(milestone: IMilestone): Promise<IMilestone> {
-    return firstValueFrom(this.http.post<IMilestone>(`${this.BASE_URL}/milestones`, milestone))
+    return firstValueFrom(this.http.post<IMilestone>(`${this.BASE_URL}/milestone`, milestone))
   }
 
-  getCompanies(): Promise<IMilestone[]> {
-    return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestones`))
+  getMilestones(): Promise<IMilestone[]> {
+    return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestone`))
   }
 
   deleteMilestone(milestoneId: number): Promise<IMilestone> {
-    return firstValueFrom(this.http.delete<IMilestone>(`${this.BASE_URL}/milestones/${milestoneId}`))
+    return firstValueFrom(this.http.delete<IMilestone>(`${this.BASE_URL}/milestone/${milestoneId}`))
   }
 }
