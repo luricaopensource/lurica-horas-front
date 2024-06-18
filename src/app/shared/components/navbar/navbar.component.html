@@ -8,8 +8,11 @@
           <button mat-list-item (click)="openModal(createTaskTemplate)" class="task-btn">Crear nueva tarea</button>
         </mat-dialog-actions>
 
-        <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Administrar Usuarios</a>
-        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Administrar Proyectos</a>
+        <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Usuarios</a>
+        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Proyectos</a>
+        <a *ngIf="isAdmin()" routerLink="/companies" mat-list-item>Empresas</a>
+        <a *ngIf="isAdmin()" routerLink="/milestones" mat-list-item>Hitos</a>
+        <a *ngIf="isAdmin()" routerLink="/reports" mat-list-item>Reportes</a>
       </div>
 
       <div class="bottom-buttons-container">
