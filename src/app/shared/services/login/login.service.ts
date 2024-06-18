@@ -12,6 +12,8 @@ import { Router } from '@angular/router'
 export class LoginService {
 
   private BASE_URL = environment.API_URL
+  private PASSWORD_MIN_LENGTH = 6
+  private USERNAME_MIN_LENGTH = 5
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -43,5 +45,13 @@ export class LoginService {
     const tokenData = JSON.parse(atob(token.split('.')[1]))
     const expirationTime = tokenData.exp * 1000
     return Date.now() >= expirationTime
+  }
+
+  getPasswordMinLength(): number {
+    return this.PASSWORD_MIN_LENGTH
+  }
+
+  getUsernameMinLength(): number {
+    return this.USERNAME_MIN_LENGTH
   }
 }

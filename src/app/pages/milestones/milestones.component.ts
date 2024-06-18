@@ -1,21 +1,21 @@
 import { Component, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IProject } from 'src/app/shared/models/projects/projects'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
-import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { IMilestone } from 'src/app/shared/models/milestones/milestones'
+import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
 
 @Component({
-  selector: 'app-projects',
-  templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.css']
+  selector: 'app-milestones',
+  templateUrl: './milestones.component.html',
+  styleUrls: ['./milestones.component.css']
 })
-export class ProjectsComponent {
-  public projects: IProject[] = []
+export class MilestonesComponent {
+  public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
 
   constructor(
-    private projectService: ProjectService,
+    private milestoneService: MilestoneService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
@@ -23,16 +23,19 @@ export class ProjectsComponent {
   }
 
   private async getProjects(): Promise<void> {
-    const projects = await this.projectService.getProjects()
+    const milestones = await this.milestoneService.getCompanies()
 
-    this.projects = projects
+    this.milestones = milestones
   }
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      company: ['', [Validators.required]],
-      currency: ['', [Validators.required]]
+      project: ['', [Validators.required]],
+      date: ['', [Validators.required]],
+      totalAmount: ['', [Validators.required]],
+      paidAmount: ['', [Validators.required]],
+      surplusAmount: ['', [Validators.required]]
     })
   }
 
@@ -42,20 +45,20 @@ export class ProjectsComponent {
       .subscribe()
   }
 
-  public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear proyecto' })
+  public openNewMilestoneModal(modalTemplate: TemplateRef<any>): void {
+    this.openModal(modalTemplate, { size: 'lg', title: 'Crear hito' })
     this.resetForm()
   }
 
-  public async createProject(): Promise<void> {
+  public async createMilestone(): Promise<void> {
     if (this.form.invalid) {
       this.formSubmitted = true
       return
     }
 
-    const project: IProject = this.form.value
+    const milestone: IMilestone = this.form.value
 
-    const response = await this.projectService.createProject(project)
+    const response = await this.milestoneService.createMilestone(milestone)
     if (response.id) {
       this.getProjects()
       this.modalService.close()

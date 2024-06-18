@@ -42,7 +42,7 @@ export class DialogComponent implements OnInit {
       return
     }
 
-    const { project, description, dateFrom, dateTo, type, currency } = this.form.value
+    const { project, description, dateFrom, dateTo } = this.form.value
     const from = new Date(dateFrom)
     const to = new Date(dateTo)
 
@@ -56,15 +56,13 @@ export class DialogComponent implements OnInit {
       dateFrom: this.formatDate(dateFrom),
       dateTo: this.formatDate(dateTo),
       hours,
-      type,
       paid: false,
       status: 'Pendiente',
       userId: 1 // FIXME: Change this to use the authService function to get the current user from localstorage
     }
 
     const response = await this.taskService.createTask(task)
-    // if (response.taskId)
-    this.taskService.taskAdded.next(true)
+    if (response.taskId) this.taskService.taskAdded.next(true)
     this.modalService.close()
   }
 

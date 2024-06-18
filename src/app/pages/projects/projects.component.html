@@ -1,7 +1,7 @@
 <app-navbar>
   <div class="container">
     <h1>Proyectos</h1>
-    <button>+ Añadir proyecto</button>
+    <button (click)="openNewProjectModal(createProjectTemplate)">+ Añadir proyecto</button>
   </div>
   <div class="container">
     <table>
@@ -9,27 +9,51 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
+          <th>Empresa</th>
           <th>Tipo de moneda</th>
           <th></th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Facturbo</td>
-          <td>USD</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Macro Pagos</td>
-          <td>PES</td>
+        <tr *ngFor="let project of projects">
+          <td>{{project.id}}</td>
+          <td>{{project.name}}</td>
+          <td>{{project.companyName}}</td>
+          <td>{{project.currency}}</td>
           <td><button class="edit-btn">Editar</button></td>
           <td><button class="delete-btn">Borrar</button></td>
         </tr>
       </tbody>
     </table>
+    <p *ngIf="!projects.length"><b>No hay proyectos para mostrar.</b></p>
   </div>
 </app-navbar>
+
+<ng-template #createProjectTemplate>
+  <form [formGroup]="form" (ngSubmit)="createProject()" autocapitalize="new-password" action="javascript:void(0)">
+    <label for="firstname">Nombre</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
+      <input required type="text" id="name" name="name" autocomplete="new-password" formControlName="name">
+    </div>
+
+    <label for="company">Empresa</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('company')}">
+      <select id="company" formControlName="company">
+        <option value=1>Finova</option>
+        <option value=2>TECPETROL</option>
+      </select>
+    </div>
+
+    <label for="currency">Tipo de moneda</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
+      <select id="currency" formControlName="currency">
+        <option value=1>ARS</option>
+        <option value=2>USD</option>
+      </select>
+    </div>
+
+    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
+    <button type="submit" class="submit-btn">Crear</button>
+  </form>
+</ng-template>

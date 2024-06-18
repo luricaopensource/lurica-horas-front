@@ -3,12 +3,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout'
 import { Observable } from 'rxjs'
 import { map, shareReplay } from 'rxjs/operators'
 import { IUser } from '../../models/users/user'
-import { DialogComponent } from '../dialog/dialog.component'
-import { MatDialog } from '@angular/material/dialog'
 import { LoginService } from '../../services/login/login.service'
 import { ModalService } from '../../services/modal/modal.service'
-import { NgTemplateOutlet } from '@angular/common'
-import { ModalComponent } from '../modal/modal.component'
 
 @Component({
   selector: 'app-navbar',

@@ -1,21 +1,21 @@
 import { Component, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IProject } from 'src/app/shared/models/projects/projects'
+import { ICompany } from 'src/app/shared/models/companies/companies'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
-import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { CompanyService } from 'src/app/shared/services/companies/company.service'
 
 @Component({
-  selector: 'app-projects',
-  templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.css']
+  selector: 'app-companies',
+  templateUrl: './companies.component.html',
+  styleUrls: ['./companies.component.css']
 })
-export class ProjectsComponent {
-  public projects: IProject[] = []
+export class CompaniesComponent {
+  public companies: ICompany[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
 
   constructor(
-    private projectService: ProjectService,
+    private companyService: CompanyService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
@@ -23,9 +23,9 @@ export class ProjectsComponent {
   }
 
   private async getProjects(): Promise<void> {
-    const projects = await this.projectService.getProjects()
+    const companies = await this.companyService.getCompanies()
 
-    this.projects = projects
+    this.companies = companies
   }
 
   private buildForm(): void {
@@ -42,20 +42,20 @@ export class ProjectsComponent {
       .subscribe()
   }
 
-  public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear proyecto' })
+  public openNewCompanyModal(modalTemplate: TemplateRef<any>): void {
+    this.openModal(modalTemplate, { size: 'lg', title: 'Crear empresa' })
     this.resetForm()
   }
 
-  public async createProject(): Promise<void> {
+  public async createCompany(): Promise<void> {
     if (this.form.invalid) {
       this.formSubmitted = true
       return
     }
 
-    const project: IProject = this.form.value
+    const company: ICompany = this.form.value
 
-    const response = await this.projectService.createProject(project)
+    const response = await this.companyService.createCompany(company)
     if (response.id) {
       this.getProjects()
       this.modalService.close()
