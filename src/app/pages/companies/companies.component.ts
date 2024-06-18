@@ -19,10 +19,10 @@ export class CompaniesComponent {
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
-    this.getProjects()
+    this.getCompanies()
   }
 
-  private async getProjects(): Promise<void> {
+  private async getCompanies(): Promise<void> {
     const companies = await this.companyService.getCompanies()
 
     this.companies = companies
@@ -31,8 +31,6 @@ export class CompaniesComponent {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      company: ['', [Validators.required]],
-      currency: ['', [Validators.required]]
     })
   }
 
@@ -57,7 +55,7 @@ export class CompaniesComponent {
 
     const response = await this.companyService.createCompany(company)
     if (response.id) {
-      this.getProjects()
+      this.getCompanies()
       this.modalService.close()
       this.resetForm()
     }

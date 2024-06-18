@@ -16,14 +16,14 @@ export class CompanyService {
   }
 
   createCompany(company: ICompany): Promise<ICompany> {
-    return firstValueFrom(this.http.post<ICompany>(`${this.BASE_URL}/companies`, company))
+    return firstValueFrom(this.http.post<ICompany>(`${this.BASE_URL}/company`, company))
   }
 
   getCompanies(): Promise<ICompany[]> {
-    return firstValueFrom(this.http.get<ICompany[]>(`${this.BASE_URL}/companies`))
+    return firstValueFrom(this.http.get<ICompany[]>(`${this.BASE_URL}/company`))
   }
 
   deleteCompany(companyId: number): Promise<ICompany> {
-    return firstValueFrom(this.http.delete<ICompany>(`${this.BASE_URL}/companies/${companyId}`))
+    return firstValueFrom(this.http.delete<ICompany>(`${this.BASE_URL}/company/${companyId}`))
   }
 }
