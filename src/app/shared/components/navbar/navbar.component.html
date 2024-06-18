@@ -5,7 +5,7 @@
     <mat-action-list class="action-list">
       <div class="top-buttons-container">
         <mat-dialog-actions mat-list-item>
-          <button mat-list-item (click)="openModal(createTaskTemplate)" class="task-btn">Crear nueva tarea</button>
+          <button mat-list-item (click)="openModal(createTaskTemplate, 'Crear tarea')" class="task-btn">Crear nueva tarea</button>
         </mat-dialog-actions>
 
         <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Administrar Usuarios</a>
@@ -36,7 +36,7 @@
           <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
         </button>
       </div>
-      <div class="user-container" (click)="openModal(editUserTemplate)">
+      <div class="user-container" (click)="openModal(editUserTemplate, 'Editar Usuario')">
         <h3>{{user.username}}</h3>
         <h4>29-05-2024 15:45:30</h4>
       </div>
@@ -44,7 +44,11 @@
 
     <!-- Add Modal Content Here -->
     <ng-template #editUserTemplate>
-      <div>This is a modal</div>
+      <form>
+        <input type="password" matInput formControlName="password" placeholder="Contraseña">
+        <input type="password" matInput formControlName="password" placeholder="Confirmar Contraseña">     
+        <button class="submit-btn">Guardar</button>
+      </form>
     </ng-template>
 
     <ng-template #createTaskTemplate>

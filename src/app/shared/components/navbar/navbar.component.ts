@@ -36,7 +36,8 @@ export class NavbarComponent {
     private authService: LoginService,
     private modalService: ModalService
   ) {
-    this.user = {
+    //obtener usuario despues de hacer login, guardarlo en localstorage y obtenerlo de ahi
+    this.user = { 
       firstName: 'Julio',
       lastName: 'Dechert',
       username: 'jdechert',
@@ -46,9 +47,9 @@ export class NavbarComponent {
     }
   }
 
-  public openModal(modalTemplate: TemplateRef<any>) {
+  public openModal(modalTemplate: TemplateRef<any>, title: string) {
     this.modalService
-      .open(modalTemplate, { size: 'lg', title: 'Crear tarea' })
+      .open(modalTemplate, { size: 'lg', title })
       .subscribe()
   }
 
