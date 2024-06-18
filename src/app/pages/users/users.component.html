@@ -1,7 +1,7 @@
 <app-navbar>
   <div class="container">
     <h1>Usuarios</h1>
-    <button>+ Añadir usuario</button>
+    <button (click)="createUser(createUserTemplate)">+ Añadir usuario</button>
   </div>
   <div class="container">
     <table>
@@ -21,46 +21,81 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Julio</td>
-          <td>Dechert</td>
-          <td>juliodechert</td>
-          <td>julio.dechert@lurica.us</td>
-          <td>Empleado</td>
-          <td>PES</td>
-          <td>$ 10.00</td>
-          <td>$ 10,000.00</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Alexis</td>
-          <td>Rivero</td>
-          <td>arivero</td>
-          <td>alexis.rivero@lurica.us</td>
-          <td>Empleado</td>
-          <td>PES</td>
-          <td>$ 10.00</td>
-          <td>$ 10,000.00</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Diego</td>
-          <td>Lucano</td>
-          <td>dielucano</td>
-          <td>diego.lucano@lurica.us</td>
-          <td>Admin</td>
-          <td>USD</td>
-          <td>$ 500.00</td>
-          <td>$ 500,000.00</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
+        <tr *ngFor="let user of users">
+          <td>{{user.id}}</td>
+          <td>{{user.firstName}}</td>
+          <td>{{user.lastName}}</td>
+          <td>{{user.username}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.role}}</td>
+          <td>{{user.currency}}</td>
+          <td>{{user.hourlyAmount}}</td>
+          <td>{{user.monthlyAmount}}</td>
+          <td><button class="edit-btn" (click)="editUser(user.id!, createUserTemplate)">Editar</button></td>
+          <td><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>
         </tr>
       </tbody>
     </table>
+    <p *ngIf="!users.length"><b>No hay usuarios para mostrar.</b></p>
   </div>
 </app-navbar>
+
+<ng-template #createUserTemplate>
+  <form [formGroup]="form" (ngSubmit)="register()" autocapitalize="new-password" action="javascript:void(0)">
+    <label for="firstname">Nombre</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('firstName')}">
+      <input required type="text" id="firstname" name="firstname" autocomplete="new-password"
+        formControlName="firstName">
+    </div>
+
+    <label for="lastname">Apellido</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('lastName')}">
+      <input required type="text" id="lastname" name="lastname" autocomplete="new-password" formControlName="lastName">
+    </div>
+
+    <label for="username">Nombre de usuario</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('username')}">
+      <input required type="text" id="username" name="username" formControlName="username">
+    </div>
+
+    <label for="password" *ngIf="showPasswordField">Contraseña</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('password')}" *ngIf="showPasswordField">
+      <input required type="password" id="password" name="password" formControlName="password">
+    </div>
+
+    <label for="email">Mail</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('email')}">
+      <input required type="email" id="email" name="email" formControlName="email">
+    </div>
+
+    <label for="currency">Tipo de moneda</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
+      <select formControlName="currency">
+        <option value=1>ARS</option>
+        <option value=2>USD</option>
+      </select>
+    </div>
+
+    <label for="rol">Rol</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('rol')}">
+      <select formControlName="rol">
+        <option value=1>Administrador</option>
+        <option value=2>Consultor</option>
+        <option value=3>Empleado</option>
+      </select>
+    </div>
+
+    <label for="hourlyAmount">Monto horario</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('hourlyAmount')}">
+      <input required type="number" id="hourlyAmount" name="hourlyAmount" formControlName="hourlyAmount">
+    </div>
+
+    <label for="monthlyAmount">Monto mensual</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('monthlyAmount')}">
+      <input required type="number" id="monthlyAmount" name="monthlyAmount" formControlName="monthlyAmount">
+    </div>
+
+    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
+    <button type="submit" class="submit-btn">Crear</button>
+  </form>
+</ng-template>
