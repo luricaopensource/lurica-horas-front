@@ -63,6 +63,28 @@ export class ProjectsComponent {
     }
   }
 
+  public async editProject(projectId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+    this.resetForm()
+
+    const project = this.projects.find(project => project.id === projectId)
+
+    if (!project) return
+
+    this.form.patchValue({
+      name: project.name,
+      company: project.companyName,
+      currency: project.currency
+    })
+
+    this.openModal(modalTemplate, { size: 'lg', title: 'Editar Proyecto' })
+  }
+
+  public async deleteProject(projectId: number): Promise<void> {
+    const response = await this.projectService.deleteProject(projectId);
+
+    if (response.id) { this.getProjects() }
+  }
+
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)
 

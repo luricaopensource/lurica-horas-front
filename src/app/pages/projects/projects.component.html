@@ -21,8 +21,8 @@
           <td>{{project.name}}</td>
           <td>{{project.companyName}}</td>
           <td>{{project.currency}}</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
+          <td><button class="edit-btn" (click)="editProject(project.id!, createProjectTemplate)">Editar</button></td>
+          <td><button class="delete-btn" (click)="deleteProject(project.id!)">Borrar</button></td>
         </tr>
       </tbody>
     </table>
