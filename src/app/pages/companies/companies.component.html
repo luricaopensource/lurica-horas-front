@@ -17,8 +17,8 @@
         <tr *ngFor="let company of companies">
           <td>{{company.id}}</td>
           <td>{{company.name}}</td>
-          <td><button class="edit-btn">Editar</button></td>
-          <td><button class="delete-btn">Borrar</button></td>
+          <td><button class="edit-btn" (click)="editCompany(company.id!, createCompanyTemplate)">Editar</button></td>
+          <td><button class="delete-btn" (click)="deleteCompany(company.id!)">Borrar</button></td>
         </tr>
       </tbody>
     </table>

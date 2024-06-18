@@ -61,6 +61,26 @@ export class CompaniesComponent {
     }
   }
 
+  public async editCompany(companyId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+    this.resetForm()
+
+    const company = this.companies.find(company => company.id === companyId)
+
+    if (!company) return
+
+    this.form.patchValue({
+      name: company.name,
+    })
+
+    this.openModal(modalTemplate, { size: 'lg', title: 'Editar empresa' })
+  }
+
+  public async deleteCompany(companyId: number): Promise<void> {
+    const response = await this.companyService.deleteCompany(companyId);
+
+    if (response.id) { this.getCompanies() }
+  }
+
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)
 
