@@ -40,16 +40,14 @@
     <label for="company">Empresa</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('company')}">
       <select id="company" formControlName="company">
-        <option value=1>Finova</option>
-        <option value=2>TECPETROL</option>
+        <option *ngFor='let company of companies' value={{company.id}}>{{company.name}}</option>
       </select>
     </div>
 
     <label for="currency">Tipo de moneda</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
-      <select id="currency" formControlName="currency">
-        <option value=1>ARS</option>
-        <option value=2>USD</option>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('project')}">
+      <select id=" currency" formControlName="currency">
+        <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
       </select>
     </div>
 

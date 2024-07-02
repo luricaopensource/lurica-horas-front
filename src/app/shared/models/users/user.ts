@@ -3,10 +3,22 @@ export interface IUser {
   firstName: string,
   lastName: string,
   username: string,
+  password?: string,
+  email: string,
+  role?: string,
+  currency?: string,
+  hourlyAmount?: number,
+  monthlyAmount?: number
+}
+
+export interface INewUser {
+  firstName: string,
+  lastName: string,
+  username: string,
   password: string,
   email: string,
-  role: string,
-  currency?: string,
+  role: number,
+  currency?: number,
   hourlyAmount?: number,
   monthlyAmount?: number
 }

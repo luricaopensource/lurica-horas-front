@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { IUser } from '../../models/users/user'
+import { INewUser, IUser } from '../../models/users/user'
 import { firstValueFrom } from 'rxjs'
 import { ILoginData } from '../../models/login/login'
 import { environment } from 'src/environments/environment'
 import { Router } from '@angular/router'
+import { IResponseModel } from '../../models'
 
 @Injectable({
   providedIn: 'root'
@@ -21,17 +22,22 @@ export class LoginService {
     return firstValueFrom(this.http.post<ILoginData>(`${this.BASE_URL}/auth/login`, { username, password }))
   }
 
-  register(user: IUser): Promise<any> {
-    return firstValueFrom(this.http.post('http://localhost:3000/auth/register', user))
+  register(user: INewUser): Promise<IResponseModel> {
+    return firstValueFrom(this.http.post<IResponseModel>('http://localhost:3000/auth/register', user))
   }
 
   logout(): void {
+    this.deleteUserFromLocalStorage()
     this.deleteToken()
     this.router.navigate(['/login'])
   }
 
   getToken(): string {
     return localStorage.getItem('access_token') || ''
+  }
+
+  deleteUserFromLocalStorage(): void {
+    localStorage.removeItem('user')
   }
 
   deleteToken(): void {

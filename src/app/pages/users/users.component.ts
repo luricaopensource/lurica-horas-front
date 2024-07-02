@@ -1,6 +1,8 @@
-import { Component, TemplateRef } from '@angular/core'
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IUser } from 'src/app/shared/models/users/user'
+import { getCurrencyId } from 'src/app/shared/helpers/currency'
+import { getRoleId } from 'src/app/shared/helpers/role'
+import { INewUser, IUser } from 'src/app/shared/models/users/user'
 import { LoginService } from 'src/app/shared/services/login/login.service'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { UserService } from 'src/app/shared/services/user/user.service'
@@ -39,7 +41,7 @@ export class UsersComponent {
       password: ['', [Validators.required, Validators.minLength(this.loginService.getUsernameMinLength())]],
       email: ['', [Validators.required, Validators.email]],
       currency: ['', [Validators.required]],
-      rol: ['', [Validators.required]],
+      role: ['', [Validators.required]],
       hourlyAmount: ['', [Validators.required]],
       monthlyAmount: ['', [Validators.required]]
     })
@@ -61,7 +63,19 @@ export class UsersComponent {
       return
     }
 
-    const user: IUser = this.form.value
+    const { firstName, lastName, username, password, email, currency, role, hourlyAmount, monthlyAmount } = this.form.value
+
+    const user: INewUser = {
+      firstName,
+      lastName,
+      username,
+      password,
+      email,
+      currency: parseInt(currency),
+      role: parseInt(role),
+      hourlyAmount,
+      monthlyAmount
+    }
 
     const response = await this.userService.createUser(user)
     if (response.id) {
@@ -84,8 +98,8 @@ export class UsersComponent {
       lastName: user.lastName,
       username: user.username,
       email: user.email,
-      currency: this.userService.getUserCurrency(user.currency?.toLowerCase() || ''),
-      rol: this.userService.getUserRole(user.role?.toLowerCase() || ''),
+      currency: getCurrencyId(user.currency?.toLowerCase() || ''),
+      role: getRoleId(user.role?.toLowerCase() || ''),
       hourlyAmount: user.hourlyAmount,
       monthlyAmount: user.monthlyAmount
     })

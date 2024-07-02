@@ -5,6 +5,12 @@ export interface IProject {
   companyName: string
 }
 
+export interface INewProject {
+  name: string,
+  currency: number,
+  companyId: number
+}
+
 export interface IResponseProject {
-  projectId: number
+  readonly id: number
 }

@@ -1,8 +1,11 @@
 import { Component, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IProject } from 'src/app/shared/models/projects/projects'
+import { ICompany } from 'src/app/shared/models/companies/companies'
+import { INewProject, IProject } from 'src/app/shared/models/projects/projects'
+import { CompanyService } from 'src/app/shared/services/companies/company.service'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { currencies } from 'src/app/shared/helpers/currency'
 
 @Component({
   selector: 'app-projects',
@@ -11,21 +14,27 @@ import { ProjectService } from 'src/app/shared/services/project/project.service'
 })
 export class ProjectsComponent {
   public projects: IProject[] = []
+  public companies: ICompany[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
+  public currencies = currencies
 
   constructor(
     private projectService: ProjectService,
+    private companiesService: CompanyService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
     this.getProjects()
+    this.getCompanies()
   }
 
   private async getProjects(): Promise<void> {
-    const projects = await this.projectService.getProjects()
+    this.projects = await this.projectService.getProjects()
+  }
 
-    this.projects = projects
+  private async getCompanies(): Promise<void> {
+    this.companies = await this.companiesService.getCompanies()
   }
 
   private buildForm(): void {
@@ -53,10 +62,16 @@ export class ProjectsComponent {
       return
     }
 
-    const project: IProject = this.form.value
+    const { name, company, currency } = this.form.value
 
-    const response = await this.projectService.createProject(project)
-    if (response.id) {
+    const project: INewProject = {
+      name,
+      companyId: parseInt(company),
+      currency: parseInt(currency)
+    }
+
+    const savedProject = await this.projectService.createProject(project)
+    if (savedProject.id) {
       this.getProjects()
       this.modalService.close()
       this.resetForm()
@@ -80,9 +95,9 @@ export class ProjectsComponent {
   }
 
   public async deleteProject(projectId: number): Promise<void> {
-    const response = await this.projectService.deleteProject(projectId);
+    const deletedProject = await this.projectService.deleteProject(projectId)
 
-    if (response.id) { this.getProjects() }
+    if (deletedProject.id) { this.getProjects() }
   }
 
   public isInvalidInput(inputName: string): boolean {

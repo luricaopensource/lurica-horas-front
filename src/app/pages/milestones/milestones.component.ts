@@ -1,8 +1,10 @@
 import { Component, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
-import { IMilestone } from 'src/app/shared/models/milestones/milestones'
+import { IMilestone, INewMilestone } from 'src/app/shared/models/milestones/milestones'
 import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
+import { IProject } from 'src/app/shared/models/projects/projects'
+import { ProjectService } from 'src/app/shared/services/project/project.service'
 
 @Component({
   selector: 'app-milestones',
@@ -13,19 +15,31 @@ export class MilestonesComponent {
   public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
+  public projects: IProject[] = []
 
   constructor(
     private milestoneService: MilestoneService,
+    private projectsService: ProjectService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
     this.getMilestones()
+    this.getProjects()
   }
 
   private async getMilestones(): Promise<void> {
     const milestones = await this.milestoneService.getMilestones()
 
     this.milestones = milestones
+
+    this.milestones.forEach((milestone: IMilestone) => {
+      const date = new Date(milestone.date)
+      milestone.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    })
+  }
+
+  private async getProjects(): Promise<void> {
+    this.projects = await this.projectsService.getProjects()
   }
 
   private buildForm(): void {
@@ -56,10 +70,20 @@ export class MilestonesComponent {
       return
     }
 
-    const milestone: IMilestone = this.form.value
+    const { name, date, paidAmount, project, surplusAmount, totalAmount } = this.form.value
 
-    const response = await this.milestoneService.createMilestone(milestone)
-    if (response.id) {
+    const milestone: INewMilestone = {
+      name,
+      date,
+      paidAmount,
+      projectId: parseInt(project),
+      surplusAmount,
+      totalAmount
+    }
+
+    const savedMilestone = await this.milestoneService.createMilestone(milestone)
+
+    if (savedMilestone.id) {
       this.getMilestones()
       this.modalService.close()
       this.resetForm()
@@ -84,9 +108,9 @@ export class MilestonesComponent {
   }
 
   public async deleteMilestone(milestoneId: number): Promise<void> {
-    const response = await this.milestoneService.deleteMilestone(milestoneId);
+    const deletedMilestone = await this.milestoneService.deleteMilestone(milestoneId)
 
-    if (response.id) { this.getMilestones() }
+    if (deletedMilestone.id) { this.getMilestones() }
   }
 
   public isInvalidInput(inputName: string): boolean {

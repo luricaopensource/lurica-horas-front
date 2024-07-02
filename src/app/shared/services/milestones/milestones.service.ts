@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Subject, firstValueFrom } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { IMilestone } from '../../models/milestones/milestones'
+import { IMilestone, INewMilestone } from '../../models/milestones/milestones'
+import { IResponseModel } from '../../models'
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +16,15 @@ export class MilestoneService {
     this.projectCreated = new Subject<boolean>()
   }
 
-  createMilestone(milestone: IMilestone): Promise<IMilestone> {
-    return firstValueFrom(this.http.post<IMilestone>(`${this.BASE_URL}/milestone`, milestone))
+  createMilestone(milestone: INewMilestone): Promise<IResponseModel> {
+    return firstValueFrom(this.http.post<IResponseModel>(`${this.BASE_URL}/milestone`, milestone))
   }
 
   getMilestones(): Promise<IMilestone[]> {
     return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestone`))
   }
 
-  deleteMilestone(milestoneId: number): Promise<IMilestone> {
-    return firstValueFrom(this.http.delete<IMilestone>(`${this.BASE_URL}/milestone/${milestoneId}`))
+  deleteMilestone(milestoneId: number): Promise<IResponseModel> {
+    return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/milestone/${milestoneId}`))
   }
 }

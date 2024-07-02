@@ -5,12 +5,13 @@
     <mat-action-list class="action-list">
       <div class="top-buttons-container">
         <mat-dialog-actions mat-list-item>
-          <button mat-list-item (click)="openModal(createTaskTemplate, 'Crear tarea')" class="task-btn">Crear nueva tarea</button>
+          <button mat-list-item (click)="openModal(createTaskTemplate, 'Crear tarea')" class="task-btn">Crear nueva
+            tarea</button>
         </mat-dialog-actions>
 
         <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Usuarios</a>
-        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Proyectos</a>
         <a *ngIf="isAdmin()" routerLink="/companies" mat-list-item>Empresas</a>
+        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Proyectos</a>
         <a *ngIf="isAdmin()" routerLink="/milestones" mat-list-item>Hitos</a>
         <a *ngIf="isAdmin()" routerLink="/reports" mat-list-item>Reportes</a>
       </div>
@@ -47,10 +48,10 @@
 
     <!-- Add Modal Content Here -->
     <ng-template #editUserTemplate>
-      <form>
-        <input type="password" matInput formControlName="password" placeholder="Contraseña">
-        <input type="password" matInput formControlName="password" placeholder="Confirmar Contraseña">     
-        <button class="submit-btn">Guardar</button>
+      <form [formGroup]="form" (ngSubmit)="saveUserPassword()">
+        <input type="password" formControlName="password" placeholder="Contraseña">
+        <input type="password" formControlName="confirmPassword" placeholder="Confirmar Contraseña">
+        <button class="submit-btn" type="submit">Guardar</button>
       </form>
     </ng-template>
 

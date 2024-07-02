@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Subject, firstValueFrom } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { IResponseUser, IUser } from '../../models/users/user'
+import { INewUser, IResponseUser, IUser } from '../../models/users/user'
+import { IResponseModel } from '../../models'
 
 @Injectable({
   providedIn: 'root'
@@ -15,35 +16,34 @@ export class UserService {
     this.userAdded = new Subject<boolean>()
   }
 
-  createUser(user: IUser): Promise<IUser> {
-    return firstValueFrom(this.http.post<IUser>(`${this.BASE_URL}/users`, user))
+  createUser(user: INewUser): Promise<IResponseModel> {
+    return firstValueFrom(this.http.post<IResponseModel>(`${this.BASE_URL}/users`, user))
+  }
+
+  updateUser(user: IUser): Promise<IResponseModel> {
+    return firstValueFrom(this.http.put<IResponseModel>(`${this.BASE_URL}/users/${user.id}`, user))
   }
 
   getUsers(): Promise<IUser[]> {
     return firstValueFrom(this.http.get<IUser[]>(`${this.BASE_URL}/users`))
   }
 
-  deleteUser(userId: number): Promise<IUser> {
-    return firstValueFrom(this.http.delete<IUser>(`${this.BASE_URL}/users/${userId}`))
+  getCurrentUser(): Promise<IUser> {
+    return firstValueFrom(this.http.get<IUser>(`${this.BASE_URL}/users/current`))
   }
 
-  getUserRole(role: string): number {
-    switch (role) {
-      case 'administrador':
-        return 1
-      case 'consultor':
-        return 2
-      default:
-        return 3
-    }
+  getUserFromLocalStorage(): IUser | null {
+    const user = localStorage.getItem('user')
+
+    if (user) return JSON.parse(user)
+    else return null
   }
 
-  getUserCurrency(currency: string): number {
-    switch (currency) {
-      case 'ars':
-        return 1
-      default:
-        return 2
-    }
+  deleteUser(userId: number): Promise<IResponseModel> {
+    return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/users/${userId}`))
+  }
+
+  isAuthenticated(): boolean {
+    return localStorage.getItem("access_token") !== null
   }
 }

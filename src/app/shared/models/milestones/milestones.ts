@@ -1,12 +1,18 @@
 export interface IMilestone {
-  id?: number,
+  id: number,
   name: string,
   date: string,
   totalAmount: number,
   paidAmount: number,
-  surplusAmount: number
+  surplusAmount: number,
+  projectName: string
 }
 
-export interface IResponseMilestone {
-  milestoneId: number
+export interface INewMilestone {
+  name: string,
+  date: string,
+  totalAmount: number,
+  paidAmount: number,
+  surplusAmount: number,
+  projectId: number
 }
