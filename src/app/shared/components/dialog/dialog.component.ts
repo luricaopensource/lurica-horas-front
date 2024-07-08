@@ -1,9 +1,13 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core'
+import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef, TemplateRef } from '@angular/core'
 import { TaskService } from '../../services/task/task.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ITask } from '../../models/tasks/tasks'
 import { ModalComponent } from '../modal/modal.component'
 import { ModalService } from '../../services/modal/modal.service'
+import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { IProject } from 'src/app/shared/models/projects/projects'
+import { MilestoneService } from '../../services/milestones/milestones.service'
+import { IMilestone } from '../../models/milestones/milestones'
 
 
 @Component({
@@ -11,7 +15,9 @@ import { ModalService } from '../../services/modal/modal.service'
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css']
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent {
+  public projects: IProject[] = []
+  public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
   public formStatus: boolean = false
   public formSubmitted: boolean = false
@@ -19,11 +25,21 @@ export class DialogComponent implements OnInit {
   constructor(
     private taskService: TaskService,
     private formBuilder: FormBuilder,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private projectService: ProjectService,
+    private milestoneService: MilestoneService
   ) { }
 
-  ngOnInit(): void {
-    this.buildForm()
+  // ngOnInit(): void {
+  //   this.buildForm()
+  // }
+
+  private async getProjects(): Promise<void> {
+    this.projects = await this.projectService.getProjects()
+  }
+
+  private async getMilestones(): Promise<void> {
+    this.milestones = await this.milestoneService.getMilestones()
   }
 
   private buildForm(): void {
@@ -34,6 +50,17 @@ export class DialogComponent implements OnInit {
       dateFrom: [null, [Validators.required]],
       dateTo: [null, [Validators.required]]
     })
+  }
+
+  private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
+    this.modalService
+      .open(modalTemplate, options)
+      .subscribe()
+  }
+
+  public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
+    this.openModal(modalTemplate, { size: 'lg', title: 'Crear tarea' })
+    this.resetForm()
   }
 
   public async createTask(): Promise<void> {
@@ -66,6 +93,14 @@ export class DialogComponent implements OnInit {
     this.modalService.close()
   }
 
+  public isInvalidInput(inputName: string): boolean {
+    const input = this.form.get(inputName)
+
+    if (!input) return false
+
+    return input.invalid && (input.dirty || input.touched || this.formSubmitted)
+  }
+
   private getHours(dateFrom: Date, dateTo: Date): number {
     let diff = (dateFrom.getTime() - dateTo.getTime()) / 1000
     diff /= (60 * 60)
@@ -76,5 +111,10 @@ export class DialogComponent implements OnInit {
     return ("0" + date.getDate()).slice(-2)
       + "-" + ("0" + (date.getMonth() + 1)).slice(-2)
       + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+  }
+
+  private resetForm(): void {
+    this.form.reset()
+    this.formSubmitted = false
   }
 }
