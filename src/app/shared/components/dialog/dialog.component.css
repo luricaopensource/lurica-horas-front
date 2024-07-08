@@ -24,6 +24,11 @@ textarea {
   box-sizing: border-box;
 }
 
+.form-group-invalid {
+  border: 1px solid red;
+  border-radius: 4px;
+}
+
 .submit-btn {
   padding: 10px 20px;
   border: none;
