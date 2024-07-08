@@ -11,8 +11,6 @@
 
         <a *ngIf="isAdmin()" routerLink="/users" mat-list-item>Usuarios</a>
         <a *ngIf="isAdmin()" routerLink="/companies" mat-list-item>Empresas</a>
-        <a *ngIf="isAdmin()" routerLink="/projects" mat-list-item>Proyectos</a>
-        <a *ngIf="isAdmin()" routerLink="/milestones" mat-list-item>Hitos</a>
         <a *ngIf="isAdmin()" routerLink="/reports" mat-list-item>Reportes</a>
       </div>
 
@@ -40,7 +38,7 @@
           <mat-icon aria-label="Side nav toggle icon" style="color: white;">menu</mat-icon>
         </button>
       </div>
-      <div class="user-container" (click)="openModal(editUserTemplate, 'Editar Usuario')">
+      <div class="user-container" (click)="openModal(editUserTemplate, 'Editar datos de usuario')">
         <h3>{{user.username}}</h3>
         <h4>29-05-2024 15:45:30</h4>
       </div>
@@ -49,8 +47,13 @@
     <!-- Add Modal Content Here -->
     <ng-template #editUserTemplate>
       <form [formGroup]="form" (ngSubmit)="saveUserPassword()">
-        <input type="password" formControlName="password" placeholder="Contraseña">
-        <input type="password" formControlName="confirmPassword" placeholder="Confirmar Contraseña">
+        <input [ngClass]="{'form-group-invalid' : isInvalidInput('password')}" type="password"
+          formControlName="password" placeholder="Contraseña">
+        <input [ngClass]="{'form-group-invalid' : isInvalidInput('confirmPassword')}" type="password"
+          formControlName="confirmPassword" placeholder="Confirmar Contraseña">
+        <p *ngIf="emptyPassword && formSubmitted" style="color: red">La contraseña no puede estar
+          <strong>vacía.</strong>
+        </p>
         <button class="submit-btn" type="submit">Guardar</button>
       </form>
     </ng-template>

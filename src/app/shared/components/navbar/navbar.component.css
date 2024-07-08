@@ -98,7 +98,6 @@ s .sidenav .mat-toolbar {
   }
 }
 
-
 form {
   display: flex;
   flex-direction: column;
@@ -106,6 +105,11 @@ form {
 
 .form-group {
   margin-bottom: 15px;
+}
+
+.form-group-invalid {
+  border: 1px solid red;
+  border-radius: 4px;
 }
 
 label {

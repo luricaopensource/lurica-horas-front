@@ -19,9 +19,11 @@
         <tr *ngFor="let project of projects">
           <td>{{project.id}}</td>
           <td>{{project.name}}</td>
-          <td>{{project.companyName}}</td>
+          <td>{{project.company.name}}</td>
           <td>{{project.currency}}</td>
-          <td><button class="edit-btn" (click)="editProject(project.id!, createProjectTemplate)">Editar</button></td>
+          <td><button class="edit-btn"
+              (click)="openEditProjectModal(project.id!, createProjectTemplate)">Editar</button>
+          </td>
           <td><button class="delete-btn" (click)="deleteProject(project.id!)">Borrar</button></td>
         </tr>
       </tbody>
@@ -31,7 +33,8 @@
 </app-navbar>
 
 <ng-template #createProjectTemplate>
-  <form [formGroup]="form" (ngSubmit)="createProject()" autocapitalize="new-password" action="javascript:void(0)">
+  <form [formGroup]="form" (ngSubmit)="isEditModal ? editProject() : createProject()" autocapitalize="new-password"
+    action="javascript:void(0)">
     <label for="firstname">Nombre</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
       <input required type="text" id="name" name="name" autocomplete="new-password" formControlName="name">
@@ -52,6 +55,8 @@
     </div>
 
     <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">Crear</button>
+    <button type="submit" class="submit-btn">
+      {{isEditModal ? 'Editar' : 'Crear'}}
+    </button>
   </form>
 </ng-template>

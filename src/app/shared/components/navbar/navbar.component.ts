@@ -20,13 +20,15 @@ export class NavbarComponent {
     lastName: '',
     username: '',
     email: '',
-    role: '',
-    currency: '',
+    roleName: '',
+    currencyName: '',
     hourlyAmount: 0,
     monthlyAmount: 0
   }
 
   public form: FormGroup = new FormGroup({})
+  public formSubmitted: boolean = false
+  public emptyPassword: boolean = true
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -66,13 +68,15 @@ export class NavbarComponent {
   }
 
   public openModal(modalTemplate: TemplateRef<any>, title: string) {
+    this.form.reset()
+
     this.modalService
       .open(modalTemplate, { size: 'lg', title })
       .subscribe()
   }
 
   isAdmin(): boolean {
-    return this.user.role === 'Administrador'
+    return this.user.roleName === 'Administrador'
   }
 
   logout() {
@@ -80,17 +84,58 @@ export class NavbarComponent {
   }
 
   async saveUserPassword(): Promise<void> {
+    this.formSubmitted = true
     const { password, confirmPassword } = this.form.value
 
-    console.log(password, confirmPassword)
+    if (!password) {
+      this.emptyPassword = true
+      return
+    }
 
     if (password !== confirmPassword) {
+      // TODO: Show error message in the modal
       alert('Las contraseñas no coinciden')
       return
     }
 
-    this.modalService.close()
+    this.emptyPassword = false
 
-    this.logout()
+    const user = this.userService.getUserFromLocalStorage()
+
+    if (!user) {
+      // TODO: Show error message in the modal
+      console.error("Error al obtener el usuario de LocalStorage")
+      return
+    }
+
+    const updatedUser: IUser = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      password,
+      email: user.email
+    }
+
+    try {
+      await this.userService.updateUser(updatedUser)
+
+      // TODO: Show success message in the modal
+
+      this.modalService.close()
+      this.formSubmitted = false
+      this.emptyPassword = true
+      this.logout()
+    } catch (error) {
+      // TODO: Show error message in the modal
+    }
+  }
+
+  public isInvalidInput(inputName: string): boolean {
+    const input = this.form.get(inputName)
+
+    if (!input) return false
+
+    return input.invalid && (input.dirty || input.touched || this.formSubmitted)
   }
 }

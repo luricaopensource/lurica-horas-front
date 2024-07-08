@@ -1,14 +1,17 @@
+import { ICompany } from "../companies/companies"
+
 export interface IProject {
   id?: number,
   name: string,
   currency: string,
-  companyName: string
+  company: ICompany
 }
 
 export interface INewProject {
+  id?: number,
   name: string,
   currency: number,
-  companyId: number
+  company: number
 }
 
 export interface IResponseProject {

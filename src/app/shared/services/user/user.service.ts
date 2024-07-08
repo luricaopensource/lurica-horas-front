@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Subject, firstValueFrom } from 'rxjs'
 import { environment } from 'src/environments/environment'
-import { INewUser, IResponseUser, IUser } from '../../models/users/user'
+import { IUser } from '../../models/users/user'
 import { IResponseModel } from '../../models'
 
 @Injectable({
@@ -16,12 +16,12 @@ export class UserService {
     this.userAdded = new Subject<boolean>()
   }
 
-  createUser(user: INewUser): Promise<IResponseModel> {
+  createUser(user: IUser): Promise<IResponseModel> {
     return firstValueFrom(this.http.post<IResponseModel>(`${this.BASE_URL}/users`, user))
   }
 
   updateUser(user: IUser): Promise<IResponseModel> {
-    return firstValueFrom(this.http.put<IResponseModel>(`${this.BASE_URL}/users/${user.id}`, user))
+    return firstValueFrom(this.http.patch<IResponseModel>(`${this.BASE_URL}/users/${user.id}`, user))
   }
 
   getUsers(): Promise<IUser[]> {

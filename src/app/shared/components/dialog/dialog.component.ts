@@ -4,6 +4,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ITask } from '../../models/tasks/tasks'
 import { ModalComponent } from '../modal/modal.component'
 import { ModalService } from '../../services/modal/modal.service'
+import { ProjectService } from '../../services/project/project.service'
+import { MilestoneService } from '../../services/milestones/milestones.service'
+import { IProject } from '../../models/projects/projects'
+import { IMilestone } from '../../models/milestones/milestones'
 
 
 @Component({
@@ -15,15 +19,29 @@ export class DialogComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
   public formStatus: boolean = false
   public formSubmitted: boolean = false
+  public projects: IProject[] = []
+  public milestones: IMilestone[] = []
 
   constructor(
+    private projectService: ProjectService,
+    private milestoneService: MilestoneService,
     private taskService: TaskService,
     private formBuilder: FormBuilder,
     private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
+    this.getProjects()
+    this.getMilestones()
     this.buildForm()
+  }
+
+  private async getProjects(): Promise<void> {
+    this.projects = await this.projectService.getProjects()
+  }
+
+  private async getMilestones(): Promise<void> {
+    this.milestones = await this.milestoneService.getMilestones()
   }
 
   private buildForm(): void {

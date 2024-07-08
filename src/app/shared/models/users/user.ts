@@ -5,19 +5,9 @@ export interface IUser {
   username: string,
   password?: string,
   email: string,
-  role?: string,
-  currency?: string,
-  hourlyAmount?: number,
-  monthlyAmount?: number
-}
-
-export interface INewUser {
-  firstName: string,
-  lastName: string,
-  username: string,
-  password: string,
-  email: string,
-  role: number,
+  roleName?: string,
+  role?: number,
+  currencyName?: string,
   currency?: number,
   hourlyAmount?: number,
   monthlyAmount?: number

@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from "@angular/core"
 import { FormBuilder, FormGroup, NgForm, Validators } from "@angular/forms"
 import { ErrorStateMatcher } from "@angular/material/core"
 import { Router } from "@angular/router"
-import { INewUser, IUser } from "src/app/shared/models/users/user"
+import { DEFAULT_ROLE_ID } from "src/app/shared/helpers/role"
+import { IUser } from "src/app/shared/models/users/user"
 import { LoginService } from "src/app/shared/services/login/login.service"
 import { UserService } from "src/app/shared/services/user/user.service"
 
@@ -63,7 +64,6 @@ export class LoginComponent implements OnInit {
   }
 
   async login(): Promise<void> {
-    console.log("Calling login()")
     if (this.form.invalid) return
 
     const formValue = this.form.value
@@ -87,13 +87,13 @@ export class LoginComponent implements OnInit {
 
     const formValue = this.form.value
 
-    const user: INewUser = {
+    const user: IUser = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       username: formValue.username,
       password: formValue.password,
       email: formValue.email,
-      role: 1,
+      role: DEFAULT_ROLE_ID,
     }
 
     const response = await this.loginService.register(user)

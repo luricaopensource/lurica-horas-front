@@ -4,17 +4,13 @@
       <div class="form-group">
         <label for="projectSelect">Proyecto</label>
         <select id="projectSelect" formControlName="project">
-          <option value="project1">Project 1</option>
-          <option value="project2">Project 2</option>
-          <option value="project3">Project 3</option>
+          <option *ngFor="let project of projects" value={{project.id}}>{{project.name}}</option>
         </select>
       </div>
       <div class="form-group">
         <label for="milestoneSelect">Hito</label>
         <select id="milestoneSelect" formControlName="milestone">
-          <option value="milestone1">Milestone 1</option>
-          <option value="milestone2">Milestone 2</option>
-          <option value="milestone3">Milestone 3</option>
+          <option *ngFor="let milestone of milestones" value={{milestone.id}}>{{milestone.name}}</option>
         </select>
       </div>
       <div class="form-group">

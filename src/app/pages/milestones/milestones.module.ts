@@ -1,14 +1,10 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { MilestonesRoutingModule } from './milestones-routing.module';
-
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
-    MilestonesRoutingModule
+    CommonModule
   ]
 })
 export class MilestonesModule { }

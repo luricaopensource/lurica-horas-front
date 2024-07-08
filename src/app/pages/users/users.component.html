@@ -27,11 +27,11 @@
           <td>{{user.lastName}}</td>
           <td>{{user.username}}</td>
           <td>{{user.email}}</td>
-          <td>{{user.role}}</td>
-          <td>{{user.currency}}</td>
+          <td>{{user.roleName}}</td>
+          <td>{{user.currencyName}}</td>
           <td>{{user.hourlyAmount}}</td>
           <td>{{user.monthlyAmount}}</td>
-          <td><button class="edit-btn" (click)="editUser(user.id!, createUserTemplate)">Editar</button></td>
+          <td><button class="edit-btn" (click)="openEditUserModal(user.id!, createUserTemplate)">Editar</button></td>
           <td><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>
         </tr>
       </tbody>
@@ -41,7 +41,8 @@
 </app-navbar>
 
 <ng-template #createUserTemplate>
-  <form [formGroup]="form" (ngSubmit)="register()" autocapitalize="new-password" action="javascript:void(0)">
+  <form [formGroup]="form" (ngSubmit)="isEditModal ? editUser() : register()" autocapitalize="new-password"
+    action="javascript:void(0)">
     <label for="firstname">Nombre</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('firstName')}">
       <input required type="text" id="firstname" name="firstname" autocomplete="new-password"
@@ -71,17 +72,14 @@
     <label for="currency">Tipo de moneda</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
       <select formControlName="currency">
-        <option value=1>ARS</option>
-        <option value=2>USD</option>
+        <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
       </select>
     </div>
 
     <label for="role">Rol</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('role')}">
       <select formControlName="role">
-        <option value=1>Administrador</option>
-        <option value=2>Consultor</option>
-        <option value=3>Empleado</option>
+        <option *ngFor="let role of roles" value={{role.id}}>{{role.name}}</option>
       </select>
     </div>
 
@@ -96,6 +94,8 @@
     </div>
 
     <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">Crear</button>
+    <button type="submit" class="submit-btn">
+      {{isEditModal ? 'Editar' : 'Crear'}}
+    </button>
   </form>
 </ng-template>

@@ -5,7 +5,7 @@ import { INewProject, IProject } from 'src/app/shared/models/projects/projects'
 import { CompanyService } from 'src/app/shared/services/companies/company.service'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
-import { currencies } from 'src/app/shared/helpers/currency'
+import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
 
 @Component({
   selector: 'app-projects',
@@ -18,6 +18,8 @@ export class ProjectsComponent {
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public currencies = currencies
+  public projectToEdit: IProject | null = null
+  public isEditModal: boolean = false
 
   constructor(
     private projectService: ProjectService,
@@ -52,6 +54,7 @@ export class ProjectsComponent {
   }
 
   public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
+    this.isEditModal = false
     this.openModal(modalTemplate, { size: 'lg', title: 'Crear proyecto' })
     this.resetForm()
   }
@@ -66,7 +69,7 @@ export class ProjectsComponent {
 
     const project: INewProject = {
       name,
-      companyId: parseInt(company),
+      company: parseInt(company),
       currency: parseInt(currency)
     }
 
@@ -78,20 +81,52 @@ export class ProjectsComponent {
     }
   }
 
-  public async editProject(projectId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+  public async openEditProjectModal(projectId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+    this.isEditModal = true
     this.resetForm()
 
     const project = this.projects.find(project => project.id === projectId)
 
     if (!project) return
 
+    this.projectToEdit = project
+
     this.form.patchValue({
       name: project.name,
-      company: project.companyName,
-      currency: project.currency
+      company: project.company.id,
+      currency: getCurrencyId(project.currency)
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Proyecto' })
+  }
+
+  public async editProject(): Promise<void> {
+    if (!this.projectToEdit) return
+
+    if (this.form.invalid) {
+      this.formSubmitted = true
+      return
+    }
+
+    const { name, company, currency } = this.form.value
+
+    const project: INewProject = {
+      id: this.projectToEdit.id,
+      name,
+      company: parseInt(company),
+      currency: parseInt(currency)
+    }
+
+    try {
+      const savedProject = await this.projectService.editProject(project)
+      if (savedProject.id) {
+        this.getProjects()
+        this.modalService.close()
+        this.resetForm()
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   public async deleteProject(projectId: number): Promise<void> {

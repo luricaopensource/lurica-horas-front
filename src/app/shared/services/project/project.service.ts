@@ -19,6 +19,10 @@ export class ProjectService {
     return firstValueFrom(this.http.post<IResponseProject>(`${this.BASE_URL}/projects`, project))
   }
 
+  editProject(project: INewProject): Promise<IResponseProject> {
+    return firstValueFrom(this.http.patch<IResponseProject>(`${this.BASE_URL}/projects/${project.id}`, project))
+  }
+
   getProjects(): Promise<IProject[]> {
     return firstValueFrom(this.http.get<IProject[]>(`${this.BASE_URL}/projects`))
   }
