@@ -22,6 +22,8 @@ export class DialogComponent{
   public formSubmitted: boolean = false
   public tasks: ITask[] = [];
 
+  @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>;
+
   constructor(
     private taskService: TaskService,
     private formBuilder: FormBuilder,
@@ -98,6 +100,9 @@ export class DialogComponent{
     this.resetForm();
   }
 
+  public showAddedTasks(): void {
+    this.modalService.open(this.viewTasksModal, { size: 'lg' });
+  }
 
   public async sendTasks(): Promise<void> {
     if (this.tasks.length === 0) return;
@@ -107,6 +112,8 @@ export class DialogComponent{
       this.taskService.taskAdded.next(true);
       this.tasks = [];
     }
+
+    this.tasks = [];
     this.modalService.close();
   }
 
