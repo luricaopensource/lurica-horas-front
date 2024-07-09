@@ -29,37 +29,32 @@ textarea {
   border-radius: 4px;
 }
 
-.submit-btn {
+#button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color: #1976d2;
   color: white;
   cursor: pointer;
   font-size: 16px;
   width: 100%;
 }
 
+.submit-btn {
+  background-color: #1976d2;
+}
+
 .add-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
   background-color: #008A61;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  width: 80%;
 }
 
 .show-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
   background-color: #008080;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  width: 80%;
+}
+
+
+.delete-btn {
+  color: red;
+
 }
 
 .button-wrapper {
@@ -70,4 +65,17 @@ textarea {
 
 .submit-btn:hover {
   background-color: #1565c0;
+}
+
+svg {
+  height: 15px;
+}
+
+a {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+ul {
+  list-style-type: none;
 }

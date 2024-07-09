@@ -21,6 +21,7 @@ export class DialogComponent{
   public formStatus: boolean = false
   public formSubmitted: boolean = false
   public tasks: ITask[] = [];
+  public editIndex: number | null = null;
 
   @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>;
 
@@ -71,19 +72,19 @@ export class DialogComponent{
       this.formSubmitted = true;
       return;
     }
-  
+
     const { project, description, type, dateFrom, dateTo } = this.form.value;
     const from = new Date(dateFrom);
     const to = new Date(dateTo);
-  
+
     if (isNaN(from.getTime()) || isNaN(to.getTime())) {
       return;
     }
-  
+
     if (from > to) return; // FIXME: Show error in form
-  
+
     const hours = this.getHours(from, to);
-  
+
     const task: ITask = {
       project,
       description,
@@ -95,13 +96,38 @@ export class DialogComponent{
       status: 'Pendiente',
       userId: 1 // FIXME: Change this to use the authService function to get the current user from localstorage
     };
-  
-    this.tasks.push(task);
+
+    if (this.editIndex !== null) {
+      this.tasks[this.editIndex] = task;
+      this.editIndex = null;
+    } else {
+      this.tasks.push(task);
+    }
+
     this.resetForm();
+    // this.modalService.close();
   }
+
 
   public showAddedTasks(): void {
     this.modalService.open(this.viewTasksModal, { size: 'lg' });
+  }
+
+  public editTask(index: number): void {
+    const task = this.tasks[index];
+    this.form.patchValue({
+      project: task.project,
+      description: task.description,
+      type: task.type,
+      dateFrom: task.dateFrom,
+      dateTo: task.dateTo
+    });
+    this.editIndex = index;
+    this.modalService.close();
+  }
+
+  public deleteTask(index: number): void {
+    this.tasks.splice(index, 1);
   }
 
   public async sendTasks(): Promise<void> {
