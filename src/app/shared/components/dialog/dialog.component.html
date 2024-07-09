@@ -1,38 +1,3 @@
-<!-- <div id="modal" class="modal">
-  <div class="modal-content">
-    <form [formGroup]="form" #createTaskForm (ngSubmit)="createTask()">
-      <div class="form-group">
-        <label for="projectSelect">Proyecto</label>
-        <select id="projectSelect" formControlName="project">
-          <option *ngFor="let project of projects" value={{project.id}}>{{project.name}}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="milestoneSelect">Hito</label>
-        <select id="milestoneSelect" formControlName="milestone">
-          <option *ngFor="let milestone of milestones" value={{milestone.id}}>{{milestone.name}}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="description">Descripción</label>
-        <textarea id="description" rows="4" formControlName="description"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="dateFrom">Fecha desde</label>
-        <input type="date" id="dateFrom" formControlName="dateFrom">
-      </div>
-      <div class="form-group">
-        <label for="dateTo">Fecha hasta</label>
-        <input type="date" id="dateTo" formControlName="dateTo">
-      </div>
-      <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-      <button class="submit-btn" type="submit">Crear</button>
-    </form>
-  </div>
-</div> -->
-
-
-<!-- <ng-template #createTaskTemplate> -->
 <form [formGroup]="form" (ngSubmit)="createTask()" autocapitalize="new-password" action="javascript:void(0)">
   <label for="project">Proyecto</label>
   <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('project')}">
@@ -54,6 +19,11 @@
   </div>
 
   <div class="form-group">
+    <label for="firstname">type</label>
+    <input required type="text" id="type" name="type" autocomplete="new-password" formControlName="type">
+  </div>
+
+  <div class="form-group">
     <label for="dateFrom">Fecha desde</label>
     <input type="date" id="dateFrom" formControlName="dateFrom">
   </div>
@@ -64,6 +34,8 @@
   </div>
 
   <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-  <button type="submit" class="submit-btn">Crear</button>
+  <button type="submit" class="add-btn">Agregar</button>
+
+  <button type="button" class="submit-btn" (click)="sendTasks()">Enviar</button>
 </form>
-<!-- </ng-template> -->
+
