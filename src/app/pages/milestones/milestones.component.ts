@@ -47,9 +47,7 @@ export class MilestonesComponent {
       name: ['', [Validators.required]],
       project: ['', [Validators.required]],
       date: ['', [Validators.required]],
-      totalAmount: ['', [Validators.required]],
-      paidAmount: ['', [Validators.required]],
-      surplusAmount: ['', [Validators.required]]
+      amount: ['', [Validators.required]],
     })
   }
 
@@ -70,15 +68,13 @@ export class MilestonesComponent {
       return
     }
 
-    const { name, date, paidAmount, project, surplusAmount, totalAmount } = this.form.value
+    const { name, date, amount, project } = this.form.value
 
     const milestone: INewMilestone = {
       name,
       date,
-      paidAmount,
+      amount,
       projectId: parseInt(project),
-      surplusAmount,
-      totalAmount
     }
 
     const savedMilestone = await this.milestoneService.createMilestone(milestone)
@@ -99,9 +95,7 @@ export class MilestonesComponent {
 
     this.form.patchValue({
       name: milestone.name,
-      totalAmount: milestone.totalAmount,
-      paidAmount: milestone.paidAmount,
-      surplusAmount: milestone.surplusAmount
+      amount: milestone.amount,
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Hito' })
