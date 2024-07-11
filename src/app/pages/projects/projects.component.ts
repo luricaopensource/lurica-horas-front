@@ -43,7 +43,8 @@ export class ProjectsComponent {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
       company: ['', [Validators.required]],
-      currency: ['', [Validators.required]]
+      currency: ['', [Validators.required]],
+      amount: ['', [Validators.required]],
     })
   }
 
@@ -65,12 +66,13 @@ export class ProjectsComponent {
       return
     }
 
-    const { name, company, currency } = this.form.value
+    const { name, company, currency, amount } = this.form.value
 
     const project: INewProject = {
       name,
       company: parseInt(company),
-      currency: parseInt(currency)
+      currency: parseInt(currency),
+      amount
     }
 
     const savedProject = await this.projectService.createProject(project)
@@ -94,7 +96,8 @@ export class ProjectsComponent {
     this.form.patchValue({
       name: project.name,
       company: project.company.id,
-      currency: getCurrencyId(project.currency)
+      currency: getCurrencyId(project.currency),
+      amount: project.amount
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Proyecto' })
@@ -108,13 +111,14 @@ export class ProjectsComponent {
       return
     }
 
-    const { name, company, currency } = this.form.value
+    const { name, company, currency, amount } = this.form.value
 
     const project: INewProject = {
       id: this.projectToEdit.id,
       name,
       company: parseInt(company),
-      currency: parseInt(currency)
+      currency: parseInt(currency),
+      amount
     }
 
     try {

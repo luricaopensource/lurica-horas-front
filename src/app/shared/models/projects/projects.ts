@@ -4,14 +4,16 @@ export interface IProject {
   id?: number,
   name: string,
   currency: string,
-  company: ICompany
+  company: ICompany,
+  amount: number
 }
 
 export interface INewProject {
   id?: number,
   name: string,
   currency: number,
-  company: number
+  company: number,
+  amount: number
 }
 
 export interface IResponseProject {
