@@ -15,7 +15,7 @@ import { HttpConfigInterceptor } from './shared/services/HttpConfigInterceptor'
 import { ModalModule } from './shared/components/modal/modal.module'
 import { ProjectsComponent } from './pages/projects/projects.component'
 import { UsersComponent } from './pages/users/users.component'
-import { CompaniesComponent } from './pages/companies/companies.component'
+import { ClientsComponent } from './pages/clients/clients.component'
 import { MilestonesComponent } from './pages/milestones/milestones.component'
 
 @NgModule({
@@ -27,7 +27,7 @@ import { MilestonesComponent } from './pages/milestones/milestones.component'
     DialogComponent,
     ProjectsComponent,
     UsersComponent,
-    CompaniesComponent,
+    ClientsComponent,
     MilestonesComponent
   ],
   imports: [
