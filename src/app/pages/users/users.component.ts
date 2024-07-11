@@ -145,6 +145,7 @@ export class UsersComponent {
         this.resetForm()
       }
     } catch (error) {
+      // TODO: Handle error properly
       console.log(error)
     }
   }

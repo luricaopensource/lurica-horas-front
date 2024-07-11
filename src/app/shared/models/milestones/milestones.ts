@@ -9,6 +9,7 @@ export interface IMilestone {
 }
 
 export interface INewMilestone {
+  id?: number,
   name: string,
   date: string,
   totalAmount: number,

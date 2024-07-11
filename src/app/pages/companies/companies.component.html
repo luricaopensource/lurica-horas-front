@@ -17,23 +17,24 @@
         <tr *ngFor="let company of companies">
           <td>{{company.id}}</td>
           <td>{{company.name}}</td>
-          <td><button class="edit-btn" (click)="editCompany(company.id!, createCompanyTemplate)">Editar</button></td>
+          <td><button class="edit-btn"
+              (click)="openEditCompanyModal(company.id!, createCompanyTemplate)">Editar</button></td>
           <td><button class="delete-btn" (click)="deleteCompany(company.id!)">Borrar</button></td>
         </tr>
       </tbody>
     </table>
-    <p *ngIf="!companies.length"><b>No hay empresas para mostrar.</b></p>
+    <p *ngIf="!companies"><b>No hay empresas para mostrar.</b></p>
   </div>
 </app-navbar>
 
 <ng-template #createCompanyTemplate>
-  <form [formGroup]="form" (ngSubmit)="createCompany()">
+  <form [formGroup]="form" (ngSubmit)="isEditModal ? editCompany() : createCompany()">
     <label for="firstname">Nombre</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
       <input required type="text" id="name" name="name" formControlName="name">
     </div>
 
     <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">Crear</button>
+    <button type="submit" class="submit-btn">{{isEditModal ? "Editar" : "Crear"}}</button>
   </form>
 </ng-template>

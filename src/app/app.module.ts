@@ -16,7 +16,8 @@ import { ModalModule } from './shared/components/modal/modal.module'
 import { ProjectsComponent } from './pages/projects/projects.component'
 import { UsersComponent } from './pages/users/users.component'
 import { CompaniesComponent } from './pages/companies/companies.component'
-import { MilestonesComponent } from './pages/milestones/milestones.component'
+import { MilestonesComponent } from './pages/milestones/milestones.component';
+import { ReportsComponent } from './pages/reports/reports.component'
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MilestonesComponent } from './pages/milestones/milestones.component'
     ProjectsComponent,
     UsersComponent,
     CompaniesComponent,
-    MilestonesComponent
+    MilestonesComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

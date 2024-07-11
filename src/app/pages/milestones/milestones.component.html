@@ -25,7 +25,8 @@
           <td>{{milestone.projectName}}</td>
           <td>{{milestone.totalAmount}}</td>
           <td>{{milestone.paidAmount}}</td>
-          <td><button class="edit-btn" (click)="editMilestone(milestone.id!, createMilestoneTemplate)">Editar</button>
+          <td><button class="edit-btn"
+              (click)="openEditMilestoneModal(milestone.id!, createMilestoneTemplate)">Editar</button>
           </td>
           <td><button class="delete-btn" (click)="deleteMilestone(milestone.id!)">Borrar</button></td>
         </tr>
@@ -36,7 +37,8 @@
 </app-navbar>
 
 <ng-template #createMilestoneTemplate>
-  <form [formGroup]="form" (ngSubmit)="createMilestone()" autocapitalize="new-password" action="javascript:void(0)">
+  <form [formGroup]="form" (ngSubmit)="isEditModal ? editMilestone() : createMilestone()" autocapitalize="new-password"
+    action="javascript:void(0)">
     <label for="firstname">Nombre</label>
     <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
       <input required type="text" id="name" name="name" autocomplete="new-password" formControlName="name">

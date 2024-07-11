@@ -13,6 +13,8 @@ export class CompaniesComponent {
   public companies: ICompany[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
+  public isEditModal: boolean = false
+  private companyToEdit: ICompany | null = null
 
   constructor(
     private companyService: CompanyService,
@@ -53,32 +55,66 @@ export class CompaniesComponent {
 
     const company: ICompany = this.form.value
 
-    const response = await this.companyService.createCompany(company)
-    if (response.id) {
+    try {
+      await this.companyService.createCompany(company)
       this.getCompanies()
       this.modalService.close()
       this.resetForm()
     }
+    catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
   }
 
-  public async editCompany(companyId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+  public openEditCompanyModal(companyId: number, modalTemplate: TemplateRef<any>): void {
     this.resetForm()
 
-    const company = this.companies.find(company => company.id === companyId)
+    this.isEditModal = true
 
-    if (!company) return
+    this.companyToEdit = this.companies.find(company => company.id === companyId) ?? null
 
-    this.form.patchValue({
-      name: company.name,
-    })
+    if (!this.companyToEdit) return
+
+    this.form.patchValue({ name: this.companyToEdit.name })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar empresa' })
   }
 
-  public async deleteCompany(companyId: number): Promise<void> {
-    const response = await this.companyService.deleteCompany(companyId);
+  public async editCompany(): Promise<void> {
+    if (!this.companyToEdit) return
 
-    if (response.id) { this.getCompanies() }
+    if (this.form.invalid) {
+      this.formSubmitted = true
+      return
+    }
+
+    const { name } = this.form.value
+
+    const company: ICompany = {
+      id: this.companyToEdit.id,
+      name
+    }
+
+    try {
+      await this.companyService.updateCompany(company)
+      this.getCompanies()
+      this.modalService.close()
+      this.resetForm()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
+  }
+
+  public async deleteCompany(companyId: number): Promise<void> {
+    try {
+      await this.companyService.deleteCompany(companyId)
+      this.getCompanies()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
   }
 
   public isInvalidInput(inputName: string): boolean {

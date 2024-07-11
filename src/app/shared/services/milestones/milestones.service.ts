@@ -20,6 +20,10 @@ export class MilestoneService {
     return firstValueFrom(this.http.post<IResponseModel>(`${this.BASE_URL}/milestone`, milestone))
   }
 
+  updateMilestone(milestone: INewMilestone): Promise<IResponseModel> {
+    return firstValueFrom(this.http.patch<IResponseModel>(`${this.BASE_URL}/milestone/${milestone.id}`, milestone))
+  }
+
   getMilestones(): Promise<IMilestone[]> {
     return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestone`))
   }

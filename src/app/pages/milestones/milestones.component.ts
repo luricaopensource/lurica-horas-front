@@ -16,6 +16,8 @@ export class MilestonesComponent {
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public projects: IProject[] = []
+  public milestoneToEdit: IMilestone | null = null
+  public isEditModal: boolean = false
 
   constructor(
     private milestoneService: MilestoneService,
@@ -81,21 +83,27 @@ export class MilestonesComponent {
       totalAmount
     }
 
-    const savedMilestone = await this.milestoneService.createMilestone(milestone)
 
-    if (savedMilestone.id) {
+
+    try {
+      await this.milestoneService.createMilestone(milestone)
       this.getMilestones()
       this.modalService.close()
       this.resetForm()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
     }
   }
 
-  public async editMilestone(milestoneId: number, modalTemplate: TemplateRef<any>): Promise<void> {
+  public async openEditMilestoneModal(milestoneId: number, modalTemplate: TemplateRef<any>): Promise<void> {
     this.resetForm()
 
     const milestone = this.milestones.find(milestone => milestone.id === milestoneId)
 
     if (!milestone) return
+
+    this.milestoneToEdit = milestone
 
     this.form.patchValue({
       name: milestone.name,
@@ -107,10 +115,46 @@ export class MilestonesComponent {
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Hito' })
   }
 
-  public async deleteMilestone(milestoneId: number): Promise<void> {
-    const deletedMilestone = await this.milestoneService.deleteMilestone(milestoneId)
+  public async editMilestone(): Promise<void> {
+    if (!this.milestoneToEdit) return
 
-    if (deletedMilestone.id) { this.getMilestones() }
+    if (this.form.invalid) {
+      this.formSubmitted = true
+      return
+    }
+
+    const { name, project, date, totalAmount, paidAmount, surplusAmount } = this.form.value
+
+    const milestone: INewMilestone = {
+      id: this.milestoneToEdit.id,
+      name,
+      projectId: parseInt(project),
+      date,
+      totalAmount,
+      paidAmount,
+      surplusAmount
+    }
+
+    try {
+      await this.milestoneService.updateMilestone(milestone)
+      this.getMilestones()
+      this.modalService.close()
+      this.resetForm()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
+  }
+
+  public async deleteMilestone(milestoneId: number): Promise<void> {
+    try {
+      await this.milestoneService.deleteMilestone(milestoneId)
+      this.getMilestones()
+    }
+    catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
   }
 
   public isInvalidInput(inputName: string): boolean {

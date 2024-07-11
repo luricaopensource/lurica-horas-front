@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Subject, firstValueFrom } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { ICompany } from '../../models/companies/companies'
+import { IResponseModel } from '../../models'
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class CompanyService {
 
   createCompany(company: ICompany): Promise<ICompany> {
     return firstValueFrom(this.http.post<ICompany>(`${this.BASE_URL}/company`, company))
+  }
+
+  updateCompany(company: ICompany): Promise<IResponseModel> {
+    return firstValueFrom(this.http.patch<IResponseModel>(`${this.BASE_URL}/company/${company.id}`, company))
   }
 
   getCompanies(): Promise<ICompany[]> {

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core'
+import { Component, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ICompany } from 'src/app/shared/models/companies/companies'
 import { INewProject, IProject } from 'src/app/shared/models/projects/projects'
@@ -73,12 +73,16 @@ export class ProjectsComponent {
       currency: parseInt(currency)
     }
 
-    const savedProject = await this.projectService.createProject(project)
-    if (savedProject.id) {
+    try {
+      await this.projectService.createProject(project)
       this.getProjects()
       this.modalService.close()
       this.resetForm()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
     }
+
   }
 
   public async openEditProjectModal(projectId: number, modalTemplate: TemplateRef<any>): Promise<void> {
@@ -118,21 +122,23 @@ export class ProjectsComponent {
     }
 
     try {
-      const savedProject = await this.projectService.editProject(project)
-      if (savedProject.id) {
-        this.getProjects()
-        this.modalService.close()
-        this.resetForm()
-      }
+      await this.projectService.editProject(project)
+
+      this.getProjects()
+      this.modalService.close()
+      this.resetForm()
     } catch (error) {
       console.error(error)
     }
   }
 
   public async deleteProject(projectId: number): Promise<void> {
-    const deletedProject = await this.projectService.deleteProject(projectId)
-
-    if (deletedProject.id) { this.getProjects() }
+    try {
+      await this.projectService.deleteProject(projectId)
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
   }
 
   public isInvalidInput(inputName: string): boolean {
