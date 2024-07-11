@@ -1,5 +1,6 @@
 export interface ITask {
-  project: string,
+  projectId: number,
+  milestoneId: number,
   description: string,
   dateFrom: string,
   dateTo: string,

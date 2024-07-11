@@ -38,17 +38,17 @@ export class DialogComponent{
    }
 
   private async getProjects(): Promise<void> {
-    this.projects = await this.projectService.getProjects()
+    this.projects = await this.projectService.getProjects() //cambiar esto en el backend para que los projects vengan POR USUARIO
   }
 
   private async getMilestones(): Promise<void> {
-    this.milestones = await this.milestoneService.getMilestones()
+    this.milestones = await this.milestoneService.getMilestones() //cambar esto en el backend para que los milestones vengan POR PROJECT
   }
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      project: ['', [Validators.required]],
-      milestone: ['', [Validators.required]],
+      projectId: ['', [Validators.required]],
+      milestoneId: ['', [Validators.required]],
       description: ['', [Validators.required]],
       type: ['', [Validators.required]],
       dateFrom: [null, [Validators.required]],
@@ -73,7 +73,7 @@ export class DialogComponent{
       return;
     }
 
-    const { project, description, type, dateFrom, dateTo } = this.form.value;
+    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value;
     const from = new Date(dateFrom);
     const to = new Date(dateTo);
 
@@ -86,7 +86,8 @@ export class DialogComponent{
     const hours = this.getHours(from, to);
 
     const task: ITask = {
-      project,
+      projectId,
+      milestoneId,
       description,
       dateFrom: this.formatDate(dateFrom),
       dateTo: this.formatDate(dateTo),
@@ -116,7 +117,8 @@ export class DialogComponent{
   public editTask(index: number): void {
     const task = this.tasks[index];
     this.form.patchValue({
-      project: task.project,
+      project: task.projectId,
+      milestone: task.milestoneId,
       description: task.description,
       type: task.type,
       dateFrom: task.dateFrom,
@@ -142,7 +144,6 @@ export class DialogComponent{
     this.tasks = [];
     this.modalService.close();
   }
-
 
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)

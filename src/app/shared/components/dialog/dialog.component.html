@@ -1,14 +1,14 @@
 <form [formGroup]="form" (ngSubmit)="createTask()" autocapitalize="new-password" action="javascript:void(0)">
   <label for="project">Proyecto</label>
   <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('project')}">
-    <select id="project" formControlName="project">
+    <select id="project" formControlName="projectId">
       <option *ngFor='let project of projects' value={{project.id}}>{{project.name}}</option>
     </select>
   </div>
 
   <label for="milestone">Hito</label>
   <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('milestone')}">
-    <select id="milestone" formControlName="milestone">
+    <select id="milestone" formControlName="milestoneId">
       <option *ngFor='let milestone of milestones' value={{milestone.id}}>{{milestone.name}}</option>
     </select>
   </div>
@@ -19,7 +19,7 @@
   </div>
 
   <div class="form-group">
-    <label for="firstname">type</label>
+    <label for="type">Tipo</label>
     <input required type="text" id="type" name="type" autocomplete="new-password" formControlName="type">
   </div>
 

@@ -16,7 +16,7 @@
       <!-- Project Column -->
       <ng-container matColumnDef="project">
         <th mat-header-cell *matHeaderCellDef>Proyecto</th>
-        <td mat-cell *matCellDef="let row">{{row.project || "Sin proyecto"}}</td>
+        <td mat-cell *matCellDef="let row">{{row.project.name || "Sin proyecto"}}</td>
       </ng-container>
 
       <!-- Task Description Column -->
