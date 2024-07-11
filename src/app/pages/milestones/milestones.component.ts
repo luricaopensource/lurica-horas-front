@@ -117,16 +117,14 @@ export class MilestonesComponent {
       return
     }
 
-    const { name, project, date, totalAmount, paidAmount, surplusAmount } = this.form.value
+    const { name, project, date, amount } = this.form.value
 
     const milestone: INewMilestone = {
       id: this.milestoneToEdit.id,
       name,
       projectId: parseInt(project),
       date,
-      totalAmount,
-      paidAmount,
-      surplusAmount
+      amount
     }
 
     try {
