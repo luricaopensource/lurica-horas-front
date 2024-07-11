@@ -1,8 +1,8 @@
 import { Component, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ICompany } from 'src/app/shared/models/companies/companies'
+import { IClient } from 'src/app/shared/models/clients/clients'
 import { INewProject, IProject } from 'src/app/shared/models/projects/projects'
-import { CompanyService } from 'src/app/shared/services/companies/company.service'
+import { ClientService } from 'src/app/shared/services/clients/client.service'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
 import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
@@ -14,7 +14,7 @@ import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
 })
 export class ProjectsComponent {
   public projects: IProject[] = []
-  public companies: ICompany[] = []
+  public clients: IClient[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public currencies = currencies
@@ -23,27 +23,28 @@ export class ProjectsComponent {
 
   constructor(
     private projectService: ProjectService,
-    private companiesService: CompanyService,
+    private clientsService: ClientService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
     this.getProjects()
-    this.getCompanies()
+    this.getClients()
   }
 
   private async getProjects(): Promise<void> {
     this.projects = await this.projectService.getProjects()
   }
 
-  private async getCompanies(): Promise<void> {
-    this.companies = await this.companiesService.getCompanies()
+  private async getClients(): Promise<void> {
+    this.clients = await this.clientsService.getClients()
   }
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
-      company: ['', [Validators.required]],
-      currency: ['', [Validators.required]]
+      client: ['', [Validators.required]],
+      currency: ['', [Validators.required]],
+      amount: ['', [Validators.required]],
     })
   }
 
@@ -65,12 +66,13 @@ export class ProjectsComponent {
       return
     }
 
-    const { name, company, currency } = this.form.value
+    const { name, client, currency, amount } = this.form.value
 
     const project: INewProject = {
       name,
-      company: parseInt(company),
-      currency: parseInt(currency)
+      client: parseInt(client),
+      currency: parseInt(currency),
+      amount
     }
 
     try {
@@ -97,8 +99,9 @@ export class ProjectsComponent {
 
     this.form.patchValue({
       name: project.name,
-      company: project.company.id,
-      currency: getCurrencyId(project.currency)
+      client: project.client.id,
+      currency: getCurrencyId(project.currency),
+      amount: project.amount
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Proyecto' })
@@ -112,13 +115,14 @@ export class ProjectsComponent {
       return
     }
 
-    const { name, company, currency } = this.form.value
+    const { name, client, currency, amount } = this.form.value
 
     const project: INewProject = {
       id: this.projectToEdit.id,
       name,
-      company: parseInt(company),
-      currency: parseInt(currency)
+      client: parseInt(client),
+      currency: parseInt(currency),
+      amount
     }
 
     try {

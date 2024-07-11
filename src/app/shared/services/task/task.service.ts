@@ -15,7 +15,7 @@ export class TaskService {
     this.taskAdded = new Subject<boolean>()
   }
 
-  createTask(task: ITask): Promise<IResponseTask> {
-    return firstValueFrom(this.http.post<IResponseTask>(`${this.BASE_URL}/tasks`, task))
+  createTasks(tasks: ITask[]): Promise<IResponseTask[]> {
+    return firstValueFrom(this.http.post<IResponseTask[]>(`${this.BASE_URL}/tasks`, tasks))
   }
 }

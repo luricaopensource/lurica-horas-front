@@ -14,12 +14,16 @@ import { IMilestone } from '../../models/milestones/milestones'
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css']
 })
-export class DialogComponent {
+export class DialogComponent{
   public projects: IProject[] = []
   public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
   public formStatus: boolean = false
   public formSubmitted: boolean = false
+  public tasks: ITask[] = [];
+  public editIndex: number | null = null;
+
+  @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>;
 
   constructor(
     private taskService: TaskService,
@@ -27,11 +31,11 @@ export class DialogComponent {
     private modalService: ModalService,
     private projectService: ProjectService,
     private milestoneService: MilestoneService
-  ) { }
-
-  // ngOnInit(): void {
-  //   this.buildForm()
-  // }
+  ) {
+    this.buildForm()
+    this.getProjects()
+    this.getMilestones()
+   }
 
   private async getProjects(): Promise<void> {
     this.projects = await this.projectService.getProjects()
@@ -46,6 +50,7 @@ export class DialogComponent {
       project: ['', [Validators.required]],
       milestone: ['', [Validators.required]],
       description: ['', [Validators.required]],
+      type: ['', [Validators.required]],
       dateFrom: [null, [Validators.required]],
       dateTo: [null, [Validators.required]]
     })
@@ -62,19 +67,23 @@ export class DialogComponent {
     this.resetForm()
   }
 
-  public async createTask(): Promise<void> {
+  public createTask(): void {
     if (this.form.invalid) {
-      this.formSubmitted = true
-      return
+      this.formSubmitted = true;
+      return;
     }
 
-    const { project, description, dateFrom, dateTo } = this.form.value
-    const from = new Date(dateFrom)
-    const to = new Date(dateTo)
+    const { project, description, type, dateFrom, dateTo } = this.form.value;
+    const from = new Date(dateFrom);
+    const to = new Date(dateTo);
 
-    if (from > to) return // FIXME: Show error in form
+    if (isNaN(from.getTime()) || isNaN(to.getTime())) {
+      return;
+    }
 
-    const hours = this.getHours(from, to)
+    if (from > to) return; // FIXME: Show error in form
+
+    const hours = this.getHours(from, to);
 
     const task: ITask = {
       project,
@@ -82,15 +91,58 @@ export class DialogComponent {
       dateFrom: this.formatDate(dateFrom),
       dateTo: this.formatDate(dateTo),
       hours,
+      type,
       paid: false,
       status: 'Pendiente',
       userId: 1 // FIXME: Change this to use the authService function to get the current user from localstorage
+    };
+
+    if (this.editIndex !== null) {
+      this.tasks[this.editIndex] = task;
+      this.editIndex = null;
+    } else {
+      this.tasks.push(task);
     }
 
-    const response = await this.taskService.createTask(task)
-    if (response.taskId) this.taskService.taskAdded.next(true)
-    this.modalService.close()
+    this.resetForm();
+    // this.modalService.close();
   }
+
+
+  public showAddedTasks(): void {
+    this.modalService.open(this.viewTasksModal, { size: 'lg' });
+  }
+
+  public editTask(index: number): void {
+    const task = this.tasks[index];
+    this.form.patchValue({
+      project: task.project,
+      description: task.description,
+      type: task.type,
+      dateFrom: task.dateFrom,
+      dateTo: task.dateTo
+    });
+    this.editIndex = index;
+    this.modalService.close();
+  }
+
+  public deleteTask(index: number): void {
+    this.tasks.splice(index, 1);
+  }
+
+  public async sendTasks(): Promise<void> {
+    if (this.tasks.length === 0) return;
+
+    const response = await this.taskService.createTasks(this.tasks);
+    if (response.every(task => task.taskId)) {
+      this.taskService.taskAdded.next(true);
+      this.tasks = [];
+    }
+
+    this.tasks = [];
+    this.modalService.close();
+  }
+
 
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)
@@ -106,10 +158,11 @@ export class DialogComponent {
     return Math.abs(Math.round(diff))
   }
 
-  private formatDate(date: Date): string {
-    return ("0" + date.getDate()).slice(-2)
-      + "-" + ("0" + (date.getMonth() + 1)).slice(-2)
-      + "-" + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2)
+  private formatDate(date: string | Date): string {
+    const d = new Date(date);
+    return ("0" + d.getDate()).slice(-2)
+      + "-" + ("0" + (d.getMonth() + 1)).slice(-2)
+      + "-" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
   }
 
   private resetForm(): void {

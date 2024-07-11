@@ -11,8 +11,7 @@
           <th>Nombre</th>
           <th>Fecha</th>
           <th>Proyecto</th>
-          <th>Monto total</th>
-          <th>Monto pagado</th>
+          <th>Monto del hito</th>
           <th></th>
           <th></th>
         </tr>
@@ -23,11 +22,9 @@
           <td>{{milestone.name}}</td>
           <td>{{milestone.date}}</td>
           <td>{{milestone.projectName}}</td>
-          <td>{{milestone.totalAmount}}</td>
-          <td>{{milestone.paidAmount}}</td>
           <td><button class="edit-btn"
               (click)="openEditMilestoneModal(milestone.id!, createMilestoneTemplate)">Editar</button>
-          </td>
+          <td>{{milestone.amount}}</td>
           <td><button class="delete-btn" (click)="deleteMilestone(milestone.id!)">Borrar</button></td>
         </tr>
       </tbody>
@@ -56,19 +53,9 @@
       <input type="date" id="date" formControlName="date">
     </div>
 
-    <label for="totalAmount">Monto total</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('totalAmount')}">
-      <input type="number" id="totalAmount" formControlName="totalAmount" />
-    </div>
-
-    <label for="paidAmount">Monto pagado</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('paidAmount')}">
-      <input type="number" id="paidAmount" formControlName="paidAmount" />
-    </div>
-
-    <label for="surplusAmount">Monto sobrante</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('surplusAmount')}">
-      <input type="number" id="surplusAmount" formControlName="surplusAmount" />
+    <label for="amount">Monto</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('amount')}">
+      <input type="number" id="amount" formControlName="amount" />
     </div>
 
     <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>

@@ -9,8 +9,9 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Empresa</th>
+          <th>Cliente</th>
           <th>Tipo de moneda</th>
+          <th>Monto del proyecto</th>
           <th></th>
           <th></th>
         </tr>
@@ -19,8 +20,9 @@
         <tr *ngFor="let project of projects">
           <td>{{project.id}}</td>
           <td>{{project.name}}</td>
-          <td>{{project.company.name}}</td>
+          <td>{{project.client.name}}</td>
           <td>{{project.currency}}</td>
+          <td>{{project.amount}}</td>
           <td><button class="edit-btn"
               (click)="openEditProjectModal(project.id!, createProjectTemplate)">Editar</button>
           </td>
@@ -40,10 +42,10 @@
       <input required type="text" id="name" name="name" autocomplete="new-password" formControlName="name">
     </div>
 
-    <label for="company">Empresa</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('company')}">
-      <select id="company" formControlName="company">
-        <option *ngFor='let company of companies' value={{company.id}}>{{company.name}}</option>
+    <label for="client">Cliente</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('client')}">
+      <select id="client" formControlName="client">
+        <option *ngFor='let client of clients' value={{client.id}}>{{client.name}}</option>
       </select>
     </div>
 
@@ -52,6 +54,11 @@
       <select id=" currency" formControlName="currency">
         <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
       </select>
+    </div>
+
+    <label for="amount">Monto</label>
+    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('amount')}">
+      <input required type="number" id="amount" name="amount" autocomplete="new-password" formControlName="amount">
     </div>
 
     <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>

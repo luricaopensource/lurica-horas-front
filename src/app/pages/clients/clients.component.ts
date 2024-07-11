@@ -1,33 +1,33 @@
 import { Component, OnInit, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ICompany } from 'src/app/shared/models/companies/companies'
+import { IClient } from 'src/app/shared/models/clients/clients'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
-import { CompanyService } from 'src/app/shared/services/companies/company.service'
+import { ClientService } from 'src/app/shared/services/clients/client.service'
 
 @Component({
-  selector: 'app-companies',
-  templateUrl: './companies.component.html',
-  styleUrls: ['./companies.component.css']
+  selector: 'app-clients',
+  templateUrl: './clients.component.html',
+  styleUrls: ['./clients.component.css']
 })
-export class CompaniesComponent {
-  public companies: ICompany[] = []
+export class ClientsComponent {
+  public clients: IClient[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public isEditModal: boolean = false
-  private companyToEdit: ICompany | null = null
+  public clientToEdit: IClient | null = null
 
   constructor(
-    private companyService: CompanyService,
+    private clientService: ClientService,
     private formBuilder: FormBuilder,
     private modalService: ModalService) {
     this.buildForm()
-    this.getCompanies()
+    this.getClients()
   }
 
-  private async getCompanies(): Promise<void> {
-    const companies = await this.companyService.getCompanies()
+  private async getClients(): Promise<void> {
+    const clients = await this.clientService.getClients()
 
-    this.companies = companies
+    this.clients = clients
   }
 
   private buildForm(): void {
@@ -42,22 +42,22 @@ export class CompaniesComponent {
       .subscribe()
   }
 
-  public openNewCompanyModal(modalTemplate: TemplateRef<any>): void {
+  public openNewClientModal(modalTemplate: TemplateRef<any>): void {
     this.openModal(modalTemplate, { size: 'lg', title: 'Crear empresa' })
     this.resetForm()
   }
 
-  public async createCompany(): Promise<void> {
+  public async createClient(): Promise<void> {
     if (this.form.invalid) {
       this.formSubmitted = true
       return
     }
 
-    const company: ICompany = this.form.value
+    const client: IClient = this.form.value
 
     try {
-      await this.companyService.createCompany(company)
-      this.getCompanies()
+      await this.clientService.createClient(client)
+      this.getClients()
       this.modalService.close()
       this.resetForm()
     }
@@ -67,22 +67,22 @@ export class CompaniesComponent {
     }
   }
 
-  public openEditCompanyModal(companyId: number, modalTemplate: TemplateRef<any>): void {
+  public openEditClientModal(clientId: number, modalTemplate: TemplateRef<any>): void {
     this.resetForm()
 
     this.isEditModal = true
 
-    this.companyToEdit = this.companies.find(company => company.id === companyId) ?? null
+    this.clientToEdit = this.clients.find(client => client.id === clientId) ?? null
 
-    if (!this.companyToEdit) return
+    if (!this.clientToEdit) return
 
-    this.form.patchValue({ name: this.companyToEdit.name })
+    this.form.patchValue({ name: this.clientToEdit.name })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar empresa' })
   }
 
-  public async editCompany(): Promise<void> {
-    if (!this.companyToEdit) return
+  public async editClient(): Promise<void> {
+    if (!this.clientToEdit) return
 
     if (this.form.invalid) {
       this.formSubmitted = true
@@ -91,14 +91,14 @@ export class CompaniesComponent {
 
     const { name } = this.form.value
 
-    const company: ICompany = {
-      id: this.companyToEdit.id,
+    const client: IClient = {
+      id: this.clientToEdit.id,
       name
     }
 
     try {
-      await this.companyService.updateCompany(company)
-      this.getCompanies()
+      await this.clientService.updateClient(client)
+      this.getClients()
       this.modalService.close()
       this.resetForm()
     } catch (error) {
@@ -107,10 +107,10 @@ export class CompaniesComponent {
     }
   }
 
-  public async deleteCompany(companyId: number): Promise<void> {
+  public async deleteClient(clientId: number): Promise<void> {
     try {
-      await this.companyService.deleteCompany(companyId)
-      this.getCompanies()
+      await this.clientService.deleteClient(clientId)
+      this.getClients()
     } catch (error) {
       // TODO: Handle error properly
       console.error(error)
