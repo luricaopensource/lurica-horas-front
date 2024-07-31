@@ -34,15 +34,14 @@ export class DialogComponent{
   ) {
     this.buildForm()
     this.getProjects()
-    this.getMilestones()
    }
 
   private async getProjects(): Promise<void> {
     this.projects = await this.projectService.getProjects() //cambiar esto en el backend para que los projects vengan POR USUARIO
   }
 
-  private async getMilestones(): Promise<void> {
-    this.milestones = await this.milestoneService.getMilestones() //cambar esto en el backend para que los milestones vengan POR PROJECT
+  private async getMilestonesByProject(project: IProject): Promise<void> {
+    this.milestones = await this.milestoneService.getMilestonesByProject(project.id!)
   }
 
   private buildForm(): void {
@@ -145,6 +144,15 @@ export class DialogComponent{
     this.modalService.close();
   }
 
+  onProjectChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const projectId = Number(selectElement.value);
+    const selectedProject = this.projects.find(project => project.id === projectId);
+    if (selectedProject) {
+      this.getMilestonesByProject(selectedProject);
+    }
+  }
+
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)
 
@@ -170,4 +178,5 @@ export class DialogComponent{
     this.form.reset()
     this.formSubmitted = false
   }
+
 }

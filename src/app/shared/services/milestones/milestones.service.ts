@@ -28,6 +28,10 @@ export class MilestoneService {
     return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestone`))
   }
 
+  getMilestonesByProject(projectId: number): Promise<IMilestone[]> {
+    return firstValueFrom(this.http.get<IMilestone[]>(`${this.BASE_URL}/milestone/project/${projectId}`))
+  }
+
   deleteMilestone(milestoneId: number): Promise<IResponseModel> {
     return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/milestone/${milestoneId}`))
   }
