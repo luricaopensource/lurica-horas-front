@@ -1,121 +1,218 @@
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #fafafa;
-  margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+  color: #333;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .container {
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  width: 80%;
+  margin: 0 auto;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
+.customer-card,
+.project-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  padding: 20px;
 }
 
-thead {
-  border-bottom: 2px solid #e0e0e0;
-}
-
-th,
-td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-th {
-  color: #000000;
-  font-weight: 500;
-}
-
-td {
-  color: #424242;
-}
-
-button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
+.customer-header,
+.project-header,
+.milestone-header {
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.customer-header:hover,
+.project-header:hover,
+.milestone-header:hover {
+  background-color: #e9e9e9;
+}
+
+.customer-header input,
+.project-header input,
+.milestone-header input {
+  background-color: #f9f9f9;
+  border: none;
+  color: #333;
+  width: 200px;
+  margin-right: 10px;
+  cursor: text;
+  font-size: 16px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.customer-header input:disabled,
+.project-header input:disabled,
+.milestone-header input:disabled {
+  background-color: #e0e0e0;
+}
+
+.customer-header .header-buttons,
+.project-header .header-buttons,
+.milestone-header .header-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.customer-header button,
+.project-header button,
+.milestone-header button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
   font-size: 14px;
-  font-weight: 500;
-  outline: none;
+  transition: background-color 0.3s;
 }
 
-.edit-btn {
-  background-color: #1976d2;
-  color: #ffffff;
+.customer-header button:hover,
+.project-header button:hover,
+.milestone-header button:hover {
+  background-color: #0056b3;
 }
 
-.edit-btn:hover {
-  background-color: #1565c0;
+.delete-button {
+  background-color: #dc3545;
 }
 
-.delete-btn {
-  background-color: #d32f2f;
-  color: #ffffff;
+.delete-button:hover {
+  background-color: #c82333;
 }
 
-.delete-btn:hover {
-  background-color: #c62828;
-}
-
-form {
+.project-body,
+.milestone-body {
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.form-group {
+.project-body label,
+.milestone-body label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.project-body input,
+.milestone-body input {
   margin-bottom: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s, background-color 0.3s;
 }
 
-label {
-  margin-bottom: 3px;
-  font-weight: 500;
-  color: #616161;
+.project-body input:disabled,
+.milestone-body input:disabled {
+  background-color: #e0e0e0;
 }
 
-input,
-select,
-textarea {
+.project-body input:focus,
+.milestone-body input:focus {
+  border-color: #007bff;
+}
+
+.milestone-body .milestone-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  /* Add gap between columns */
+}
+
+.milestone-body .milestone-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+
+.milestone-body .milestone-column:last-child {
+  margin-right: 0;
+}
+
+.milestone {
+  margin-bottom: 20px;
+  /* Add margin between milestones */
+  border: 1px solid #ddd;
+  /* Add border to milestone */
+  border-radius: 5px;
+  /* Add border radius */
   padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
+  /* Add padding */
+  background-color: #fff;
+  /* Add background color */
 }
 
-.form-group-invalid {
-  border: 1px solid red;
-  border-radius: 4px;
+.hidden {
+  display: none;
 }
 
-.submit-btn {
+.projects,
+.milestones {
+  padding: 15px;
+}
+
+.milestone:last-child {
+  border-bottom: none;
+}
+
+h2,
+h3,
+p {
+  margin: 0;
+  color: #333;
+}
+
+.add-button {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
   padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #1976d2;
-  color: white;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  width: 100%;
+  font-size: 14px;
+  margin: 10px 0;
+  transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+  display: block;
+  width: fit-content;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.submit-btn:hover {
-  background-color: #1565c0;
+.add-button:hover {
+  background-color: #f9f9f9;
+  border-color: #999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.add-button-container {
+  text-align: center;
+  margin: 20px 0;
 }

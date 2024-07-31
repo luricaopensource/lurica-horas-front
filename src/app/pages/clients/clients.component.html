@@ -1,40 +1,66 @@
 <app-navbar>
   <div class="container">
-    <h1>Clientes</h1>
-    <button (click)="openNewClientModal(createClientTemplate)">+ Añadir cliente</button>
-  </div>
-  <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let client of clients">
-          <td>{{client.id}}</td>
-          <td>{{client.name}}</td>
-          <td><button class="edit-btn" (click)="openEditClientModal(client.id!, createClientTemplate)">Editar</button>
-          </td>
-          <td><button class="delete-btn" (click)="deleteClient(client.id!)">Borrar</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <p *ngIf="!clients"><b>No hay clientes para mostrar.</b></p>
-  </div>
-</app-navbar>
-
-<ng-template #createClientTemplate>
-  <form [formGroup]="form" (ngSubmit)="isEditModal ? editClient() : createClient()">
-    <label for="firstname">Nombre</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
-      <input required type="text" id="name" name="name" formControlName="name">
+    <button class="add-button" (click)="addCustomer()">+ Añadir cliente</button>
+    <div class="customer-card" *ngFor="let customer of customers; let i = index">
+      <div class="customer-header" (click)="toggleVisibility(i)">
+        <input type="text" placeholder="Cliente increible" [(ngModel)]="customer.name" [disabled]="!customer.editMode"
+          (click)="stopPropagation($event)">
+        <div class="header-buttons">
+          <button class="edit-button" (click)="editEntity(customer, $event)">Edit</button>
+          <button class="delete-button" (click)="deleteEntity(i, undefined, undefined, $event)">Delete</button>
+        </div>
+      </div>
+      <div [ngClass]="{'hidden': !customer.showProjects}" class="projects">
+        <div class="project-card" *ngFor="let project of customer.projects; let j = index">
+          <div class="project-header" (click)="toggleVisibility(i, j)">
+            <input type="text" placeholder="Proyecto increible" [(ngModel)]="project.name"
+              [disabled]="!project.editMode" (click)="stopPropagation($event)">
+            <div class="header-buttons">
+              <button class="edit-button" (click)="editEntity(project, $event)">Edit</button>
+              <button class="delete-button" (click)="deleteEntity(i, j, undefined, $event)">Delete</button>
+            </div>
+          </div>
+          <div [ngClass]="{'hidden': !project.showMilestones}" class="project-body">
+            <label for="currency">Currency Type:</label>
+            <input type="text" [(ngModel)]="project.currency" [disabled]="!project.editMode"
+              (click)="stopPropagation($event)">
+            <label for="amount">Amount:</label>
+            <input type="number" [(ngModel)]="project.amount" [disabled]="!project.editMode"
+              (click)="stopPropagation($event)">
+          </div>
+          <div [ngClass]="{'hidden': !project.showMilestones}" class="milestones">
+            <div class="milestone" *ngFor="let milestone of project.milestones; let k = index">
+              <div class="milestone-header" (click)="stopPropagation($event)">
+                <input type="text" [(ngModel)]="milestone.name" [disabled]="!milestone.editMode"
+                  (click)="stopPropagation($event)">
+                <div class="header-buttons">
+                  <button class="edit-button" (click)="editEntity(milestone, $event)">Edit</button>
+                  <button class="delete-button" (click)="deleteEntity(i, j, k, $event)">Delete</button>
+                </div>
+              </div>
+              <div class="milestone-body">
+                <div class="milestone-row">
+                  <div class="milestone-column">
+                    <label for="date">Date:</label>
+                    <input type="date" [(ngModel)]="milestone.date" [disabled]="!milestone.editMode"
+                      (click)="stopPropagation($event)">
+                  </div>
+                  <div class="milestone-column">
+                    <label for="amountPercentage">Amount Percentage:</label>
+                    <input type="number" [(ngModel)]="milestone.amountPercentage" [disabled]="!milestone.editMode"
+                      (click)="stopPropagation($event)">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button class="add-button">+ Añadir hito</button>
+          </div>
+        </div>
+        <button class="add-button" (click)="addProject()">+ Añadir proyecto</button>
+      </div>
     </div>
+  </div>
 
-    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">{{isEditModal ? "Editar" : "Crear"}}</button>
-  </form>
-</ng-template>
+
+
+</app-navbar>
