@@ -144,7 +144,7 @@ export class DialogComponent{
     this.modalService.close();
   }
 
-  onProjectChange(event: Event): void {
+  public onProjectChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement;
     const projectId = Number(selectElement.value);
     const selectedProject = this.projects.find(project => project.id === projectId);
@@ -177,6 +177,7 @@ export class DialogComponent{
   private resetForm(): void {
     this.form.reset()
     this.formSubmitted = false
+    this.milestones = []
   }
 
 }
