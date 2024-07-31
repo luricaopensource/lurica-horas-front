@@ -17,7 +17,8 @@ import { ProjectsComponent } from './pages/projects/projects.component'
 import { UsersComponent } from './pages/users/users.component'
 import { MilestonesComponent } from './pages/milestones/milestones.component'
 import { ReportsComponent } from './pages/reports/reports.component'
-import { ClientsComponent } from './pages/clients/clients.component'
+import { ClientsComponent } from './pages/clients/clients.component';
+import { CompanyComponent } from './pages/company/company.component'
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ClientsComponent } from './pages/clients/clients.component'
     UsersComponent,
     ReportsComponent,
     ClientsComponent,
-    MilestonesComponent
+    MilestonesComponent,
+    CompanyComponent
   ],
   imports: [
     BrowserModule,
