@@ -78,7 +78,8 @@ export class LoginComponent implements OnInit {
       const user: IUser = await this.userService.getCurrentUser()
       localStorage.setItem('user', JSON.stringify(user))
 
-      this.router.navigate(["/dashboard"])
+      user.roleName === "Administrador" ? this.router.navigate(["/companies"]) : this.router.navigate(["/dashboard"]) 
+
     }
   }
 
