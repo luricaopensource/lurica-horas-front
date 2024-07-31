@@ -56,7 +56,10 @@ h1 {
     font-size: 18px;    
     display: flex;
     align-items: center;
-    
+}
+
+.companies-element:hover {
+    cursor:pointer
 }
 
 ul {

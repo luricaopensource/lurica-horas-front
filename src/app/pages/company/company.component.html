@@ -10,15 +10,9 @@
                 <ul>
                     <div class="li-companies-container">
                         <p class="select-company-text">Seleccione una Empresa para operar</p>
-                        <div class="companies-element">
+                        <div class="companies-element" *ngFor="let company of companies" (click)="saveCompanyDataInLocalStorage(company)" routerLink="/dashboard">
                             <img src="https://testpagos.macrosoluciones.macro.com.ar/_next/image?url=%2Fimages%2Flogo-empresa.png&w=64&q=75">
-                            <li class="company-element-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</li>
-                        </div>
-                    </div>
-                    <div class="li-companies-container">
-                        <div class="companies-element">
-                            <img src="https://testpagos.macrosoluciones.macro.com.ar/_next/image?url=%2Fimages%2Flogo-empresa.png&w=64&q=75">
-                            <li class="company-element-text">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</li>
+                            <li class="company-element-text">{{company.name}}</li>
                         </div>
                     </div>
                 </ul>
