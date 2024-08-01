@@ -16,6 +16,16 @@
 
       <div class="bottom-buttons-container">
         <mat-dialog-actions>
+          <button *ngIf="isAdmin()" class="'logout-btn" routerLink="/companies" mat-list-item>
+            <div class="logout-text-icon-container">
+              <span class="logout-text">Cambiar empresa</span>
+              <mat-icon>
+                <span class="material-icons-outlined">
+                  business
+                </span>
+              </mat-icon>
+            </div>
+          </button>
           <button class="logout-btn" mat-list-item (click)="logout()">
             <div class="logout-text-icon-container">
               <span class="logout-text">Cerrar sesión</span>

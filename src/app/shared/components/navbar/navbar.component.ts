@@ -56,7 +56,7 @@ export class NavbarComponent {
     })
   }
 
-  private getCurrentUser(): void {
+  public getCurrentUser(): void {
     const user = this.userService.getUserFromLocalStorage()
 
     if (!user) {
