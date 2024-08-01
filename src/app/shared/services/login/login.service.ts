@@ -23,7 +23,7 @@ export class LoginService {
   }
 
   register(user: IUser): Promise<IResponseModel> {
-    return firstValueFrom(this.http.post<IResponseModel>('http://localhost:3000/auth/register', user))
+    return firstValueFrom(this.http.post<IResponseModel>(`${this.BASE_URL}/auth/register`, user))
   }
 
   logout(): void {
