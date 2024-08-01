@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, TemplateRef } from '@angular/core'
+import { Component, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IClient } from 'src/app/shared/models/clients/clients'
+import { IClient, IClientCollapsible } from 'src/app/shared/models/clients/clients'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ClientService } from 'src/app/shared/services/clients/client.service'
+import { IProjectCollapsible } from 'src/app/shared/models/projects/projects'
 
 @Component({
   selector: 'app-clients',
@@ -10,61 +11,44 @@ import { ClientService } from 'src/app/shared/services/clients/client.service'
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent {
-  public clients: IClient[] = []
+  public clients: IClientCollapsible[] = []
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public isEditModal: boolean = false
   public clientToEdit: IClient | null = null
 
-  customers = [
-    {
-      name: 'Customer 1',
-      editMode: false,
-      showProjects: false,
-      projects: [
-        {
-          name: 'Project 1',
-          currency: 'USD',
-          amount: 1000,
-          editMode: false,
-          showMilestones: false,
-          milestones: [
-            { name: 'Milestone 1', date: '2023-07-04', amountPercentage: 50, editMode: false },
-            { name: 'Milestone 2', date: '2023-08-04', amountPercentage: 50, editMode: false }
-          ]
-        },
-        {
-          name: 'Project 2',
-          currency: 'EUR',
-          amount: 2000,
-          editMode: false,
-          showMilestones: false,
-          milestones: [
-            { name: 'Milestone 1', date: '2023-09-04', amountPercentage: 25, editMode: false },
-            { name: 'Milestone 2', date: '2023-10-04', amountPercentage: 75, editMode: false }
-          ]
-        }
-      ]
-    }
-  ];
+  constructor(
+    private clientService: ClientService,
+    private formBuilder: FormBuilder,
+    private modalService: ModalService) {
+    this.buildForm()
+    this.getClients()
+  }
+
+  createCustomer(customer: IClientCollapsible): void {
+    customer.editMode = false
+    console.log("leaving customer input")
+  }
 
   addCustomer(): void {
-    this.customers.push({ name: '', editMode: true, showProjects: false, projects: [] })
+    this.clients.push({ name: '', editMode: true, showProjects: false, projects: [] })
   }
 
-  addProject(): void {
-    this.customers[0].projects.push({ name: '', currency: '', amount: 0, editMode: true, showMilestones: false, milestones: [] })
+  addProject(customer: IClientCollapsible): void {
+    customer.projects.push({ name: '', currency: '', amount: 0, editMode: true, showMilestones: false, milestones: [] })
   }
 
-  addMilestone(): void {
-    this.customers[0].projects[0].milestones.push({ name: '', date: '', amountPercentage: 0, editMode: true })
+  addMilestone(customer: IClientCollapsible, newProject: IProjectCollapsible): void {
+    const project = customer.projects.find(project => project.id === newProject.id)
+
+    project!.milestones.push({ name: '', date: '', amountPercentage: 0, editMode: true })
   }
 
   toggleVisibility(i: number, j?: number) {
     if (j === undefined) {
-      this.customers[i].showProjects = !this.customers[i].showProjects
+      this.clients[i].showProjects = !this.clients[i].showProjects
     } else {
-      this.customers[i].projects[j].showMilestones = !this.customers[i].projects[j].showMilestones
+      this.clients[i].projects[j].showMilestones = !this.clients[i].projects[j].showMilestones
     }
   }
 
@@ -82,26 +66,22 @@ export class ClientsComponent {
       event.stopPropagation()
     }
     if (k === undefined && j === undefined) {
-      this.customers.splice(i, 1)
+      this.clients.splice(i, 1)
     } else if (k === undefined && j !== undefined) {
-      this.customers[i].projects.splice(j, 1)
+      this.clients[i].projects.splice(j, 1)
     } else if (j !== undefined && k !== undefined) {
-      this.customers[i].projects[j].milestones.splice(k, 1)
+      this.clients[i].projects[j].milestones.splice(k, 1)
     }
-  }
-
-  constructor(
-    private clientService: ClientService,
-    private formBuilder: FormBuilder,
-    private modalService: ModalService) {
-    this.buildForm()
-    this.getClients()
   }
 
   private async getClients(): Promise<void> {
     const clients = await this.clientService.getClients()
 
-    this.clients = clients
+    this.clients = clients.map((client: IClient) => {
+      const newClient: IClientCollapsible = { ...client, editMode: false, showProjects: false, projects: [] }
+
+      return newClient
+    })
   }
 
   private buildForm(): void {

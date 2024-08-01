@@ -21,10 +21,10 @@
           <td>{{milestone.id}}</td>
           <td>{{milestone.name}}</td>
           <td>{{milestone.date}}</td>
-          <td>{{milestone.projectName}}</td>
+          <!-- <td>{{milestone.projectName}}</td> -->
           <td><button class="edit-btn"
               (click)="openEditMilestoneModal(milestone.id!, createMilestoneTemplate)">Editar</button>
-          <td>{{milestone.amount}}</td>
+            <!-- <td>{{milestone.amount}}</td> -->
           <td><button class="delete-btn" (click)="deleteMilestone(milestone.id!)">Borrar</button></td>
         </tr>
       </tbody>

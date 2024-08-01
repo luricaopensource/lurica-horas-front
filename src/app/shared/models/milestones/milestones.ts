@@ -1,9 +1,12 @@
 export interface IMilestone {
-  id: number,
+  id?: number,
   name: string,
   date: string,
-  amount: number,
-  projectName: string
+  amountPercentage: number
+}
+
+export interface IMilestoneCollapsible extends IMilestone {
+  editMode: boolean
 }
 
 export interface INewMilestone {

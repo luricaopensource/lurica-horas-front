@@ -1,11 +1,17 @@
 import { IClient } from "../clients/clients"
+import { IMilestoneCollapsible } from "../milestones/milestones"
 
 export interface IProject {
   id?: number,
   name: string,
   currency: string,
-  client: IClient,
   amount: number
+}
+
+export interface IProjectCollapsible extends IProject {
+  editMode: boolean,
+  showMilestones: boolean,
+  milestones: IMilestoneCollapsible[]
 }
 
 export interface INewProject {

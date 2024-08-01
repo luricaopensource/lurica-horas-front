@@ -99,7 +99,7 @@ export class ProjectsComponent {
 
     this.form.patchValue({
       name: project.name,
-      client: project.client.id,
+      client: 0,
       currency: getCurrencyId(project.currency),
       amount: project.amount
     })

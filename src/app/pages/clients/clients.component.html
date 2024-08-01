@@ -1,13 +1,14 @@
 <app-navbar>
   <div class="container">
     <button class="add-button" (click)="addCustomer()">+ Añadir cliente</button>
-    <div class="customer-card" *ngFor="let customer of customers; let i = index">
+    <div class="customer-card" *ngFor="let customer of clients; let i = index">
       <div class="customer-header" (click)="toggleVisibility(i)">
         <input type="text" placeholder="Cliente increible" [(ngModel)]="customer.name" [disabled]="!customer.editMode"
-          (click)="stopPropagation($event)">
+          (click)="stopPropagation($event)" (focusout)="createCustomer(customer)">
         <div class="header-buttons">
-          <button class="edit-button" (click)="editEntity(customer, $event)">Edit</button>
-          <button class="delete-button" (click)="deleteEntity(i, undefined, undefined, $event)">Delete</button>
+          <button class="edit-button" (click)="editEntity(customer, $event)"><img src="assets/edit.svg" /></button>
+          <button class="delete-button" (click)="deleteEntity(i, undefined, undefined, $event)"><img
+              src="assets/delete.svg" /></button>
         </div>
       </div>
       <div [ngClass]="{'hidden': !customer.showProjects}" class="projects">
@@ -16,8 +17,9 @@
             <input type="text" placeholder="Proyecto increible" [(ngModel)]="project.name"
               [disabled]="!project.editMode" (click)="stopPropagation($event)">
             <div class="header-buttons">
-              <button class="edit-button" (click)="editEntity(project, $event)">Edit</button>
-              <button class="delete-button" (click)="deleteEntity(i, j, undefined, $event)">Delete</button>
+              <button class="edit-button" (click)="editEntity(project, $event)"><img src="assets/edit.svg"></button>
+              <button class="delete-button" (click)="deleteEntity(i, j, undefined, $event)"><img
+                  src="assets/delete.svg" /></button>
             </div>
           </div>
           <div [ngClass]="{'hidden': !project.showMilestones}" class="project-body">
@@ -34,8 +36,10 @@
                 <input type="text" [(ngModel)]="milestone.name" [disabled]="!milestone.editMode"
                   (click)="stopPropagation($event)">
                 <div class="header-buttons">
-                  <button class="edit-button" (click)="editEntity(milestone, $event)">Edit</button>
-                  <button class="delete-button" (click)="deleteEntity(i, j, k, $event)">Delete</button>
+                  <button class="edit-button" (click)="editEntity(milestone, $event)"><img
+                      src="assets/edit.svg" /></button>
+                  <button class="delete-button" (click)="deleteEntity(i, j, k, $event)"><img
+                      src="assets/delete.svg" /></button>
                 </div>
               </div>
               <div class="milestone-body">
@@ -53,10 +57,10 @@
                 </div>
               </div>
             </div>
-            <button class="add-button">+ Añadir hito</button>
+            <button class="add-button" (click)="addMilestone(customer, project)">+ Añadir hito</button>
           </div>
         </div>
-        <button class="add-button" (click)="addProject()">+ Añadir proyecto</button>
+        <button class="add-button" (click)="addProject(customer)">+ Añadir proyecto</button>
       </div>
     </div>
   </div>

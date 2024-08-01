@@ -78,27 +78,19 @@ body {
 .milestone-header button {
   margin-left: 5px;
   padding: 5px 10px;
-  border: none;
+  border: 1px solid #EFEFEF;
   border-radius: 3px;
   cursor: pointer;
-  background-color: #007bff;
-  color: #fff;
   font-size: 14px;
   transition: background-color 0.3s;
 }
 
-.customer-header button:hover,
-.project-header button:hover,
-.milestone-header button:hover {
-  background-color: #0056b3;
+.header-buttons .edit-button:hover {
+  border: 1px solid #007bff;
 }
 
-.delete-button {
-  background-color: #dc3545;
-}
-
-.delete-button:hover {
-  background-color: #c82333;
+.header-buttons .delete-button {
+  border: 1px solid #c82333;
 }
 
 .project-body,

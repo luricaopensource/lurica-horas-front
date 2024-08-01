@@ -103,7 +103,7 @@ export class MilestonesComponent {
 
     this.form.patchValue({
       name: milestone.name,
-      amount: milestone.amount,
+      amount: 0,
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar Hito' })
