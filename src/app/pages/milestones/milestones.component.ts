@@ -75,7 +75,7 @@ export class MilestonesComponent {
     const milestone: INewMilestone = {
       name,
       date,
-      amount,
+      amountPercentage: amount,
       projectId: parseInt(project),
     }
 
@@ -124,7 +124,7 @@ export class MilestonesComponent {
       name,
       projectId: parseInt(project),
       date,
-      amount
+      amountPercentage: amount
     }
 
     try {

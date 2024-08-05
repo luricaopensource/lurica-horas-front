@@ -1,11 +1,12 @@
 import { IClient } from "../clients/clients"
-import { IMilestoneCollapsible } from "../milestones/milestones"
+import { IMilestone, IMilestoneCollapsible } from "../milestones/milestones"
 
 export interface IProject {
   id?: number,
   name: string,
   currency: string,
-  amount: number
+  amount: number,
+  milestones: IMilestone[]
 }
 
 export interface IProjectCollapsible extends IProject {

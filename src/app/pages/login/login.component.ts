@@ -82,6 +82,7 @@ export class LoginComponent implements OnInit {
       if (user.companies!.length < 2) this.router.navigate(["/dashboard"])
       else this.router.navigate(["/companies"])
     } catch (error) {
+      console.error(error)
       this.apiError = "Credenciales inválidas."
       this.form.setErrors({ invalidCredentials: true })
     }

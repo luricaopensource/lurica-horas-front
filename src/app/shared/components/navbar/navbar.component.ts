@@ -64,6 +64,8 @@ export class NavbarComponent {
       return
     }
 
+    if (!user.companies) this.user.companies = []
+
     this.user = user
   }
 

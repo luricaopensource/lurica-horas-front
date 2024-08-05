@@ -14,6 +14,6 @@ export interface INewMilestone {
   id?: number,
   name: string,
   date: string,
-  amount: number,
+  amountPercentage: number,
   projectId: number
 }

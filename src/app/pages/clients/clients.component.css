@@ -221,3 +221,10 @@ p {
   text-align: center;
   margin: 20px 0;
 }
+
+.add-button:disabled {
+  border: 2px solid #CCCCCC;
+  background-color: #E0E0E0;
+  color: #AAAAAA;
+  cursor: not-allowed;
+}

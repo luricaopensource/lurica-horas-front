@@ -1,11 +1,12 @@
-import { Component, TemplateRef } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Component } from '@angular/core'
 import { IClient, IClientCollapsible } from 'src/app/shared/models/clients/clients'
-import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ClientService } from 'src/app/shared/services/clients/client.service'
-import { IProjectCollapsible } from 'src/app/shared/models/projects/projects'
-import { currencies } from '../../shared/helpers/currency'
-import { IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
+import { IProject, IProjectCollapsible, IResponseProject } from 'src/app/shared/models/projects/projects'
+import { currencies, getCurrencyId } from '../../shared/helpers/currency'
+import { IMilestone, IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
+import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
+import { IResponseModel } from '../../shared/models/index'
 
 @Component({
   selector: 'app-clients',
@@ -14,7 +15,6 @@ import { IMilestoneCollapsible } from 'src/app/shared/models/milestones/mileston
 })
 export class ClientsComponent {
   public clients: IClientCollapsible[] = []
-  public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public isEditModal: boolean = false
   public clientToEdit: IClient | null = null
@@ -22,18 +22,19 @@ export class ClientsComponent {
 
   constructor(
     private clientService: ClientService,
-    private formBuilder: FormBuilder,
-    private modalService: ModalService) {
-    this.buildForm()
+    private projectService: ProjectService,
+    private milestoneService: MilestoneService) {
     this.getClients()
   }
 
   async createCustomer(customer: IClientCollapsible): Promise<void> {
     try {
-      await this.clientService.createClient(customer)
+      const customerCreated = await this.clientService.createClient(customer)
+      customer.id = customerCreated.id
       customer.editMode = false
     } catch (error) {
       console.error((error as any).error)
+      // Create a toast notification
     }
   }
 
@@ -63,14 +64,52 @@ export class ClientsComponent {
     event.stopPropagation()
   }
 
-  saveEntity(entity: IClientCollapsible | IProjectCollapsible | IMilestoneCollapsible, event: Event) {
+  async saveProject(project: IProjectCollapsible, customerId: number, event: Event) {
+    if (!project.editMode) {
+      project.editMode = true
+      return
+    }
     event.stopPropagation()
-    entity.created = true
+
+    if (!project.name || !project.currency || !project.amount) return
+
+    const response: IResponseModel = await this.projectService.createProject({
+      name: project.name,
+      currency: getCurrencyId(project.currency),
+      amount: project.amount,
+      client: customerId
+    })
+
+    project.id = response.id
+    project.editMode = false
+    project.created = true
   }
 
-  editEntity(entity: IClientCollapsible | IProjectCollapsible | IMilestoneCollapsible, event: Event) {
+  async saveMilestone(milestone: IMilestoneCollapsible, projectId: number, event: Event) {
+    if (!milestone.editMode) {
+      milestone.editMode = true
+      return
+    }
+
     event.stopPropagation()
-    entity.editMode = !entity.editMode
+
+    if (!milestone.name || !milestone.date || !milestone.amountPercentage) return
+
+    const response: IResponseModel = await this.milestoneService.createMilestone({
+      name: milestone.name,
+      date: milestone.date,
+      amountPercentage: milestone.amountPercentage,
+      projectId
+    })
+
+    milestone.id = response.id
+    milestone.editMode = false
+    milestone.created = true
+  }
+
+  editEntity(entity: IClientCollapsible, event: Event) {
+    event.stopPropagation()
+    entity.editMode = true
   }
 
   deleteEntity(i: number, j?: number, k?: number, event?: Event) {
@@ -90,94 +129,40 @@ export class ClientsComponent {
     const clients = await this.clientService.getClients()
 
     this.clients = clients.map((client: IClient) => {
-      const newClient: IClientCollapsible = { ...client, editMode: false, showProjects: false, projects: [] }
+      let projects = client.projects?.map<IProjectCollapsible>((project: IProject) => {
+        let milestones = project.milestones?.map<IMilestoneCollapsible>((milestone: IMilestone) => ({
+          ...milestone,
+          editMode: false,
+          created: true
+        }))
+
+        return {
+          ...project,
+          editMode: false,
+          showMilestones: false,
+          milestones,
+          created: true
+        }
+      })
+
+      if (!projects || projects.length == 0) projects = []
+
+      const newClient: IClientCollapsible = { ...client, editMode: false, showProjects: false, projects }
 
       return newClient
     })
   }
 
-  private buildForm(): void {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      amount: [0, [Validators.required]]
-    })
-  }
+  public async deleteClient(customer: IClient, i: number, event: Event): Promise<void> {
+    event.stopPropagation()
 
-  private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
-    this.modalService
-      .open(modalTemplate, options)
-      .subscribe()
-  }
-
-  public openNewClientModal(modalTemplate: TemplateRef<any>): void {
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear empresa' })
-    this.resetForm()
-  }
-
-  public async createClient(): Promise<void> {
-    if (this.form.invalid) {
-      this.formSubmitted = true
+    if (!customer.name) {
+      this.deleteEntity(i, undefined, undefined, event)
       return
     }
 
-    const client: IClient = this.form.value
-
     try {
-      await this.clientService.createClient(client)
-      this.getClients()
-      this.modalService.close()
-      this.resetForm()
-    }
-    catch (error) {
-      // TODO: Handle error properly
-      console.error(error)
-    }
-  }
-
-  public openEditClientModal(clientId: number, modalTemplate: TemplateRef<any>): void {
-    this.resetForm()
-
-    this.isEditModal = true
-
-    this.clientToEdit = this.clients.find(client => client.id === clientId) ?? null
-
-    if (!this.clientToEdit) return
-
-    this.form.patchValue({ name: this.clientToEdit.name })
-
-    this.openModal(modalTemplate, { size: 'lg', title: 'Editar empresa' })
-  }
-
-  public async editClient(): Promise<void> {
-    if (!this.clientToEdit) return
-
-    if (this.form.invalid) {
-      this.formSubmitted = true
-      return
-    }
-
-    const { name } = this.form.value
-
-    const client: IClient = {
-      id: this.clientToEdit.id,
-      name
-    }
-
-    try {
-      await this.clientService.updateClient(client)
-      this.getClients()
-      this.modalService.close()
-      this.resetForm()
-    } catch (error) {
-      // TODO: Handle error properly
-      console.error(error)
-    }
-  }
-
-  public async deleteClient(clientId: number): Promise<void> {
-    try {
-      await this.clientService.deleteClient(clientId)
+      await this.clientService.deleteClient(customer.id!)
       this.getClients()
     } catch (error) {
       // TODO: Handle error properly
@@ -185,16 +170,42 @@ export class ClientsComponent {
     }
   }
 
-  public isInvalidInput(inputName: string): boolean {
-    const input = this.form.get(inputName)
+  async deleteProject(project: IProjectCollapsible, i: number, j: number, event: Event): Promise<void> {
+    event.stopPropagation()
 
-    if (!input) return false
+    if (!project.name && !project.currency && !project.amount) {
+      this.deleteEntity(i, j, undefined, event)
+      return
+    }
 
-    return input.invalid && (input.dirty || input.touched || this.formSubmitted)
+    try {
+      await this.projectService.deleteProject(project.id!)
+      this.getClients()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
   }
 
-  private resetForm(): void {
-    this.form.reset()
-    this.formSubmitted = false
+  async deleteMilestone(milestone: IMilestoneCollapsible, i: number, j: number, k: number, event: Event): Promise<void> {
+    event.stopPropagation()
+
+    if (!milestone.amountPercentage && !milestone.date && !milestone.name) {
+      this.deleteEntity(i, j, k, event)
+      return
+    }
+
+    try {
+      await this.milestoneService.deleteMilestone(milestone.id!)
+      this.getClients()
+    } catch (error) {
+      // TODO: Handle error properly
+      console.error(error)
+    }
+  }
+
+  public isInvalidInput(input: string): boolean {
+    // TODO: Validate input
+    return false
   }
 }
