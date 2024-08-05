@@ -53,7 +53,7 @@ export class DialogComponent {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       projectId: ['', [Validators.required]],
-      milestoneId: ['', [Validators.required]],
+      milestoneId: [''],
       description: ['', [Validators.required]],
       type: [''],
       dateFrom: [null, [Validators.required]],
