@@ -18,8 +18,8 @@
               [disabled]="!project.editMode" (click)="stopPropagation($event)">
             <div class="header-buttons">
               <button *ngIf="!project.created" class="save-button"
-                (click)="saveProject(project, customer.id!, $event)"><img src="assets/save.svg"></button>
-              <button class="edit-button" (click)="saveProject(project, customer.id!, $event)"><img
+                (click)="saveProject(project, customer.id!, i, $event, j)"><img src="assets/save.svg"></button>
+              <button class="edit-button" (click)="saveProject(project, customer.id!, i, $event, j)"><img
                   src="assets/edit.svg"></button>
               <button class="delete-button" (click)="deleteProject(project, i, j, $event)"><img
                   src="assets/delete.svg" /></button>

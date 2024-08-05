@@ -28,6 +28,8 @@ export class ClientsComponent {
   }
 
   async createCustomer(customer: IClientCollapsible): Promise<void> {
+    if (!customer.name) return
+
     try {
       const customerCreated = await this.clientService.createClient(customer)
       customer.id = customerCreated.id
@@ -43,7 +45,7 @@ export class ClientsComponent {
   }
 
   addProject(customer: IClientCollapsible): void {
-    customer.projects.push({ name: '', currency: '', amount: 0, created: false, editMode: true, showMilestones: false, milestones: [] })
+    customer.projects.push({ name: '', currency: '', amount: 0, created: false, editMode: true, showMilestones: true, milestones: [] })
   }
 
   addMilestone(customer: IClientCollapsible, newProject: IProjectCollapsible): void {
@@ -64,12 +66,16 @@ export class ClientsComponent {
     event.stopPropagation()
   }
 
-  async saveProject(project: IProjectCollapsible, customerId: number, event: Event) {
+  async saveProject(project: IProjectCollapsible, customerId: number, i: number, event: Event, j?: number) {
+    event.stopPropagation()
+
     if (!project.editMode) {
+
+      this.toggleVisibility(i, j)
+
       project.editMode = true
       return
     }
-    event.stopPropagation()
 
     if (!project.name || !project.currency || !project.amount) return
 
@@ -86,12 +92,12 @@ export class ClientsComponent {
   }
 
   async saveMilestone(milestone: IMilestoneCollapsible, projectId: number, event: Event) {
+    event.stopPropagation()
+
     if (!milestone.editMode) {
       milestone.editMode = true
       return
     }
-
-    event.stopPropagation()
 
     if (!milestone.name || !milestone.date || !milestone.amountPercentage) return
 
