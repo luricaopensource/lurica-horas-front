@@ -4,6 +4,8 @@ import { IClient, IClientCollapsible } from 'src/app/shared/models/clients/clien
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { ClientService } from 'src/app/shared/services/clients/client.service'
 import { IProjectCollapsible } from 'src/app/shared/models/projects/projects'
+import { currencies } from '../../shared/helpers/currency'
+import { IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
 
 @Component({
   selector: 'app-clients',
@@ -16,6 +18,7 @@ export class ClientsComponent {
   public formSubmitted: boolean = false
   public isEditModal: boolean = false
   public clientToEdit: IClient | null = null
+  public currencies = currencies
 
   constructor(
     private clientService: ClientService,
@@ -25,9 +28,13 @@ export class ClientsComponent {
     this.getClients()
   }
 
-  createCustomer(customer: IClientCollapsible): void {
-    customer.editMode = false
-    console.log("leaving customer input")
+  async createCustomer(customer: IClientCollapsible): Promise<void> {
+    try {
+      await this.clientService.createClient(customer)
+      customer.editMode = false
+    } catch (error) {
+      console.error((error as any).error)
+    }
   }
 
   addCustomer(): void {
@@ -35,13 +42,13 @@ export class ClientsComponent {
   }
 
   addProject(customer: IClientCollapsible): void {
-    customer.projects.push({ name: '', currency: '', amount: 0, editMode: true, showMilestones: false, milestones: [] })
+    customer.projects.push({ name: '', currency: '', amount: 0, created: false, editMode: true, showMilestones: false, milestones: [] })
   }
 
   addMilestone(customer: IClientCollapsible, newProject: IProjectCollapsible): void {
     const project = customer.projects.find(project => project.id === newProject.id)
 
-    project!.milestones.push({ name: '', date: '', amountPercentage: 0, editMode: true })
+    project!.milestones.push({ name: '', date: '', amountPercentage: 0, created: false, editMode: true })
   }
 
   toggleVisibility(i: number, j?: number) {
@@ -56,7 +63,12 @@ export class ClientsComponent {
     event.stopPropagation()
   }
 
-  editEntity(entity: any, event: Event) {
+  saveEntity(entity: IClientCollapsible | IProjectCollapsible | IMilestoneCollapsible, event: Event) {
+    event.stopPropagation()
+    entity.created = true
+  }
+
+  editEntity(entity: IClientCollapsible | IProjectCollapsible | IMilestoneCollapsible, event: Event) {
     event.stopPropagation()
     entity.editMode = !entity.editMode
   }
@@ -87,6 +99,8 @@ export class ClientsComponent {
   private buildForm(): void {
     this.form = this.formBuilder.group({
       name: ['', [Validators.required]],
+      currency: ['', [Validators.required]],
+      amount: [0, [Validators.required]]
     })
   }
 

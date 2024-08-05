@@ -9,6 +9,7 @@ export interface IProject {
 }
 
 export interface IProjectCollapsible extends IProject {
+  created: boolean,
   editMode: boolean,
   showMilestones: boolean,
   milestones: IMilestoneCollapsible[]

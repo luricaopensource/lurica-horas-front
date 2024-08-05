@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   public form: FormGroup = new FormGroup({});
   public errorMatcher: ErrorStateMatcher
   public isLoginPage: boolean = true;
+  public apiError: string = ""
   private PASSWORD_MIN_LENGTH = 6;
   private USERNAME_MIN_LENGTH = 5;
 
@@ -71,15 +72,18 @@ export class LoginComponent implements OnInit {
     const username = formValue.username
     const password = formValue.password
 
-    const response = await this.loginService.login(username, password)
-    if (response.access_token) {
+    try {
+      const response = await this.loginService.login(username, password)
       localStorage.setItem("access_token", response.access_token)
 
       const user: IUser = await this.userService.getCurrentUser()
       localStorage.setItem('user', JSON.stringify(user))
 
-      user.roleName === "Administrador" ? this.router.navigate(["/companies"]) : this.router.navigate(["/dashboard"]) 
-
+      if (user.companies!.length < 2) this.router.navigate(["/dashboard"])
+      else this.router.navigate(["/companies"])
+    } catch (error) {
+      this.apiError = "Credenciales inválidas."
+      this.form.setErrors({ invalidCredentials: true })
     }
   }
 
@@ -99,5 +103,19 @@ export class LoginComponent implements OnInit {
 
     const response = await this.loginService.register(user)
     if (response.id) this.router.navigate(["/login"])
+  }
+
+  loginFormInvalid(): boolean {
+    const failedLogin = this.form.hasError('invalidCredentials')
+
+    return this.passwordFieldInvalid() || this.usernameFieldInvalid()
+  }
+
+  usernameFieldInvalid(): boolean {
+    return this.form.get('username')!.hasError('required') && this.form.get('username')!.touched
+  }
+
+  passwordFieldInvalid(): boolean {
+    return this.form.get('password')!.hasError('required') && this.form.get('password')!.touched
   }
 }

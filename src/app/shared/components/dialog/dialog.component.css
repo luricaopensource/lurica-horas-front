@@ -1,6 +1,12 @@
 form {
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .form-group {
@@ -29,53 +35,187 @@ textarea {
   border-radius: 4px;
 }
 
-#button {
+.error-message {
+  color: red;
+}
+
+.btn {
   padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  color: white;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #333;
   cursor: pointer;
   font-size: 16px;
-  width: 100%;
-}
-
-.submit-btn {
-  background-color: #1976d2;
-}
-
-.add-btn {
-  background-color: #008A61;
-}
-
-.show-btn {
-  background-color: #008080;
-}
-
-
-.delete-btn {
-  color: red;
-
+  margin: 10px;
+  text-align: center;
+  display: inline-block;
 }
 
 .button-wrapper {
   display: flex;
-  justify-content: space-between;
-  margin: 15px 0;
+  justify-content: center;
+  align-items: center;
 }
 
-.submit-btn:hover {
-  background-color: #1565c0;
+.add-btn {
+  width: 100%;
 }
 
-svg {
-  height: 15px;
+.btn:hover {
+  background-color: #e0e0e0;
 }
 
-a {
+.btn-icon {
+  padding: 5px;
+  background: none;
+  border: none;
   cursor: pointer;
-  margin: 0 5px;
+  display: inline-block;
 }
 
-ul {
-  list-style-type: none;
+.btn-icon svg {
+  height: 20px;
+}
+
+.btn-icon.edit-btn svg {
+  fill: black; /* Black color for edit button */
+}
+
+.btn-icon.delete-btn {
+  background-color: black; /* Black background for delete button */
+  border-radius: 50%; /* Add rounded background for better visibility */
+  padding: 5px; /* Add padding to the icon */
+}
+
+.btn-icon.delete-btn svg {
+  fill: white; /* White color for delete icon */
+}
+
+.tag-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.tag {
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.tag:hover {
+  opacity: 1;
+}
+
+.desarrollo {
+  background-color: rgba(33, 150, 243, 0.8); /* #2196F3 */
+}
+
+.infraestructura {
+  background-color: rgba(76, 175, 80, 0.8); /* #4CAF50 */
+}
+
+.ciberseguridad {
+  background-color: rgba(255, 152, 0, 0.8); /* #FF9800 */
+}
+
+.otros {
+  background-color: rgba(156, 39, 176, 0.8); /* #9C27B0 */
+}
+
+.tag.selected {
+  outline: 2px solid #000;
+}
+
+.modal-header {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal-main-body {
+  width: 75%;
+}
+
+.modal-body {
+  width: 450px;
+  padding: 10px;
+}
+
+.modal-body ul {
+  padding: 0;
+}
+
+.modal-body li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.modal-body li a {
+  margin-left: 10px;
+}
+
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  margin: 20px auto 0;
+}
+
+.columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 1;
+  margin: 0 10px;
+}
+
+.task-list-column {
+  width: 35%;
+}
+
+.task-list-title {
+  margin-top: 0;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+.task-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+
+.btn-icon {
+  margin-left: 10px;
+  cursor: pointer;
 }

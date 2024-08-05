@@ -6,6 +6,7 @@ export interface IMilestone {
 }
 
 export interface IMilestoneCollapsible extends IMilestone {
+  created: boolean,
   editMode: boolean
 }
 

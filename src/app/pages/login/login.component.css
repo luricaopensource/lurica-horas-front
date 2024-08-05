@@ -46,6 +46,10 @@ form {
     background-color: white;
     margin-bottom: 10px;
   }
+
+  .invalid-input {
+    border-color: #be0926;
+  }
 }
 
 button {

@@ -7,6 +7,7 @@ export interface IClient {
 }
 
 export interface IClientCollapsible extends IClient {
+  created?: boolean,
   editMode: boolean,
   showProjects: boolean,
   projects: IProjectCollapsible[]

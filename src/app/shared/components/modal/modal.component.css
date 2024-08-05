@@ -21,7 +21,7 @@
   transform: translate(-50%, -50%);
   width: 500px;
   height: auto;
-  border: olive 1px solid;
+  border: lightgrey 1px solid;
   background-color: white;
   border-radius: 5px;
   padding: 20px;
@@ -45,4 +45,8 @@
 
 .modal-close {
   cursor: pointer;
+}
+
+.lg {
+  width: 65%;
 }

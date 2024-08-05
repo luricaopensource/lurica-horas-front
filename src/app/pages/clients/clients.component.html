@@ -13,23 +13,32 @@
       </div>
       <div [ngClass]="{'hidden': !customer.showProjects}" class="projects">
         <div class="project-card" *ngFor="let project of customer.projects; let j = index">
-          <div class="project-header" (click)="toggleVisibility(i, j)">
-            <input type="text" placeholder="Proyecto increible" [(ngModel)]="project.name"
-              [disabled]="!project.editMode" (click)="stopPropagation($event)">
-            <div class="header-buttons">
-              <button class="edit-button" (click)="editEntity(project, $event)"><img src="assets/edit.svg"></button>
-              <button class="delete-button" (click)="deleteEntity(i, j, undefined, $event)"><img
-                  src="assets/delete.svg" /></button>
+          <form [formGroup]="form">
+            <div class="project-header" (click)="toggleVisibility(i, j)">
+              <input type="text" placeholder="Proyecto increible" formControlName="name" [(ngModel)]="project.name"
+                [disabled]="!project.editMode" (click)="stopPropagation($event)">
+              <div class="header-buttons">
+                <button *ngIf="!project.created" class="save-button" (click)="saveEntity(project, $event)"><img
+                    src="assets/save.svg"></button>
+                <button class="edit-button" (click)="editEntity(project, $event)"><img src="assets/edit.svg"></button>
+                <button class="delete-button" (click)="deleteEntity(i, j, undefined, $event)"><img
+                    src="assets/delete.svg" /></button>
+              </div>
             </div>
-          </div>
-          <div [ngClass]="{'hidden': !project.showMilestones}" class="project-body">
-            <label for="currency">Currency Type:</label>
-            <input type="text" [(ngModel)]="project.currency" [disabled]="!project.editMode"
-              (click)="stopPropagation($event)">
-            <label for="amount">Amount:</label>
-            <input type="number" [(ngModel)]="project.amount" [disabled]="!project.editMode"
-              (click)="stopPropagation($event)">
-          </div>
+            <div [ngClass]="{'hidden': !project.showMilestones}" class="project-body">
+
+              <label for="currency">Tipo de moneda</label>
+              <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
+                <select formControlName="currency" [disabled]="!project.editMode" (click)="stopPropagation($event)">
+                  <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
+                </select>
+              </div>
+
+              <label for="amount">Monto:</label>
+              <input type="number" formControlName="amount" [(ngModel)]="project.amount" [disabled]="!project.editMode"
+                (click)="stopPropagation($event)">
+            </div>
+          </form>
           <div [ngClass]="{'hidden': !project.showMilestones}" class="milestones">
             <div class="milestone" *ngFor="let milestone of project.milestones; let k = index">
               <div class="milestone-header" (click)="stopPropagation($event)">
@@ -45,12 +54,12 @@
               <div class="milestone-body">
                 <div class="milestone-row">
                   <div class="milestone-column">
-                    <label for="date">Date:</label>
+                    <label for="date">Fecha de entrega:</label>
                     <input type="date" [(ngModel)]="milestone.date" [disabled]="!milestone.editMode"
                       (click)="stopPropagation($event)">
                   </div>
                   <div class="milestone-column">
-                    <label for="amountPercentage">Amount Percentage:</label>
+                    <label for="amountPercentage">Porcentaje del hito:</label>
                     <input type="number" [(ngModel)]="milestone.amountPercentage" [disabled]="!milestone.editMode"
                       (click)="stopPropagation($event)">
                   </div>

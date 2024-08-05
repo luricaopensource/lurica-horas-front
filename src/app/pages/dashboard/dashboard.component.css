@@ -1,9 +1,190 @@
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #fafafa;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .full-width-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  border-bottom: 2px solid #e0e0e0;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+  color: #000000;
+  font-weight: 500;
+}
+
+td {
+  color: #424242;
+}
+
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+}
+
+.edit-btn {
+  background-color: #1976d2;
+  color: #ffffff;
+}
+
+.edit-btn:hover {
+  background-color: #1565c0;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: #ffffff;
+}
+
+.delete-btn:hover {
+  background-color: #c62828;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  margin-bottom: 3px;
+  font-weight: 500;
+  color: #616161;
+}
+
+input,
+select,
+textarea {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group-invalid {
+  border: 1px solid red;
+  border-radius: 4px;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
   width: 100%;
 }
 
-.btn:hover {
-  cursor: default;
-  background-color: #4050b5;
+.submit-btn:hover {
+  background-color: #1565c0;
+}
+
+/* Styles for the currency card */
+.currency-card {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background-color: #1976d2;
   color: white;
+  font-weight: 500;
+  white-space: nowrap; /* Ensure the text does not wrap */
+  text-align: center; /* Center the text */
+  overflow: hidden; /* Ensure it doesn't overflow */
+  text-overflow: ellipsis; /* Add ellipsis if the text is too long */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    display: none;
+  }
+
+  tbody tr {
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  td {
+    padding: 10px;
+    text-align: right;
+    position: relative;
+  }
+
+  td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 50%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+  }
+
+  .currency-card {
+    display: inline-block; /* Change from block to inline-block */
+    margin: 0 auto;
+    width: auto; /* Change from fit-content to auto */
+  }
 }

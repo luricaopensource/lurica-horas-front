@@ -4,25 +4,17 @@
 
 <form class="form-group" [formGroup]="form" *ngIf="isLoginPage" #triggerForm="ngForm" (ngSubmit)="login()">
   <h1>Login</h1>
-
-  <!-- <mat-form-field class="login-form-field">
-    <mat-label>Usuario</mat-label>
-    <input type="text" matInput formControlName="username" [errorStateMatcher]="errorMatcher"
-      placeholder="lionel_messi">
-    <mat-error *ngIf="this.form.get('username')?.hasError('required')">El nombre de usuario es
-      <strong>requerido</strong></mat-error>
-  </mat-form-field>
-
-  <mat-form-field class="login-form-field password-field">
-    <mat-label>Contraseña</mat-label>
-    <input type="password" matInput formControlName="password" [errorStateMatcher]="errorMatcher" placeholder="******">
-    <mat-error *ngIf="this.form.get('password')?.hasError('required')">La contraseña es
-      <strong>requerida</strong></mat-error>
-  </mat-form-field> -->
-  <input type="text" formControlName="username" placeholder="Lionel Messi">
-  <input type="password" formControlName="password" placeholder="******">
-  <p *ngIf="this.form.get('password')?.hasError('required')">La contraseña es
-    <strong>requerida</strong>
+  <input id="username"
+    [ngClass]="{'invalid-input' : usernameFieldInvalid() || this.form.hasError('invalidCredentials')}" type="text"
+    formControlName="username" placeholder="Lionel Messi">
+  <input id="password"
+    [ngClass]="{'invalid-input' : passwordFieldInvalid() || this.form.hasError('invalidCredentials')}" type="password"
+    formControlName="password" placeholder="******">
+  <p *ngIf="loginFormInvalid()">
+    Por favor complete los campos requeridos.
+  </p>
+  <p *ngIf="this.apiError" style="color: red">
+    {{this.apiError}}
   </p>
   <button type="submit">Login &#8594;</button>
 </form>

@@ -4,39 +4,43 @@
     <button (click)="createUser(createUserTemplate)">+ Añadir usuario</button>
   </div>
   <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Nombre de usuario</th>
-          <th>Mail</th>
-          <th>Rol</th>
-          <th>Tipo de moneda</th>
-          <th>Monto horario</th>
-          <th>Monto mensual</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{user.id}}</td>
-          <td>{{user.firstName}}</td>
-          <td>{{user.lastName}}</td>
-          <td>{{user.username}}</td>
-          <td>{{user.email}}</td>
-          <td>{{user.roleName}}</td>
-          <td>{{user.currencyName}}</td>
-          <td>{{user.hourlyAmount}}</td>
-          <td>{{user.monthlyAmount}}</td>
-          <td><button class="edit-btn" (click)="openEditUserModal(user.id!, createUserTemplate)">Editar</button></td>
-          <td><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <p *ngIf="!users.length"><b>No hay usuarios para mostrar.</b></p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Nombre de usuario</th>
+            <th>Mail</th>
+            <th>Rol</th>
+            <th>Tipo de moneda</th>
+            <th>Monto horario</th>
+            <th>Monto mensual</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td data-label="ID">{{user.id}}</td>
+            <td data-label="Nombre">{{user.firstName}}</td>
+            <td data-label="Apellido">{{user.lastName}}</td>
+            <td data-label="Nombre de usuario">{{user.username}}</td>
+            <td data-label="Mail">{{user.email}}</td>
+            <td data-label="Rol">{{user.roleName}}</td>
+            <td data-label="Tipo de moneda">{{user.currencyName}}</td>
+            <td data-label="Monto horario">{{user.hourlyAmount || '-'}}</td>
+            <td data-label="Monto mensual">{{user.monthlyAmount || '-'}}</td>
+            <td data-label=""><button class="edit-btn"
+                (click)="openEditUserModal(user.id!, createUserTemplate)">Editar</button></td>
+            <td data-label=""><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>
+          </tr>
+        </tbody>
+
+      </table>
+      <p *ngIf="!users.length"><b>No hay usuarios para mostrar.</b></p>
+    </div>
   </div>
 </app-navbar>
 

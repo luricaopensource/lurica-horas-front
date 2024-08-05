@@ -7,6 +7,8 @@ import { ProjectService } from 'src/app/shared/services/project/project.service'
 import { IProject } from 'src/app/shared/models/projects/projects'
 import { MilestoneService } from '../../services/milestones/milestones.service'
 import { IMilestone } from '../../models/milestones/milestones'
+import { UserService } from '../../services/user/user.service'
+import { IUser } from '../../models/users/user'
 
 
 @Component({
@@ -14,7 +16,7 @@ import { IMilestone } from '../../models/milestones/milestones'
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css']
 })
-export class DialogComponent{
+export class DialogComponent {
   public projects: IProject[] = []
   public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
@@ -22,26 +24,30 @@ export class DialogComponent{
   public formSubmitted: boolean = false
   public tasks: ITask[] = [];
   public editIndex: number | null = null;
+  public user: IUser | null = null
+  public errorMessage: string = ''
 
-  @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>;
+  @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>
 
   constructor(
     private taskService: TaskService,
     private formBuilder: FormBuilder,
     private modalService: ModalService,
     private projectService: ProjectService,
-    private milestoneService: MilestoneService
+    private milestoneService: MilestoneService,
+    private userService: UserService
   ) {
     this.buildForm()
     this.getProjects()
-   }
+    this.user = this.userService.getUserFromLocalStorage()
+  }
 
   private async getProjects(): Promise<void> {
     this.projects = await this.projectService.getProjects() //cambiar esto en el backend para que los projects vengan POR USUARIO
   }
 
-  private async getMilestonesByProject(project: IProject): Promise<void> {
-    this.milestones = await this.milestoneService.getMilestonesByProject(project.id!)
+  private async getMilestonesByProjectId(projectId: number): Promise<void> {
+    this.milestones = await this.milestoneService.getMilestonesByProject(projectId)
   }
 
   private buildForm(): void {
@@ -49,10 +55,18 @@ export class DialogComponent{
       projectId: ['', [Validators.required]],
       milestoneId: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      type: ['', [Validators.required]],
+      type: [''],
       dateFrom: [null, [Validators.required]],
       dateTo: [null, [Validators.required]]
     })
+  }
+
+  selectType(type: string): void {
+    this.form.patchValue({ type })
+    document.querySelectorAll('.tag').forEach(tag => {
+      tag.classList.remove('selected')
+    })
+    document.querySelector(`.tag.${type.toLowerCase()}`)?.classList.add('selected')
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
@@ -68,88 +82,95 @@ export class DialogComponent{
 
   public createTask(): void {
     if (this.form.invalid) {
-      this.formSubmitted = true;
-      return;
+      this.formSubmitted = true
+      return
     }
 
-    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value;
-    const from = new Date(dateFrom);
-    const to = new Date(dateTo);
+    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value
+    const from = new Date(dateFrom)
+    const to = new Date(dateTo)
 
     if (isNaN(from.getTime()) || isNaN(to.getTime())) {
-      return;
+      return
     }
 
-    if (from > to) return; // FIXME: Show error in form
+    if (from > to) {
+      this.errorMessage = 'Fecha desde no puede ser mayor a fecha hasta'
+      return
+    }
 
-    const hours = this.getHours(from, to);
+    const hours = this.getHours(from, to)
+
+    if (hours === 0) {
+      this.errorMessage = 'Fecha desde no puede ser igual a fecha hasta'
+      return
+    }
+
+    if (!this.user) return
 
     const task: ITask = {
       projectId,
       milestoneId,
       description,
-      dateFrom: dateFrom,
-      dateTo: dateTo,
+      dateFrom: new Date(dateFrom).toLocaleString(),
+      dateTo: new Date(dateTo).toLocaleString(),
       hours,
       type,
       paid: false,
       status: 'Pendiente',
-      userId: 1 // FIXME: Change this to use the authService function to get the current user from localstorage
-    };
-
-    if (this.editIndex !== null) {
-      this.tasks[this.editIndex] = task;
-      this.editIndex = null;
-    } else {
-      this.tasks.push(task);
+      userId: this.user.id!
     }
 
-    this.resetForm();
-    // this.modalService.close();
-  }
+    if (this.editIndex !== null) {
+      this.tasks[this.editIndex] = task
+      this.editIndex = null
+    } else {
+      this.tasks.push(task)
+    }
 
-
-  public showAddedTasks(): void {
-    this.modalService.open(this.viewTasksModal, { size: 'lg' });
+    this.resetForm()
   }
 
   public editTask(index: number): void {
-    const task = this.tasks[index];
+    const task = this.tasks[index]
+    this.getMilestonesByProjectId(task.projectId)
+
+    const dateFrom = new Date(task.dateFrom)
+    const dateTo = new Date(task.dateTo)
+
     this.form.patchValue({
-      project: task.projectId,
-      milestone: task.milestoneId,
+      projectId: task.projectId,
+      milestoneId: task.milestoneId,
       description: task.description,
       type: task.type,
-      dateFrom: task.dateFrom,
-      dateTo: task.dateTo
-    });
-    this.editIndex = index;
-    this.modalService.close();
+      dateFrom: dateFrom,
+      dateTo: dateTo
+    })
+    this.editIndex = index
   }
 
   public deleteTask(index: number): void {
-    this.tasks.splice(index, 1);
+    this.tasks.splice(index, 1)
   }
 
   public async sendTasks(): Promise<void> {
-    if (this.tasks.length === 0) return;
+    if (this.tasks.length === 0) return
 
-    const response = await this.taskService.createTasks(this.tasks);
-    if (response.every(task => task.taskId)) {
-      this.taskService.taskAdded.next(true);
-      this.tasks = [];
+    try {
+      await this.taskService.createTasks(this.tasks)
+      this.taskService.taskAdded.next(true)
+      this.modalService.close()
+    } catch (error) {
+      console.error(error)
     }
-
-    this.tasks = [];
-    this.modalService.close();
   }
 
   public onProjectChange(event: Event): void {
-    const selectElement = event.target as HTMLSelectElement;
-    const projectId = Number(selectElement.value);
-    const selectedProject = this.projects.find(project => project.id === projectId);
+    const selectElement = event.target as HTMLSelectElement
+    const projectId = Number(selectElement.value)
+    const selectedProject = this.projects.find(project => project.id === projectId)
     if (selectedProject) {
-      this.getMilestonesByProject(selectedProject);
+      this.getMilestonesByProjectId(selectedProject.id!)
     }
   }
 
@@ -167,14 +188,8 @@ export class DialogComponent{
     return Math.abs(Math.round(diff))
   }
 
-  private formatDate(date: string | Date): string {
-    const d = new Date(date);
-    return ("0" + d.getDate()).slice(-2)
-      + "-" + ("0" + (d.getMonth() + 1)).slice(-2)
-      + "-" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
-  }
-
   private resetForm(): void {
+    this.errorMessage = ''
     this.form.reset()
     this.formSubmitted = false
     this.milestones = []

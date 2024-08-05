@@ -11,7 +11,7 @@ export interface DashboardItem {
   date: string
   createdAt: Date
   dateTo: string
-  project: string
+  project: { name: string }
   description: string
   hours: number
   status: string

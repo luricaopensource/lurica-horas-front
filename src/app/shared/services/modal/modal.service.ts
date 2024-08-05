@@ -7,6 +7,7 @@ export class ModalService {
   private modalNotifier?: Subject<string>
   public containerRef!: ViewContainerRef
   private componentRef!: ComponentRef<ModalComponent>
+  private components: ComponentRef<ModalComponent>[] = []
 
   constructor() { }
 
@@ -24,11 +25,14 @@ export class ModalService {
     this.componentRef = componentRef
     this.containerRef.insert(componentRef.hostView)
     this.modalNotifier = new Subject()
+
+    this.components.push(componentRef)
+
     return this.modalNotifier.asObservable()
   }
 
   close() {
-    this.componentRef.instance.close()
+    this.components.forEach(component => component.destroy())
     this.closeModal()
   }
 

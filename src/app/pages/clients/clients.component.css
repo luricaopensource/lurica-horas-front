@@ -78,7 +78,7 @@ body {
 .milestone-header button {
   margin-left: 5px;
   padding: 5px 10px;
-  border: 1px solid #EFEFEF;
+  border: 1px solid #efefef;
   border-radius: 3px;
   cursor: pointer;
   font-size: 14px;
@@ -91,6 +91,17 @@ body {
 
 .header-buttons .delete-button {
   border: 1px solid #c82333;
+}
+
+input,
+select,
+textarea {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .project-body,
@@ -111,7 +122,9 @@ body {
 }
 
 .project-body input,
-.milestone-body input {
+.milestone-body input,
+.project-body select,
+.milestone-body select {
   margin-bottom: 15px;
   background-color: #fff;
   border: 1px solid #ddd;

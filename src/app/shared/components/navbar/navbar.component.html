@@ -16,7 +16,7 @@
 
       <div class="bottom-buttons-container">
         <mat-dialog-actions>
-          <button *ngIf="isAdmin()" class="'logout-btn" routerLink="/companies" mat-list-item>
+          <button *ngIf="this.user.companies!.length > 1" class="'logout-btn" routerLink="/companies" mat-list-item>
             <div class="logout-text-icon-container">
               <span class="logout-text">Cambiar empresa</span>
               <mat-icon>

@@ -1,3 +1,5 @@
+import { IUsersToCompanies } from "../companies/companies"
+
 export interface IUser {
   id?: number,
   firstName: string,
@@ -10,7 +12,8 @@ export interface IUser {
   currencyName?: string,
   currency?: number,
   hourlyAmount?: number,
-  monthlyAmount?: number
+  monthlyAmount?: number,
+  companies?: IUsersToCompanies[]
 }
 
 export interface IResponseUser {

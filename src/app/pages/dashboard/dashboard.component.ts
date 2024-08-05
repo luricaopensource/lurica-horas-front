@@ -11,7 +11,7 @@ import { TaskService } from 'src/app/shared/services/task/task.service'
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements AfterViewInit, OnInit {
+export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
   @ViewChild(MatTable) table!: MatTable<DashboardItem>
@@ -47,11 +47,5 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.dataSource.data = data
       })
     })
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort
-    this.dataSource.paginator = this.paginator
-    this.table.dataSource = this.dataSource
   }
 }
