@@ -116,7 +116,7 @@ export class DashboardComponent implements OnInit {
 
   public deleteTask(id: number): void {
     this.taskService.deleteTask(id)
-    this.getInitialData()
+    this.dataSource.data.splice(id - 1, 1)
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
