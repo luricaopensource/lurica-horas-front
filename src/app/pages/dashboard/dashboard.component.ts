@@ -56,16 +56,20 @@ export class DashboardComponent implements OnInit {
     this.buildForm()
   }
 
+  getInitialData(): void {
+    this.dashboardService.getDashboardData().then((data) => {
+      data.forEach((item: DashboardItem) => {
+        const date = new Date(item.dateTo)
+        item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+      })
+
+      this.dataSource.data = data
+    })
+  }
+
   ngOnInit(): void {
     this.taskService.taskAdded.subscribe(() => {
-      this.dashboardService.getDashboardData().then((data) => {
-        data.forEach((item: DashboardItem) => {
-          const date = new Date(item.dateTo)
-          item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-        })
-
-        this.dataSource.data = data
-      })
+      this.getInitialData()
     })
   }
 
@@ -112,6 +116,7 @@ export class DashboardComponent implements OnInit {
 
   public deleteTask(id: number): void {
     this.taskService.deleteTask(id)
+    this.getInitialData()
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
