@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of dataSource.data">
+          <tr *ngFor="let row of dataSource.data; let i = index">
             <td data-label="Id">{{row.id}}</td>
             <td data-label="Fecha">{{row.date || "Sin fecha"}}</td>
             <td data-label="Proyecto">{{row.project.name}}</td>
@@ -34,7 +34,7 @@
             <ng-container *ngIf="isAdmin">
               <td data-label=""><button class="edit-btn"
                   (click)="openEditTaskModal(row.id!, createUserTemplate)">Editar</button></td>
-              <td data-label=""><button class="delete-btn" (click)="deleteTask(row.id)">Borrar</button></td>
+              <td data-label=""><button class="delete-btn" (click)="deleteTask(row.id, i)">Borrar</button></td>
             </ng-container>
           </tr>
         </tbody>
