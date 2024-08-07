@@ -8,6 +8,7 @@
             <th>Id</th>
             <th>Fecha</th>
             <th>Proyecto</th>
+            <th>Empleado</th>
             <th>Descripción</th>
             <th>Horas</th>
             <th>Estado</th>
@@ -22,17 +23,94 @@
             <td data-label="Id">{{row.id}}</td>
             <td data-label="Fecha">{{row.date || "Sin fecha"}}</td>
             <td data-label="Proyecto">{{row.project.name}}</td>
+            <td data-label="Empleado">{{row.employee.fullName}}</td>
             <td data-label="Descripción">{{row.description}}</td>
             <td data-label="Horas">{{row.hours}}</td>
             <td data-label="Estado">{{row.status}}</td>
-            <td data-label="Monto por Hora">{{row.hourlyAmount || "$1.00"}}</td>
+            <td data-label="Monto por Hora">${{row.employee.hourlyAmount || "1.00"}}</td>
             <td data-label="Tipo Moneda"><span class="currency-card">{{row.currency || "ARS"}}</span></td>
             <td data-label="Monto en USD">{{row.usdAmount || "Infinity"}}</td>
-            <td data-label="Monto por Coste">{{row.costAmount || "$0.00"}}</td>
+            <td data-label="Monto por Coste">${{row.costAmount || "0.00"}}</td>
+            <ng-container *ngIf="isAdmin">
+              <td data-label=""><button class="edit-btn"
+                  (click)="openEditTaskModal(row.id!, createUserTemplate)">Editar</button></td>
+              <td data-label=""><button class="delete-btn" (click)="deleteTask(row.id)">Borrar</button></td>
+            </ng-container>
           </tr>
         </tbody>
       </table>
       <p *ngIf="!dataSource.data.length"><b>No hay tareas para mostrar.</b></p>
     </div>
   </div>
+
+  <ng-template #createUserTemplate>
+    <form [formGroup]="form" (ngSubmit)="editTask()" autocapitalize="new-password" action="javascript:void(0)">
+      <label for="project">Proyecto</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('project')}">
+        <select id="project" formControlName="projectId" (change)="onProjectChange($event)">
+          <option *ngFor='let project of projects' value={{project.id}}>{{project.name}}</option>
+        </select>
+      </div>
+
+      <label for="milestone">Hito</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('milestone')}">
+        <select id="milestone" formControlName="milestoneId">
+          <option *ngFor='let milestone of selectedProject.milestones' value={{milestone.id}}>{{milestone.name}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea id="description" rows="4" formControlName="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Tipo</label>
+        <div class="tag-selection">
+          <!-- <span class="tag desarrollo" (click)="selectType('Desarrollo')">Desarrollo</span>
+          <span class="tag infraestructura" (click)="selectType('Infraestructura')">Infraestructura</span>
+          <span class="tag ciberseguridad" (click)="selectType('Ciberseguridad')">Ciberseguridad</span>
+          <span class="tag otros" (click)="selectType('Otros')">Otros</span> -->
+        </div>
+        <input type="hidden" formControlName="type">
+      </div>
+
+      <mat-form-field>
+        <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom">
+        <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker">
+          <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </ngx-mat-datepicker-toggle>
+        <div class="datetime-picker-container">
+          <ngx-mat-datetime-picker #dateFromPicker [stepHour]="1" [stepMinute]="10">
+            <ngx-mat-datepicker-actions>
+              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+              <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
+            </ngx-mat-datepicker-actions>
+          </ngx-mat-datetime-picker>
+        </div>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo">
+        <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker">
+          <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </ngx-mat-datepicker-toggle>
+        <div class="datetime-picker-container">
+          <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [stepHour]="1" [stepMinute]="10">
+            <ngx-mat-datepicker-actions>
+              <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+              <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
+            </ngx-mat-datepicker-actions>
+          </ngx-mat-datetime-picker>
+        </div>
+      </mat-form-field>
+
+      <p *ngIf="this.form.invalid && formSubmitted" class="error-message">Por favor complete los campos.</p>
+      <p *ngIf="this.errorMessage" class="error-message">{{this.errorMessage}}</p>
+      <div class="button-wrapper">
+        <button id="button" type="submit" class="btn add-btn">+ Editar</button>
+      </div>
+    </form>
+  </ng-template>
 </app-navbar>

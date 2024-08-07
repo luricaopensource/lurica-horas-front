@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewChildren, ViewContainerRef, TemplateRef } from '@angular/core'
+import { Component, ViewChild, TemplateRef } from '@angular/core'
 import { TaskService } from '../../services/task/task.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ITask } from '../../models/tasks/tasks'
 import { ModalService } from '../../services/modal/modal.service'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
 import { IProject } from 'src/app/shared/models/projects/projects'
-import { MilestoneService } from '../../services/milestones/milestones.service'
 import { IMilestone } from '../../models/milestones/milestones'
 import { UserService } from '../../services/user/user.service'
 import { IUser } from '../../models/users/user'
@@ -34,7 +33,6 @@ export class DialogComponent {
     private formBuilder: FormBuilder,
     private modalService: ModalService,
     private projectService: ProjectService,
-    private milestoneService: MilestoneService,
     private userService: UserService
   ) {
     this.buildForm()
@@ -43,11 +41,11 @@ export class DialogComponent {
   }
 
   private async getProjects(): Promise<void> {
-    this.projects = await this.projectService.getProjects() //cambiar esto en el backend para que los projects vengan POR USUARIO
+    this.projects = this.userIsAdmin() ? await this.projectService.getProjects() : await this.projectService.getProjectsByEmployee()
   }
 
-  private async getMilestonesByProjectId(projectId: number): Promise<void> {
-    this.milestones = await this.milestoneService.getMilestonesByProject(projectId)
+  private userIsAdmin(): boolean {
+    return this.user?.role == 1
   }
 
   private buildForm(): void {
@@ -133,7 +131,8 @@ export class DialogComponent {
 
   public editTask(index: number): void {
     const task = this.tasks[index]
-    this.getMilestonesByProjectId(task.projectId)
+    const selectedProject = this.projects.find(project => project.id === task.projectId)
+    this.milestones = selectedProject?.milestones!
 
     const dateFrom = new Date(task.dateFrom)
     const dateTo = new Date(task.dateTo)
@@ -169,8 +168,9 @@ export class DialogComponent {
     const selectElement = event.target as HTMLSelectElement
     const projectId = Number(selectElement.value)
     const selectedProject = this.projects.find(project => project.id === projectId)
+
     if (selectedProject) {
-      this.getMilestonesByProjectId(selectedProject.id!)
+      this.milestones = selectedProject.milestones
     }
   }
 
@@ -194,5 +194,4 @@ export class DialogComponent {
     this.formSubmitted = false
     this.milestones = []
   }
-
 }

@@ -14,6 +14,7 @@ export interface IUser {
   hourlyAmount?: number,
   monthlyAmount?: number,
   companies?: IUsersToCompanies[]
+  isAdmin?: boolean
 }
 
 export interface IResponseUser {

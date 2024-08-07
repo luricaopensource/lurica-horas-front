@@ -16,18 +16,16 @@ export class DashboardService {
   constructor(private readonly http: HttpClient, private readonly userService: UserService) { }
 
   getDashboardData(): Promise<DashboardItem[]> {
-    const userRole = this.getCurrentUser().roleName;
-    const userId = this.getCurrentUser().id;
-    if (userRole == 'admin') return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks`))
+    const user = this.getCurrentUser()
+    if (user.isAdmin) return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks`))
 
-    return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks/employee/${userId}`))
+
+    return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks/employee/${user.id}`))
   }
 
   public getCurrentUser() {
     const user = this.userService.getUserFromLocalStorage()
 
-    return user!;
+    return user!
   }
-
-
 }

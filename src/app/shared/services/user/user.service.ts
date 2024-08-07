@@ -35,7 +35,12 @@ export class UserService {
   getUserFromLocalStorage(): IUser | null {
     const user = localStorage.getItem('user')
 
-    if (user) return JSON.parse(user)
+    if (user) {
+      const userObject: IUser = JSON.parse(user)
+      userObject.isAdmin = userObject.roleName === 'Administrador'
+
+      return userObject
+    }
     else return null
   }
 

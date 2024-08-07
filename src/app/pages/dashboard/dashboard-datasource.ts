@@ -9,8 +9,8 @@ import { DashboardService } from '../../shared/services/dashboard/dashboard.serv
 export interface DashboardItem {
   id: number
   date: string
-  createdAt: Date
   dateTo: string
+  createdAt: Date
   project: { name: string }
   description: string
   hours: number
@@ -19,6 +19,7 @@ export interface DashboardItem {
   currency: string
   usdAmount: number
   costAmount: number
+  employee: { id: string, fullName: string, hourlyAmount: string, currencyName: string }
 }
 
 /**
