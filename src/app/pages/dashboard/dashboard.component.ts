@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
       projectId: currentTask.project.id,
       milestoneId: currentTask.milestone.id,
       description: currentTask.description,
-      dateFrom: new Date(currentTask.date),
+      dateFrom: new Date(currentTask.dateFrom),
       dateTo: new Date(currentTask.dateTo),
 
     })
