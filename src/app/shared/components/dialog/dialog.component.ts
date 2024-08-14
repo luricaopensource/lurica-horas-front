@@ -41,7 +41,7 @@ export class DialogComponent {
   }
 
   private async getProjects(): Promise<void> {
-    this.projects = this.userIsAdmin() ? await this.projectService.getProjects() : await this.projectService.getProjectsByEmployee()
+    this.projects = this.userIsAdmin() ? await this.projectService.getProjects() : await this.projectService.getProjectsByEmployee(this.user?.id!)
   }
 
   private userIsAdmin(): boolean {

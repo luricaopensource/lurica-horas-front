@@ -1,4 +1,5 @@
 export interface ITask {
+  id?: number,
   projectId: number,
   milestoneId: number,
   description: string,
@@ -13,6 +14,6 @@ export interface ITask {
 
 
 export interface IResponseTask {
-  taskId: number,
+  readonly id: number,
   userId: number
 }

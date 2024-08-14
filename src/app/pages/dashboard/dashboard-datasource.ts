@@ -11,7 +11,8 @@ export interface DashboardItem {
   date: string
   dateTo: string
   createdAt: Date
-  project: { name: string }
+  project: { id: number, name: string }
+  milestone: { id: number, name: string }
   description: string
   hours: number
   status: string

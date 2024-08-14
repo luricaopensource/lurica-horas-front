@@ -23,4 +23,9 @@ export class TaskService {
   deleteTask(taskId: number): Promise<IResponseModel> {
     return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/tasks/${taskId}`))
   }
+
+  editTask(task: ITask): Promise<IResponseModel> {
+    return firstValueFrom(this.http.patch<IResponseTask>(`${this.BASE_URL}/tasks/${task.id}`, task))
+  }
+
 }
