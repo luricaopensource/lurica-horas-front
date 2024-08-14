@@ -28,8 +28,8 @@ export class ProjectService {
     return firstValueFrom(this.http.get<IProject[]>(`${this.BASE_URL}/projects`))
   }
 
-  getProjectsByEmployee(): Promise<IProject[]> {
-    return firstValueFrom(this.http.get<IProject[]>(`${this.BASE_URL}/projects/employee`))
+  getProjectsByEmployee(userId: number): Promise<IProject[]> {
+    return firstValueFrom(this.http.get<IProject[]>(`${this.BASE_URL}/projects/employee/${userId}`))
   }
 
   deleteProject(projectId: number): Promise<IResponseModel> {

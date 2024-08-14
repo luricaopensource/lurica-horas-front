@@ -10,6 +10,10 @@ import { UserService } from 'src/app/shared/services/user/user.service'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { IProject } from 'src/app/shared/models/projects/projects'
+import { ProjectService } from 'src/app/shared/services/project/project.service'
+import { IMilestone } from 'src/app/shared/models/milestones/milestones'
+import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
+import { ITask } from 'src/app/shared/models/tasks/tasks'
 
 @Component({
   selector: 'app-dashboard',
@@ -26,9 +30,11 @@ export class DashboardComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public projects: IProject[] = []
+  public milestones: IMilestone[] = []
   public selectedProject: IProject = {} as IProject
   public errorMessage: string = ''
   public isAdmin: boolean = false
+  public taskToEdit: number | null = null
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
@@ -47,6 +53,8 @@ export class DashboardComponent implements OnInit {
   constructor(private readonly dashboardService: DashboardService,
     private readonly taskService: TaskService,
     private userService: UserService,
+    private projectService: ProjectService,
+    private milestoneService: MilestoneService,
     private formBuilder: FormBuilder,
     private modalService: ModalService
   ) {
@@ -90,6 +98,7 @@ export class DashboardComponent implements OnInit {
     const selectedProject = this.projects.find(project => project.id === projectId)
 
     if (selectedProject) this.selectedProject = selectedProject
+    this.setMilestonesByProject(projectId);
   }
 
   public isInvalidInput(inputName: string): boolean {
@@ -107,12 +116,80 @@ export class DashboardComponent implements OnInit {
   public openEditTaskModal(taskId: number, modalTemplate: TemplateRef<any>): void {
     this.resetForm()
 
-    this.form.patchValue({})
+    let currentTask = this.getTaskFromDashboard(taskId)
+
+    this.taskToEdit = currentTask.id
+
+    this.setProjectsByUser(this.user!.id!);
+
+    console.log(currentTask)
+
+    this.form.patchValue({
+      projectId: currentTask.project.id,
+      milestoneId: currentTask.milestone.id,
+      description: currentTask.description,
+      dateFrom: new Date(currentTask.dateFrom),
+      dateTo: new Date(currentTask.dateTo),
+
+    })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar tarea' })
+
   }
 
-  public editTask(): void { }
+  async editTask(): Promise<void> { 
+    if (this.form.invalid) {
+      this.formSubmitted = true
+      return
+    }
+
+    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value
+    const from = new Date(dateFrom)
+    const to = new Date(dateTo)
+
+    if (isNaN(from.getTime()) || isNaN(to.getTime())) {
+      return
+    }
+
+    if (from > to) {
+      this.errorMessage = 'Fecha desde no puede ser mayor a fecha hasta'
+      return
+    }
+
+    const hours = this.getHours(from, to)
+
+    if (hours === 0) {
+      this.errorMessage = 'Fecha desde no puede ser igual a fecha hasta'
+      return
+    }
+
+    if (!this.user) return
+
+    const task: ITask = {
+      id: this.taskToEdit!,
+      projectId,
+      milestoneId,
+      description,
+      dateFrom: from.toLocaleString(),
+      dateTo: to.toLocaleString(),
+      hours,
+      type,
+      paid: false,
+      status: 'Pendiente',
+      userId: this.user.id!
+    }
+
+    try {
+      await this.taskService.editTask(task)
+      this.modalService.close()
+      this.resetForm()
+    } catch (error) {
+      console.error(error)
+    }
+
+    this.resetForm()
+    this.reloadTasks()
+  }
 
   public deleteTask(id: number, index: number): void {
     this.taskService.deleteTask(id)
@@ -129,4 +206,32 @@ export class DashboardComponent implements OnInit {
     this.form.reset()
     this.formSubmitted = false
   }
+
+  private getTaskFromDashboard(id: number): DashboardItem {
+    return this.dataSource.data.find(task => task.id === id)!
+  }
+
+  private setProjectsByUser(userId: number): void {
+    this.projectService.getProjectsByEmployee(userId).then((projects) => {
+      this.projects = projects
+    })
+  }
+
+  private setMilestonesByProject(projectId: number): void {
+    this.milestoneService.getMilestonesByProject(projectId).then((milestones) => {
+      this.milestones = milestones
+    })
+  }
+
+  private reloadTasks(): void {
+    this.dataSource.data = []
+    this.getInitialData()
+  }
+
+  private getHours(dateFrom: Date, dateTo: Date): number {
+    let diff = (dateFrom.getTime() - dateTo.getTime()) / 1000
+    diff /= (60 * 60)
+    return Math.abs(Math.round(diff))
+  }
+
 }
