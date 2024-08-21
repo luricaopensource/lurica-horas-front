@@ -1,11 +1,10 @@
 import { Component, TemplateRef } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { IClient } from 'src/app/shared/models/clients/clients'
-import { INewProject, IProject } from 'src/app/shared/models/projects/projects'
-import { ClientService } from 'src/app/shared/services/clients/client.service'
-import { ModalService } from 'src/app/shared/services/modal/modal.service'
+import { getCurrencyId } from 'src/app/shared/helpers/currency'
+import { IResponseModel } from 'src/app/shared/models'
+import { IClientCollapsible } from 'src/app/shared/models/clients/clients'
+import { INewProject, IProjectCollapsible } from 'src/app/shared/models/projects/projects'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
-import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
 
 @Component({
   selector: 'app-projects',
@@ -13,148 +12,57 @@ import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent {
-  public projects: IProject[] = []
-  public clients: IClient[] = []
   public form: FormGroup = new FormGroup({})
-  public formSubmitted: boolean = false
-  public currencies = currencies
-  public projectToEdit: IProject | null = null
-  public isEditModal: boolean = false
 
   constructor(
-    private projectService: ProjectService,
-    private clientsService: ClientService,
-    private formBuilder: FormBuilder,
-    private modalService: ModalService) {
-    this.buildForm()
-    this.getProjects()
-    this.getClients()
+    private service: ProjectService
+  ) {
   }
 
-  private async getProjects(): Promise<void> {
-    this.projects = await this.projectService.getProjects()
+  addProject(customer: IClientCollapsible): void {
+    customer.projects.push({ name: '', currency: '', amount: 0, created: false, editMode: true, showMilestones: true, milestones: [] })
   }
 
-  private async getClients(): Promise<void> {
-    this.clients = await this.clientsService.getClients()
-  }
+  async saveProject(project: IProjectCollapsible, customerId: number, i: number, event: Event, j?: number) {
+    event.stopPropagation()
 
-  private buildForm(): void {
-    this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      client: ['', [Validators.required]],
-      currency: ['', [Validators.required]],
-      amount: ['', [Validators.required]],
-    })
-  }
-
-  private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
-    this.modalService
-      .open(modalTemplate, options)
-      .subscribe()
-  }
-
-  public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
-    this.isEditModal = false
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear proyecto' })
-    this.resetForm()
-  }
-
-  public async createProject(): Promise<void> {
-    if (this.form.invalid) {
-      this.formSubmitted = true
+    if (!project.editMode) {
+      project.editMode = true
       return
     }
 
-    const { name, client, currency, amount } = this.form.value
+    if (!project.name || !project.currency || !project.amount) return
 
-    const project: INewProject = {
-      name,
-      client: parseInt(client),
-      currency: parseInt(currency),
-      amount
-    }
-
-    try {
-      await this.projectService.createProject(project)
-      this.getProjects()
-      this.modalService.close()
-      this.resetForm()
-    } catch (error) {
-      // TODO: Handle error properly
-      console.error(error)
-    }
-
-  }
-
-  public async openEditProjectModal(projectId: number, modalTemplate: TemplateRef<any>): Promise<void> {
-    this.isEditModal = true
-    this.resetForm()
-
-    const project = this.projects.find(project => project.id === projectId)
-
-    if (!project) return
-
-    this.projectToEdit = project
-
-    this.form.patchValue({
+    const projectToCreate: INewProject = {
       name: project.name,
-      client: 0,
       currency: getCurrencyId(project.currency),
-      amount: project.amount
-    })
+      amount: project.amount,
+      client: customerId
+    }
 
-    this.openModal(modalTemplate, { size: 'lg', title: 'Editar Proyecto' })
+    if (project.id) projectToCreate.id = project.id
+
+    const response: IResponseModel = project.created ? await this.service.editProject(projectToCreate) : await this.service.createProject(projectToCreate)
+
+    project.id = response.id
+    project.currencyId = getCurrencyId(project.currency)
+    project.editMode = false
+    project.created = true
   }
 
-  public async editProject(): Promise<void> {
-    if (!this.projectToEdit) return
+  async deleteProject(project: IProjectCollapsible, i: number, j: number, event: Event): Promise<void> {
+    event.stopPropagation()
 
-    if (this.form.invalid) {
-      this.formSubmitted = true
+    if (!project.name && !project.currency && !project.amount) {
+      // this.deleteEntity(i, j, undefined, event)
       return
     }
 
-    const { name, client, currency, amount } = this.form.value
-
-    const project: INewProject = {
-      id: this.projectToEdit.id,
-      name,
-      client: parseInt(client),
-      currency: parseInt(currency),
-      amount
-    }
-
     try {
-      await this.projectService.editProject(project)
-
-      this.getProjects()
-      this.modalService.close()
-      this.resetForm()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  public async deleteProject(projectId: number): Promise<void> {
-    try {
-      await this.projectService.deleteProject(projectId)
+      await this.service.deleteProject(project.id!)
     } catch (error) {
       // TODO: Handle error properly
       console.error(error)
     }
-  }
-
-  public isInvalidInput(inputName: string): boolean {
-    const input = this.form.get(inputName)
-
-    if (!input) return false
-
-    return input.invalid && (input.dirty || input.touched || this.formSubmitted)
-  }
-
-  private resetForm(): void {
-    this.form.reset()
-    this.formSubmitted = false
   }
 }

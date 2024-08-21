@@ -30,8 +30,8 @@
             <td data-label="Mail">{{user.email}}</td>
             <td data-label="Rol">{{user.roleName}}</td>
             <td data-label="Tipo de moneda">{{user.currencyName}}</td>
-            <td data-label="Monto horario">{{user.hourlyAmount || '-'}}</td>
-            <td data-label="Monto mensual">{{user.monthlyAmount || '-'}}</td>
+            <td data-label="Monto horario">${{user.hourlyAmount || '-'}}</td>
+            <td data-label="Monto mensual">${{user.monthlyAmount || '-'}}</td>
             <td data-label=""><button class="edit-btn"
                 (click)="openEditUserModal(user.id!, createUserTemplate)">Editar</button></td>
             <td data-label=""><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>

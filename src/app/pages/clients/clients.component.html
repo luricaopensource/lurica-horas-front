@@ -1,81 +1,18 @@
 <app-navbar>
   <div class="container">
+    <!-- Customer section -->
     <button class="add-button" (click)="addCustomer()">+ Añadir cliente</button>
-    <div class="customer-card" *ngFor="let customer of clients; let i = index">
-      <div class="customer-header" (click)="toggleVisibility(i)">
-        <input type="text" placeholder="Cliente increible" [(ngModel)]="customer.name" [disabled]="!customer.editMode"
-          (click)="stopPropagation($event)" (focusout)="createCustomer(customer)">
+    <div class="customer-card" *ngFor="let customer of customers">
+      <div class="customer-header" (click)="displayProjects()">
+        <input type="text" placeholder="Cliente increíble" [value]="customer.name">
         <div class="header-buttons">
-          <button class="edit-button" (click)="editEntity(customer, $event)"><img src="assets/edit.svg" /></button>
-          <button class="delete-button" (click)="deleteClient(customer, i, $event)"><img
-              src="assets/delete.svg" /></button>
+          <button class="edit-button" (click)="edit()"><img src="assets/edit.svg" /></button>
+          <button class="delete-button" (click)="delete(customer)"><img src="assets/delete.svg" /></button>
         </div>
       </div>
-      <div [ngClass]="{'hidden': !customer.showProjects}" class="projects">
-        <div class="project-card" *ngFor="let project of customer.projects; let j = index">
-          <div class="project-header" (click)="toggleVisibility(i, j)">
-            <input type="text" placeholder="Proyecto increible" [(ngModel)]="project.name"
-              [disabled]="!project.editMode" (click)="stopPropagation($event)">
-            <div class="header-buttons">
-              <button *ngIf="!project.created" class="save-button"
-                (click)="saveProject(project, customer.id!, i, $event, j)"><img src="assets/save.svg"></button>
-              <button class="edit-button" (click)="saveProject(project, customer.id!, i, $event, j)"><img
-                  src="assets/edit.svg"></button>
-              <button class="delete-button" (click)="deleteProject(project, i, j, $event)"><img
-                  src="assets/delete.svg" /></button>
-            </div>
-          </div>
-          <div [ngClass]="{'hidden': !project.showMilestones}" class="project-body">
 
-            <label for="currency">Tipo de moneda</label>
-            <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
-              <select [(ngModel)]="project.currency" [disabled]="!project.editMode" (click)="stopPropagation($event)">
-                <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
-              </select>
-            </div>
-
-            <label for="amount">Monto:</label>
-            <input type="number" [(ngModel)]="project.amount" [disabled]="!project.editMode"
-              (click)="stopPropagation($event)">
-          </div>
-          <div [ngClass]="{'hidden': !project.showMilestones}" class="milestones">
-            <div class="milestone" *ngFor="let milestone of project.milestones; let k = index">
-              <div class="milestone-header" (click)="stopPropagation($event)">
-                <input type="text" [(ngModel)]="milestone.name" [disabled]="!milestone.editMode"
-                  (click)="stopPropagation($event)">
-                <div class="header-buttons">
-                  <button *ngIf="!milestone.created" class="save-button"
-                    (click)="saveMilestone(milestone, project.id!, $event)"><img src="assets/save.svg"></button>
-                  <button class="edit-button" (click)="saveMilestone(milestone, project.id!, $event)"><img
-                      src="assets/edit.svg" /></button>
-                  <button class="delete-button" (click)="deleteMilestone(milestone, i, j, k, $event)"><img
-                      src="assets/delete.svg" /></button>
-                </div>
-              </div>
-              <div class="milestone-body">
-                <div class="milestone-row">
-                  <div class="milestone-column">
-                    <label for="date">Fecha de entrega:</label>
-                    <input type="date" [(ngModel)]="milestone.date" [disabled]="!milestone.editMode"
-                      (click)="stopPropagation($event)">
-                  </div>
-                  <div class="milestone-column">
-                    <label for="amountPercentage">Porcentaje del hito:</label>
-                    <input type="number" [(ngModel)]="milestone.amountPercentage" [disabled]="!milestone.editMode"
-                      (click)="stopPropagation($event)">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button class="add-button" [disabled]="!project.created" (click)="addMilestone(customer, project)">+ Añadir
-              hito</button>
-          </div>
-        </div>
-        <button class="add-button" (click)="addProject(customer)">+ Añadir proyecto</button>
-      </div>
+      <!-- Project section -->
+      <app-projects *ngIf="toggleShowProjects"></app-projects>
     </div>
   </div>
-
-
-
 </app-navbar>

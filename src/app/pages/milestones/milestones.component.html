@@ -1,64 +1,34 @@
-<app-navbar>
-  <div class="container">
-    <h1>Hitos</h1>
-    <button (click)="openNewMilestoneModal(createMilestoneTemplate)">+ Añadir hito</button>
+<!-- <div *ngIf="clients[i].projects[j].showMilestones" class="milestones">
+  <div class="milestone" *ngFor="let milestoneControl of getMilestoneControls(i, j); let k = index" [formGroupName]="k">
+    <div class="milestone-header" (click)="stopPropagation($event)">
+      <input type="text" formControlName="name" (click)="stopPropagation($event)">
+      <div class="header-buttons">
+        <button *ngIf="!clients[i].projects[j].milestones[k].created" class="save-button"
+          (click)="saveMilestone(clients[i].projects[j].milestones[k], clients[i].projects[j].id!, $event)">
+          <img src="assets/save.svg">
+        </button>
+        <button class="edit-button"
+          (click)="saveMilestone(clients[i].projects[j].milestones[k], clients[i].projects[j].id!, $event)">
+          <img src="assets/edit.svg" />
+        </button>
+        <button class="delete-button" (click)="deleteMilestone(clients[i].projects[j].milestones[k], i, j, k, $event)">
+          <img src="assets/delete.svg" />
+        </button>
+      </div>
+    </div>
+    <div class="milestone-body">
+      <div class="milestone-row">
+        <div class="milestone-column">
+          <label for="date">Fecha de entrega:</label>
+          <input type="date" formControlName="date" (click)="stopPropagation($event)">
+        </div>
+        <div class="milestone-column">
+          <label for="amountPercentage">Porcentaje del hito:</label>
+          <input type="number" formControlName="amountPercentage" (click)="stopPropagation($event)">
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Fecha</th>
-          <th>Proyecto</th>
-          <th>Monto del hito</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let milestone of milestones">
-          <td>{{milestone.id}}</td>
-          <td>{{milestone.name}}</td>
-          <td>{{milestone.date}}</td>
-          <!-- <td>{{milestone.projectName}}</td> -->
-          <td><button class="edit-btn"
-              (click)="openEditMilestoneModal(milestone.id!, createMilestoneTemplate)">Editar</button>
-            <!-- <td>{{milestone.amount}}</td> -->
-          <td><button class="delete-btn" (click)="deleteMilestone(milestone.id!)">Borrar</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <p *ngIf="!milestones.length"><b>No hay hitos para mostrar.</b></p>
-  </div>
-</app-navbar>
-
-<ng-template #createMilestoneTemplate>
-  <form [formGroup]="form" (ngSubmit)="isEditModal ? editMilestone() : createMilestone()" autocapitalize="new-password"
-    action="javascript:void(0)">
-    <label for="firstname">Nombre</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('name')}">
-      <input required type="text" id="name" name="name" autocomplete="new-password" formControlName="name">
-    </div>
-
-    <label for="project">Proyecto</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('project')}">
-      <select id="project" formControlName="project">
-        <option *ngFor="let project of projects" value={{project.id}}>{{project.name}}</option>
-      </select>
-    </div>
-
-    <label for="date">Fecha</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('date')}">
-      <input type="date" id="date" formControlName="date">
-    </div>
-
-    <label for="amount">Monto</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('amount')}">
-      <input type="number" id="amount" formControlName="amount" />
-    </div>
-
-    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">Crear</button>
-  </form>
-</ng-template>
+  <button class="add-button" [disabled]="!clients[i].projects[j].created"
+    (click)="addMilestone(clients[i], clients[i].projects[j])">+ Añadir hito</button>
+</div> -->

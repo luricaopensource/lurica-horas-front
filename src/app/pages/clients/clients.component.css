@@ -85,7 +85,8 @@ body {
   transition: background-color 0.3s;
 }
 
-.header-buttons .edit-button:hover {
+.header-buttons .edit-button:hover,
+.header-buttons .save-button:hover {
   border: 1px solid #007bff;
 }
 
@@ -223,8 +224,8 @@ p {
 }
 
 .add-button:disabled {
-  border: 2px solid #CCCCCC;
-  background-color: #E0E0E0;
-  color: #AAAAAA;
+  border: 2px solid #cccccc;
+  background-color: #e0e0e0;
+  color: #aaaaaa;
   cursor: not-allowed;
 }
