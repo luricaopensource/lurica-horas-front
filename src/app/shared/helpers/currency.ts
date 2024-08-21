@@ -1,11 +1,15 @@
 export const currencies = [
   {
     id: 1,
-    name: 'ARS',
+    name: 'Pesos Argentinos',
   },
   {
     id: 2,
-    name: 'USD',
+    name: 'Dólar Oficial',
+  },
+  {
+    id: 3,
+    name: 'Dólar Paralelo',
   }
 ]
 

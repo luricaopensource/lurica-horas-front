@@ -15,7 +15,6 @@
             <th>Monto por Hora</th>
             <th>Tipo Moneda</th>
             <th>Monto en USD</th>
-            <th>Monto por Coste</th>
           </tr>
         </thead>
         <tbody>
@@ -29,8 +28,7 @@
             <td data-label="Estado">{{row.status}}</td>
             <td data-label="Monto por Hora">${{row.employee.hourlyAmount || "1.00"}}</td>
             <td data-label="Tipo Moneda"><span class="currency-card">{{row.currency || "ARS"}}</span></td>
-            <td data-label="Monto en USD">{{row.usdAmount || "Infinity"}}</td>
-            <td data-label="Monto por Coste">${{row.costAmount || "0.00"}}</td>
+            <td data-label="Monto en USD">${{row.employee.usdAmount || "0.00"}}</td>
             <ng-container *ngIf="isAdmin">
               <td data-label=""><button class="edit-btn"
                   (click)="openEditTaskModal(row.id!, createUserTemplate)">Editar</button></td>
@@ -109,7 +107,7 @@
       <p *ngIf="this.form.invalid && formSubmitted" class="error-message">Por favor complete los campos.</p>
       <p *ngIf="this.errorMessage" class="error-message">{{this.errorMessage}}</p>
       <div class="button-wrapper">
-        <button id="button" type="submit" class="btn add-btn">+ Editar</button>
+        <button id="button" type="submit" class="btn">Editar</button>
       </div>
     </form>
   </ng-template>

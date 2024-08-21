@@ -1,71 +1,75 @@
 <app-navbar>
-    <div class="modal-content">
-        <div class="report-filters">
-            <form [formGroup]="reportForm" (ngSubmit)="generateReport()">
-                <div class="form-group">
-                    <label for="employee">Empleado</label>
-                    <select id="employee" formControlName="employeeId">
-                        <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.firstName }} {{ employee.lastName }}</option>
-                    </select>
-                </div>
+  <div class="modal-content">
+    <div class="report-filters">
+      <form [formGroup]="reportForm" (ngSubmit)="generateReport()">
+        <button type="button" class="btn filter-btn" (click)="cleanFilters()">Limpiar filtros</button>
 
-                <div class="form-group">
-                    <label for="project">Proyecto</label>
-                    <select id="project" formControlName="projectId">
-                        <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="customer">Cliente</label>
-                    <select id="customer" formControlName="customerId">
-                        <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="milestone">Hito</label>
-                    <select id="milestone" formControlName="milestoneId">
-                        <option *ngFor="let milestone of milestones" [value]="milestone.id">{{ milestone.name }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde" formControlName="dateFrom" />
-                        <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker">
-                            <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                        </ngx-mat-datepicker-toggle>
-                        <div class="datetime-picker-container">
-                            <ngx-mat-datetime-picker #dateFromPicker [hideTime]="true">
-                                <ngx-mat-datepicker-actions>
-                                    <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                                    <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
-                                </ngx-mat-datepicker-actions>
-                            </ngx-mat-datetime-picker>
-                        </div>
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group">
-                    <mat-form-field>
-                        <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo" />
-                        <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker">
-                            <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                        </ngx-mat-datepicker-toggle>
-                        <div class="datetime-picker-container">
-                            <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [hideTime]="true">
-                                <ngx-mat-datepicker-actions>
-                                    <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                                    <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
-                                </ngx-mat-datepicker-actions>
-                            </ngx-mat-datetime-picker>
-                        </div>
-                    </mat-form-field>
-                </div>
-
-                <button type="submit" class="btn">Generar Reporte</button>
-            </form>
+        <div class="form-group">
+          <label for="employee">Empleado</label>
+          <select id="employee" formControlName="employeeId">
+            <option *ngFor="let employee of employees" [value]="employee.id">{{ employee.firstName }} {{
+              employee.lastName }}</option>
+          </select>
         </div>
+
+        <div class="form-group">
+          <label for="project">Proyecto</label>
+          <select id="project" formControlName="projectId" (change)="onProjectChange()">
+            <option *ngFor="let project of projects" [value]="project.id">{{ project.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="customer">Cliente</label>
+          <select id="customer" formControlName="customerId">
+            <option *ngFor="let customer of customers" [value]="customer.id">{{ customer.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="milestone">Hito</label>
+          <select id="milestone" formControlName="milestoneId">
+            <option *ngFor="let milestone of milestones" [value]="milestone.id">{{ milestone.name }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde"
+              formControlName="dateFrom" />
+            <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker">
+              <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </ngx-mat-datepicker-toggle>
+            <div class="datetime-picker-container">
+              <ngx-mat-datetime-picker #dateFromPicker [hideTime]="true">
+                <ngx-mat-datepicker-actions>
+                  <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+                  <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
+                </ngx-mat-datepicker-actions>
+              </ngx-mat-datetime-picker>
+            </div>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field>
+            <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo" />
+            <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker">
+              <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+            </ngx-mat-datepicker-toggle>
+            <div class="datetime-picker-container">
+              <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [hideTime]="true">
+                <ngx-mat-datepicker-actions>
+                  <button mat-button ngxMatDatepickerCancel>Cancelar</button>
+                  <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
+                </ngx-mat-datepicker-actions>
+              </ngx-mat-datetime-picker>
+            </div>
+          </mat-form-field>
+        </div>
+
+        <button type="submit" class="btn">Generar Reporte</button>
+      </form>
     </div>
+  </div>
 </app-navbar>

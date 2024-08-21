@@ -22,14 +22,15 @@ export class ReportsComponent {
   public projects: IProject[] = []
   public customers: IClient[] = []
   public milestones: IMilestone[] = []
+  public selectedProject: IProject | null = null
 
   public constructor(
     private readonly reportService: ReportsService,
     private fb: FormBuilder,
     private userService: UserService,
     private projectService: ProjectService,
-    private milestoneService: MilestoneService,
-    private clientService: ClientService
+    private clientService: ClientService,
+    private milestoneService: MilestoneService
   ) {
     this.buildForm()
     this.getEntities()
@@ -42,13 +43,12 @@ export class ReportsComponent {
     this.milestones = await this.milestoneService.getMilestones()
   }
 
+  public onProjectChange(): void {
+    this.selectedProject = this.projects.find(project => project.id == this.reportForm.value.projectId) || null
+    this.milestones = this.selectedProject!.milestones || []
+  }
+
   async generateReport(): Promise<void> {
-    const dateFrom = this.reportForm.value.dateFrom
-    const dateTo = this.reportForm.value.dateTo
-
-    const dateFromString = dateFrom ? dateFrom.toISOString() : null
-    const dateToString = dateTo ? dateTo.toISOString() : null
-
     const body = {
       employeeId: this.reportForm.value.employeeId,
       projectId: this.reportForm.value.projectId,
@@ -58,11 +58,15 @@ export class ReportsComponent {
       dateTo: this.reportForm.value.dateTo
     }
 
-    console.log(body)
+    this.reportForm.reset()
 
-    // const blob = await this.reportService.getPdf(body)
-    // const url = URL.createObjectURL(blob)
-    // window.open(url)
+    const blob = await this.reportService.getPdf(body)
+    const url = URL.createObjectURL(blob)
+    window.open(url)
+  }
+
+  cleanFilters(): void {
+    this.reportForm.reset()
   }
 
   buildForm() {

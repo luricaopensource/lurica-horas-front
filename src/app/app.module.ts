@@ -20,6 +20,7 @@ import { ReportsComponent } from './pages/reports/reports.component'
 import { ClientsComponent } from './pages/clients/clients.component'
 import { CompanyComponent } from './pages/company/company.component'
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker'
+import { DollarQuoteComponent } from './pages/dollar-quote/dollar-quote.component'
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
     ReportsComponent,
     ClientsComponent,
     MilestonesComponent,
-    CompanyComponent
+    CompanyComponent,
+    DollarQuoteComponent
   ],
   imports: [
     BrowserModule,

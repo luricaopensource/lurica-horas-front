@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTable } from '@angular/material/table'
@@ -12,7 +12,6 @@ import { ModalService } from 'src/app/shared/services/modal/modal.service'
 import { IProject } from 'src/app/shared/models/projects/projects'
 import { ProjectService } from 'src/app/shared/services/project/project.service'
 import { IMilestone } from 'src/app/shared/models/milestones/milestones'
-import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
 import { ITask } from 'src/app/shared/models/tasks/tasks'
 
 @Component({
@@ -54,7 +53,6 @@ export class DashboardComponent implements OnInit {
     private readonly taskService: TaskService,
     private userService: UserService,
     private projectService: ProjectService,
-    private milestoneService: MilestoneService,
     private formBuilder: FormBuilder,
     private modalService: ModalService
   ) {
@@ -67,7 +65,7 @@ export class DashboardComponent implements OnInit {
   getInitialData(): void {
     this.dashboardService.getDashboardData().then((data) => {
       data.forEach((item: DashboardItem) => {
-        const date = new Date(item.dateTo)
+        const date = new Date(item.date)
         item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
       })
 
@@ -98,7 +96,7 @@ export class DashboardComponent implements OnInit {
     const selectedProject = this.projects.find(project => project.id === projectId)
 
     if (selectedProject) this.selectedProject = selectedProject
-    this.setMilestonesByProject(projectId);
+    this.milestones = selectedProject?.milestones || []
   }
 
   public isInvalidInput(inputName: string): boolean {
@@ -113,16 +111,16 @@ export class DashboardComponent implements OnInit {
     return this.user?.roleName == "Administrador"
   }
 
-  public openEditTaskModal(taskId: number, modalTemplate: TemplateRef<any>): void {
+  public async openEditTaskModal(taskId: number, modalTemplate: TemplateRef<any>): Promise<void> {
     this.resetForm()
 
     let currentTask = this.getTaskFromDashboard(taskId)
 
     this.taskToEdit = currentTask.id
 
-    this.setProjectsByUser(this.user!.id!);
+    await this.setProjectsByUser(this.user!.id!)
 
-    console.log(currentTask)
+    this.selectedProject = this.projects.find(project => project.id === currentTask.project.id) || {} as IProject
 
     this.form.patchValue({
       projectId: currentTask.project.id,
@@ -130,14 +128,12 @@ export class DashboardComponent implements OnInit {
       description: currentTask.description,
       dateFrom: new Date(currentTask.dateFrom),
       dateTo: new Date(currentTask.dateTo),
-
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar tarea' })
-
   }
 
-  async editTask(): Promise<void> { 
+  async editTask(): Promise<void> {
     if (this.form.invalid) {
       this.formSubmitted = true
       return
@@ -211,16 +207,8 @@ export class DashboardComponent implements OnInit {
     return this.dataSource.data.find(task => task.id === id)!
   }
 
-  private setProjectsByUser(userId: number): void {
-    this.projectService.getProjectsByEmployee(userId).then((projects) => {
-      this.projects = projects
-    })
-  }
-
-  private setMilestonesByProject(projectId: number): void {
-    this.milestoneService.getMilestonesByProject(projectId).then((milestones) => {
-      this.milestones = milestones
-    })
+  private async setProjectsByUser(userId: number): Promise<void> {
+    this.projects = await this.projectService.getProjectsByEmployee(userId)
   }
 
   private reloadTasks(): void {

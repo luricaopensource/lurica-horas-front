@@ -11,17 +11,13 @@ export interface DashboardItem {
   date: string
   dateFrom: string
   dateTo: string
-  createdAt: Date
   project: { id: number, name: string }
   milestone: { id: number, name: string }
   description: string
   hours: number
   status: string
-  hourlyAmount: number
   currency: string
-  usdAmount: number
-  costAmount: number
-  employee: { id: string, fullName: string, hourlyAmount: string, currencyName: string }
+  employee: { id: string, fullName: string, hourlyAmount: string, currencyName: string, usdAmount: string }
 }
 
 /**
