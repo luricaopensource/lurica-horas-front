@@ -1,17 +1,15 @@
-<!-- <div *ngIf="clients[i].projects[j].showMilestones" class="milestones">
-  <div class="milestone" *ngFor="let milestoneControl of getMilestoneControls(i, j); let k = index" [formGroupName]="k">
+<div class="milestones">
+  <div class="milestone" *ngFor="let milestone of project.milestones; let i = index">
     <div class="milestone-header" (click)="stopPropagation($event)">
-      <input type="text" formControlName="name" (click)="stopPropagation($event)">
+      <input type="text" placeholder="Nombre del hito" formControlName="name" (click)="stopPropagation($event)">
       <div class="header-buttons">
-        <button *ngIf="!clients[i].projects[j].milestones[k].created" class="save-button"
-          (click)="saveMilestone(clients[i].projects[j].milestones[k], clients[i].projects[j].id!, $event)">
+        <button *ngIf="milestone.created" class="save-button" (click)="saveMilestone(milestone, project.id!, $event)">
           <img src="assets/save.svg">
         </button>
-        <button class="edit-button"
-          (click)="saveMilestone(clients[i].projects[j].milestones[k], clients[i].projects[j].id!, $event)">
+        <button class="edit-button" (click)="saveMilestone(milestone, project.id!, $event)">
           <img src="assets/edit.svg" />
         </button>
-        <button class="delete-button" (click)="deleteMilestone(clients[i].projects[j].milestones[k], i, j, k, $event)">
+        <button class="delete-button" (click)="deleteMilestone(milestone, $event)">
           <img src="assets/delete.svg" />
         </button>
       </div>
@@ -29,6 +27,5 @@
       </div>
     </div>
   </div>
-  <button class="add-button" [disabled]="!clients[i].projects[j].created"
-    (click)="addMilestone(clients[i], clients[i].projects[j])">+ Añadir hito</button>
-</div> -->
+  <button class="add-button" [disabled]="!project.created" (click)="addMilestone()">+ Añadir hito</button>
+</div>

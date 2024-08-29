@@ -1,7 +1,6 @@
-import { Component } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Component, Input } from '@angular/core'
+import { FormGroup } from '@angular/forms'
 import { IResponseModel } from 'src/app/shared/models'
-import { IClientCollapsible } from 'src/app/shared/models/clients/clients'
 import { IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
 import { IProjectCollapsible } from 'src/app/shared/models/projects/projects'
 import { MilestoneService } from 'src/app/shared/services/milestones/milestones.service'
@@ -9,10 +8,11 @@ import { MilestoneService } from 'src/app/shared/services/milestones/milestones.
 @Component({
   selector: 'app-milestones',
   templateUrl: './milestones.component.html',
-  styleUrls: ['./milestones.component.css']
+  styleUrls: ['../clients/clients.component.css']
 })
 export class MilestonesComponent {
   public form: FormGroup = new FormGroup({})
+  @Input() project: IProjectCollapsible = {} as IProjectCollapsible
 
   constructor(
     private service: MilestoneService
@@ -20,10 +20,12 @@ export class MilestonesComponent {
 
   }
 
-  addMilestone(customer: IClientCollapsible, newProject: IProjectCollapsible): void {
-    const project = customer.projects.find(project => project.id === newProject.id)
+  stopPropagation(event: Event): void {
+    event.stopPropagation()
+  }
 
-    project!.milestones.push({ name: '', date: '', amountPercentage: 0, created: false, editMode: true })
+  addMilestone(): void {
+    this.project.milestones.push({ name: '', date: '', amountPercentage: 0, created: false, editMode: true })
   }
 
   async saveMilestone(milestone: IMilestoneCollapsible, projectId: number, event: Event) {
@@ -48,7 +50,7 @@ export class MilestonesComponent {
     milestone.created = true
   }
 
-  async deleteMilestone(milestone: IMilestoneCollapsible, i: number, j: number, k: number, event: Event): Promise<void> {
+  async deleteMilestone(milestone: IMilestoneCollapsible, event: Event): Promise<void> {
     event.stopPropagation()
 
     if (!milestone.amountPercentage && !milestone.date && !milestone.name) {

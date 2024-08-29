@@ -1,36 +1,42 @@
 <!-- Project section -->
-<!-- <div *ngIf="clients[i].showProjects" class="projects">
-  <div class="project-card" *ngFor="let projectControl of getProjectControls(i); let j = index" [formGroupName]="j">
-    <div class="project-header" (click)="toggleVisibility(i, j)">
-      <input type="text" placeholder="Proyecto increíble" formControlName="name" (click)="stopPropagation($event)">
-      <div class="header-buttons">
-        <button *ngIf="!clients[i].projects[j].created; else editButton" class="save-button"
-          (click)="saveProject(clients[i].projects[j], clients[i].id!, i, $event, j)">
-          <img src="assets/save.svg">
-        </button>
-        <ng-template #editButton>
-          <button class="edit-button" (click)="saveProject(clients[i].projects[j], clients[i].id!, i, $event, j)">
-            <img src="assets/edit.svg">
+
+<div class="projects">
+  <div class="project-card" *ngFor="let project of customer.projects; let i = index">
+    <form [formGroup]="form">
+      <div class="project-header" (click)="toggleFields(project)">
+
+        <input type="text" placeholder="Nombre del proyecto" [formControlName]="project.name + project.id"
+          (click)="stopPropagation($event)">
+        <div class="header-buttons">
+          <button *ngIf="!project.id; else editButton" class="save-button"
+            (click)="save(project, customer.id!, $event)">
+            <img src="assets/save.svg">
           </button>
-        </ng-template>
-        <button class="delete-button" (click)="deleteProject(clients[i].projects[j], i, j, $event)">
-          <img src="assets/delete.svg" />
-        </button>
+          <ng-template #editButton>
+            <button class="edit-button" (click)="save(project, customer.id!, $event)">
+              <img src="assets/edit.svg">
+            </button>
+          </ng-template>
+          <button class="delete-button" (click)="delete(project, i, $event)">
+            <img src="assets/delete.svg" />
+          </button>
+        </div>
       </div>
-    </div>
-    <div *ngIf="clients[i].projects[j].showMilestones" class="project-body">
-      <label for="currency">Tipo de moneda</label>
-      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
-        <select formControlName="currency" (click)="stopPropagation($event)">
-          <option *ngFor="let currency of currencies" [value]="currency.name">
-            {{currency.name}}
-          </option>
-        </select>
+
+      <div *ngIf="project.showMilestones" class="project-body">
+        <label for="currency">Tipo de moneda</label>
+        <div class="form-group">
+          <select [formControlName]="project.currency + project.id">
+            <option *ngFor="let currency of currencies" value={{currency.id}}>
+              {{currency.name}}
+            </option>
+          </select>
+        </div>
+        <label for="amount">Monto:</label>
+        <input type="number" [formControlName]="project.amountControlName!">
       </div>
-      <label for="amount">Monto:</label>
-      <input type="number" formControlName="amount" (click)="stopPropagation($event)">
-    </div>
-    <app-milestones *ngIf="toggleShowMilestones"></app-milestones>
+    </form>
+    <app-milestones *ngIf="project.showMilestones" [project]="project"></app-milestones>
   </div>
-  <button class="add-button">+ Añadir proyecto</button>
-</div> -->
+  <button class="add-button" (click)="addProject(customer)">+ Añadir proyecto</button>
+</div>

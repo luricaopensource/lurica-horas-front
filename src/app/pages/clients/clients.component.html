@@ -2,17 +2,17 @@
   <div class="container">
     <!-- Customer section -->
     <button class="add-button" (click)="addCustomer()">+ Añadir cliente</button>
-    <div class="customer-card" *ngFor="let customer of customers">
-      <div class="customer-header" (click)="displayProjects()">
-        <input type="text" placeholder="Cliente increíble" [value]="customer.name">
+    <div class="customer-card" *ngFor="let customer of customers; let i = index">
+      <div class="customer-header" (click)="displayProjects(customer)">
+        <input [disabled]="!customer.editMode" type="text" placeholder="Nombre del cliente" [(ngModel)]="customer.name"
+          (focusout)="createCustomer(customer)" (click)="stopPropagation($event)">
         <div class="header-buttons">
-          <button class="edit-button" (click)="edit()"><img src="assets/edit.svg" /></button>
-          <button class="delete-button" (click)="delete(customer)"><img src="assets/delete.svg" /></button>
+          <button class="edit-button" (click)="edit(customer, $event)"><img src="assets/edit.svg" /></button>
+          <button class="delete-button" (click)="delete(customer, i, $event)"><img src="assets/delete.svg" /></button>
         </div>
       </div>
-
       <!-- Project section -->
-      <app-projects *ngIf="toggleShowProjects"></app-projects>
+      <app-projects [customer]="customer" *ngIf="customer.showProjects"></app-projects>
     </div>
   </div>
 </app-navbar>

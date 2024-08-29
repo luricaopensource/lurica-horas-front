@@ -4,7 +4,6 @@ export interface ITask {
   milestoneId: number,
   description: string,
   dateFrom: string,
-  dateTo: string,
   hours: number,
   type?: string,
   paid: boolean,

@@ -12,21 +12,25 @@ import { IMilestone, IMilestoneCollapsible } from 'src/app/shared/models/milesto
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent {
-  public customers: IClient[] = []
+  public customers: IClientCollapsible[] = []
   public clientToEdit: IClient | null = null
   public currencies = currencies
   public toggleShowProjects: boolean = false
 
   constructor(
-    private clientService: ClientService) {
+    private service: ClientService) {
     this.getClients()
+  }
+
+  stopPropagation(event: Event) {
+    event.stopPropagation()
   }
 
   async createCustomer(customer: IClientCollapsible): Promise<void> {
     if (!customer.name) return
 
     try {
-      const customerCreated = await this.clientService.createClient(customer)
+      const customerCreated = customer.id ? await this.service.updateClient(customer) : await this.service.createClient(customer)
       customer.id = customerCreated.id
       customer.editMode = false
     } catch (error) {
@@ -35,30 +39,56 @@ export class ClientsComponent {
     }
   }
 
-  displayProjects() {
-    this.toggleShowProjects = !this.toggleShowProjects
+  displayProjects(customer: IClientCollapsible) {
+    customer.showProjects = !customer.showProjects
   }
 
   addCustomer(): void {
-    this.customers.push({ name: '', projects: [] })
+    this.customers.push({ name: '', projects: [], editMode: true, showProjects: false })
   }
 
-  edit() {
-    console.log("editEntity")
+  edit(customer: IClientCollapsible, event: Event) {
+    this.stopPropagation(event)
+    customer.editMode = !customer.editMode
   }
 
   private async getClients(): Promise<void> {
-    this.customers = await this.clientService.getClients()
+    const clients = await this.service.getClients()
+
+    this.customers = clients.map((client: IClient) => {
+      let projects = client.projects?.map<IProjectCollapsible>((project: IProject) => {
+        let milestones = project.milestones?.map<IMilestoneCollapsible>((milestone: IMilestone) => ({
+          ...milestone,
+          editMode: false,
+          created: true
+        }))
+
+        return {
+          ...project,
+          editMode: false,
+          showMilestones: false,
+          milestones,
+          created: true
+        }
+      })
+
+      if (!projects || projects.length == 0) projects = []
+
+      const newClient: IClientCollapsible = { ...client, editMode: false, showProjects: false, projects }
+
+      return newClient
+    })
   }
 
-  public async delete(customer: IClient): Promise<void> {
+  public async delete(customer: IClient, customerIndex: number, event: Event): Promise<void> {
+    this.stopPropagation(event)
     if (!customer.name) {
-      // this.deleteEntity(i, undefined, undefined, event)
+      this.customers.splice(customerIndex, 1)
       return
     }
 
     try {
-      await this.clientService.deleteClient(customer.id!)
+      await this.service.deleteClient(customer.id!)
       this.getClients()
     } catch (error) {
       // TODO: Handle error properly

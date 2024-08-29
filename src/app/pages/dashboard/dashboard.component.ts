@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
   public errorMessage: string = ''
   public isAdmin: boolean = false
   public taskToEdit: number | null = null
+  public date: Date = new Date()
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
@@ -65,8 +66,8 @@ export class DashboardComponent implements OnInit {
   getInitialData(): void {
     this.dashboardService.getDashboardData().then((data) => {
       data.forEach((item: DashboardItem) => {
-        const date = new Date(item.date)
-        item.date = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+        const date = new Date(item.createdAt)
+        item.createdAt = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
       })
 
       this.dataSource.data = data
@@ -85,8 +86,8 @@ export class DashboardComponent implements OnInit {
       milestoneId: [null, [Validators.required]],
       description: ['', [Validators.required]],
       type: [''],
-      dateFrom: [new Date(), [Validators.required]],
-      dateTo: [new Date(), [Validators.required]]
+      dateFrom: ['', [Validators.required]],
+      hours: [null, [Validators.required]]
     })
   }
 
@@ -118,16 +119,21 @@ export class DashboardComponent implements OnInit {
 
     this.taskToEdit = currentTask.id
 
-    await this.setProjectsByUser(this.user!.id!)
+    if (!this.user) return
+    if (!this.user.id) return
+
+    await this.setProjectsByUser(this.user.id)
 
     this.selectedProject = this.projects.find(project => project.id === currentTask.project.id) || {} as IProject
 
+    const milestoneId = currentTask.milestone ? currentTask.milestone.id : 0
+
     this.form.patchValue({
       projectId: currentTask.project.id,
-      milestoneId: currentTask.milestone.id,
+      milestoneId: milestoneId,
       description: currentTask.description,
-      dateFrom: new Date(currentTask.dateFrom),
-      dateTo: new Date(currentTask.dateTo),
+      dateFrom: new Date(currentTask.createdAt),
+      hours: currentTask.hours
     })
 
     this.openModal(modalTemplate, { size: 'lg', title: 'Editar tarea' })
@@ -139,25 +145,8 @@ export class DashboardComponent implements OnInit {
       return
     }
 
-    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value
+    const { projectId, milestoneId, description, type, dateFrom, hours } = this.form.value
     const from = new Date(dateFrom)
-    const to = new Date(dateTo)
-
-    if (isNaN(from.getTime()) || isNaN(to.getTime())) {
-      return
-    }
-
-    if (from > to) {
-      this.errorMessage = 'Fecha desde no puede ser mayor a fecha hasta'
-      return
-    }
-
-    const hours = this.getHours(from, to)
-
-    if (hours === 0) {
-      this.errorMessage = 'Fecha desde no puede ser igual a fecha hasta'
-      return
-    }
 
     if (!this.user) return
 
@@ -167,7 +156,6 @@ export class DashboardComponent implements OnInit {
       milestoneId,
       description,
       dateFrom: from.toLocaleString(),
-      dateTo: to.toLocaleString(),
       hours,
       type,
       paid: false,
@@ -215,11 +203,4 @@ export class DashboardComponent implements OnInit {
     this.dataSource.data = []
     this.getInitialData()
   }
-
-  private getHours(dateFrom: Date, dateTo: Date): number {
-    let diff = (dateFrom.getTime() - dateTo.getTime()) / 1000
-    diff /= (60 * 60)
-    return Math.abs(Math.round(diff))
-  }
-
 }

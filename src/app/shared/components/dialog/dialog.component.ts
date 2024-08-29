@@ -84,25 +84,8 @@ export class DialogComponent {
       return
     }
 
-    const { projectId, milestoneId, description, type, dateFrom, dateTo } = this.form.value
+    const { projectId, milestoneId, description, type, dateFrom, hours } = this.form.value
     const from = new Date(dateFrom)
-    const to = new Date(dateTo)
-
-    if (isNaN(from.getTime()) || isNaN(to.getTime())) {
-      return
-    }
-
-    if (from > to) {
-      this.errorMessage = 'Fecha desde no puede ser mayor a fecha hasta'
-      return
-    }
-
-    const hours = this.getHours(from, to)
-
-    if (hours === 0) {
-      this.errorMessage = 'Fecha desde no puede ser igual a fecha hasta'
-      return
-    }
 
     if (!this.user) return
 
@@ -111,7 +94,6 @@ export class DialogComponent {
       milestoneId,
       description,
       dateFrom: new Date(dateFrom).toLocaleString(),
-      dateTo: new Date(dateTo).toLocaleString(),
       hours,
       type,
       paid: false,
@@ -135,7 +117,6 @@ export class DialogComponent {
     this.milestones = selectedProject?.milestones!
 
     const dateFrom = new Date(task.dateFrom)
-    const dateTo = new Date(task.dateTo)
 
     this.form.patchValue({
       projectId: task.projectId,
@@ -143,7 +124,7 @@ export class DialogComponent {
       description: task.description,
       type: task.type,
       dateFrom: dateFrom,
-      dateTo: dateTo
+      hours: task.hours
     })
     this.editIndex = index
   }
