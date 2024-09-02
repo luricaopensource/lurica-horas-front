@@ -15,7 +15,7 @@ export interface DashboardItem {
   hours: number
   status: string
   currency: string
-  employee: { id: string, fullName: string, hourlyAmount: string, currencyName: string, usdAmount: string }
+  employee: { id: string, fullName: string, hourlyAmount: string, currencyName: string, blueQuoteAmount: string, officialQuoteAmount: string }
 }
 
 /**

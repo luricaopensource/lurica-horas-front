@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator
   @ViewChild(MatSort) sort!: MatSort
   @ViewChild(MatTable) table!: MatTable<DashboardItem>
-  dataSource: DashboardDataSource
+  dataSource: DashboardDataSource | null = null
   data: DashboardItem[] = []
   user: IUser | null = null
   public form: FormGroup = new FormGroup({})
@@ -46,8 +46,8 @@ export class DashboardComponent implements OnInit {
     'status',
     'hourly-amount',
     'currency',
-    'usd-amount',
-    'cost-amount'
+    'blue-amount',
+    'official-amount'
   ];
 
   constructor(private readonly dashboardService: DashboardService,
@@ -57,10 +57,6 @@ export class DashboardComponent implements OnInit {
     private formBuilder: FormBuilder,
     private modalService: ModalService
   ) {
-    this.dataSource = new DashboardDataSource(this.dashboardService)
-    this.user = this.userService.getUserFromLocalStorage()
-    this.isAdmin = this.userIsAdmin()
-    this.buildForm()
   }
 
   getInitialData(): void {
@@ -70,11 +66,16 @@ export class DashboardComponent implements OnInit {
         item.createdAt = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
       })
 
-      this.dataSource.data = data
+      this.dataSource!.data = data
     })
   }
 
   ngOnInit(): void {
+    this.dataSource = new DashboardDataSource(this.dashboardService)
+    this.user = this.userService.getUserFromLocalStorage()
+    this.isAdmin = this.userIsAdmin()
+    this.buildForm()
+
     this.taskService.taskAdded.subscribe(() => {
       this.getInitialData()
     })
@@ -177,7 +178,7 @@ export class DashboardComponent implements OnInit {
 
   public deleteTask(id: number, index: number): void {
     this.taskService.deleteTask(id)
-    this.dataSource.data.splice(index, 1)
+    this.dataSource!.data.splice(index, 1)
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
@@ -192,7 +193,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private getTaskFromDashboard(id: number): DashboardItem {
-    return this.dataSource.data.find(task => task.id === id)!
+    return this.dataSource!.data.find(task => task.id === id)!
   }
 
   private async setProjectsByUser(userId: number): Promise<void> {
@@ -200,7 +201,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private reloadTasks(): void {
-    this.dataSource.data = []
+    this.dataSource!.data = []
     this.getInitialData()
   }
 }

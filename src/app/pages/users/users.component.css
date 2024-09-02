@@ -168,3 +168,28 @@ textarea {
     font-weight: bold;
   }
 }
+
+.radio-group {
+  margin-bottom: 20px;
+}
+
+.main-label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.radio-option {
+  display: inline-flex;
+  margin-right: 20px;
+}
+
+.radio-option input[type="radio"] {
+  margin-right: 4px;
+}
+
+.radio-option label {
+  font-size: 16px;
+  cursor: pointer;
+}

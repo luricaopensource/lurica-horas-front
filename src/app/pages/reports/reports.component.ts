@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { Component, OnInit } from "@angular/core"
 import { FormBuilder, FormGroup } from "@angular/forms"
 import { IClient } from "src/app/shared/models/clients/clients"
 import { IMilestone } from "src/app/shared/models/milestones/milestones"
@@ -15,7 +15,7 @@ import { UserService } from "src/app/shared/services/user/user.service"
   templateUrl: "./reports.component.html",
   styleUrls: ["./reports.component.css"]
 })
-export class ReportsComponent {
+export class ReportsComponent implements OnInit {
   public pdfUrl: string = ""
   public reportForm: FormGroup = new FormGroup({})
   public employees: IUser[] = []
@@ -32,6 +32,9 @@ export class ReportsComponent {
     private clientService: ClientService,
     private milestoneService: MilestoneService
   ) {
+  }
+
+  ngOnInit(): void {
     this.buildForm()
     this.getEntities()
   }

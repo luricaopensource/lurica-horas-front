@@ -12,13 +12,15 @@
             <th>Descripción</th>
             <th>Horas</th>
             <th>Estado</th>
-            <th>Monto por Hora</th>
             <th>Tipo Moneda</th>
-            <th>Monto en USD</th>
+            <th>Tipo Monto</th>
+            <th>Monto horario en USD</th>
+            <th>Cotizado Blue</th>
+            <th>Cotizado Oficial</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of dataSource.data; let i = index">
+          <tr *ngFor="let row of dataSource!.data; let i = index">
             <td data-label="Id">{{row.id}}</td>
             <td data-label="Fecha">{{row.createdAt || "Sin fecha"}}</td>
             <td data-label="Proyecto">{{row.project.name}}</td>
@@ -26,9 +28,11 @@
             <td data-label="Descripción">{{row.description}}</td>
             <td data-label="Horas">{{row.hours}}</td>
             <td data-label="Estado">{{row.status}}</td>
-            <td data-label="Monto por Hora">${{row.employee.hourlyAmount || "1.00"}}</td>
             <td data-label="Tipo Moneda"><span class="currency-card">{{row.currency || "ARS"}}</span></td>
-            <td data-label="Monto en USD">${{row.employee.usdAmount || "0.00"}}</td>
+            <td data-label="Tipo de Monto">--</td>
+            <td data-label="Monto horario en USD">${{row.employee.hourlyAmount || "1.00"}}</td>
+            <td data-label="USD Blue">${{row.employee.blueQuoteAmount || "0.00"}}</td>
+            <td data-label="USD Oficial">${{row.employee.officialQuoteAmount || "0.00"}}</td>
             <ng-container *ngIf="isAdmin">
               <td data-label=""><button class="edit-btn"
                   (click)="openEditTaskModal(row.id!, createUserTemplate)">Editar</button></td>
@@ -37,7 +41,7 @@
           </tr>
         </tbody>
       </table>
-      <p *ngIf="!dataSource.data.length"><b>No hay tareas para mostrar.</b></p>
+      <p *ngIf="!dataSource!.data.length"><b>No hay tareas para mostrar.</b></p>
     </div>
   </div>
 

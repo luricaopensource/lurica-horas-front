@@ -46,6 +46,37 @@ s .sidenav .mat-toolbar {
   z-index: 1;
 }
 
+.logo-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 1.5em;
+    font-weight: 500;
+    color: #000; /* Ensure text color is set */
+    border-radius: 5px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.logo-wrapper img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px; /* Adds space between the logo and the text */
+    transition: transform 0.3s ease;
+}
+
+.logo-wrapper:hover {
+    color: #be0926; /* Change text color on hover */
+    background-color: rgba(0, 0, 0, 0.1); /* Add a subtle background color change on hover */
+    border-radius: 5px;
+}
+
+.logo-wrapper:hover img {
+    transform: scale(1.1); /* Slightly enlarges the logo on hover */
+}
+
 .header-toolbar {
   display: flex;
   flex-direction: row;

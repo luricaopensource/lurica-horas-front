@@ -13,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms'
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
 
   public user: IUser = {
     firstName: '',
@@ -43,6 +43,9 @@ export class NavbarComponent {
     private userService: UserService,
     private formBuilder: FormBuilder
   ) {
+  }
+
+  ngOnInit(): void {
     this.buildForm()
     this.getCurrentUser()
   }

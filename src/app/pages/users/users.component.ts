@@ -12,7 +12,7 @@ import { UserService } from 'src/app/shared/services/user/user.service'
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
   public users: IUser[] = []
   public formSubmitted: boolean = false
@@ -27,6 +27,9 @@ export class UsersComponent {
     private loginService: LoginService,
     private userService: UserService
   ) {
+  }
+
+  ngOnInit(): void {
     this.buildForm()
     this.getUsers()
   }
@@ -46,8 +49,8 @@ export class UsersComponent {
       email: ['', [Validators.required, Validators.email]],
       currency: ['', [Validators.required]],
       role: ['', [Validators.required]],
-      hourlyAmount: ['', [Validators.required]],
-      monthlyAmount: ['', [Validators.required]]
+      amount: ['', [Validators.required]],
+      amountType: [false, [Validators.required]]
     })
   }
 
@@ -58,7 +61,7 @@ export class UsersComponent {
   }
 
   public createUser(modalTemplate: TemplateRef<any>): void {
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear usuario' })
+    this.openModal(modalTemplate, { size: 'md', title: 'Crear usuario' })
   }
 
   public async register() {
@@ -67,7 +70,10 @@ export class UsersComponent {
       return
     }
 
-    const { firstName, lastName, username, password, email, currency, role, hourlyAmount, monthlyAmount } = this.form.value
+    const { firstName, lastName, username, password, email, currency, role, amount, amountType } = this.form.value
+
+    const monthlyAmount = amountType == "hourly" ? 0 : amount;
+    const hourlyAmount = amountType == "hourly" ? amount : 0;
 
     const user: IUser = {
       firstName,

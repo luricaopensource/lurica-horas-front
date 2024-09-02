@@ -1,43 +1,44 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core'
-import { TaskService } from '../../services/task/task.service'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { ITask } from '../../models/tasks/tasks'
-import { ModalService } from '../../services/modal/modal.service'
-import { ProjectService } from 'src/app/shared/services/project/project.service'
-import { IProject } from 'src/app/shared/models/projects/projects'
-import { IMilestone } from '../../models/milestones/milestones'
-import { UserService } from '../../services/user/user.service'
-import { IUser } from '../../models/users/user'
-
+import { Component, ViewChild, TemplateRef, OnInit } from "@angular/core"
+import { TaskService } from "../../services/task/task.service"
+import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { ITask } from "../../models/tasks/tasks"
+import { ModalService } from "../../services/modal/modal.service"
+import { ProjectService } from "src/app/shared/services/project/project.service"
+import { IProject } from "src/app/shared/models/projects/projects"
+import { IMilestone } from "../../models/milestones/milestones"
+import { UserService } from "../../services/user/user.service"
+import { IUser } from "../../models/users/user"
 
 @Component({
-  selector: 'app-dialog',
-  templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.css']
+  selector: "app-dialog",
+  templateUrl: "./dialog.component.html",
+  styleUrls: ["./dialog.component.css"],
 })
-export class DialogComponent {
+export class DialogComponent implements OnInit {
   public projects: IProject[] = []
   public milestones: IMilestone[] = []
   public form: FormGroup = new FormGroup({})
   public formStatus: boolean = false
   public formSubmitted: boolean = false
-  public tasks: ITask[] = [];
-  public editIndex: number | null = null;
+  public tasks: ITask[] = []
+  public editIndex: number = 0
   public user: IUser | null = null
-  public errorMessage: string = ''
+  public errorMessage: string = ""
 
-  @ViewChild('viewTasksModal') viewTasksModal!: TemplateRef<any>
+  @ViewChild("viewTasksModal") viewTasksModal!: TemplateRef<any>
 
   constructor(
     private taskService: TaskService,
     private formBuilder: FormBuilder,
     private modalService: ModalService,
     private projectService: ProjectService,
-    private userService: UserService
-  ) {
+    private userService: UserService,
+  ) {}
+
+  ngOnInit(): void {
+    this.user = this.userService.getUserFromLocalStorage()
     this.buildForm()
     this.getProjects()
-    this.user = this.userService.getUserFromLocalStorage()
   }
 
   private async getProjects(): Promise<void> {
@@ -50,70 +51,62 @@ export class DialogComponent {
 
   private buildForm(): void {
     this.form = this.formBuilder.group({
-      projectId: ['', [Validators.required]],
-      milestoneId: [''],
-      description: ['', [Validators.required]],
-      type: [''],
-      dateFrom: [null, [Validators.required]],
-      dateTo: [null, [Validators.required]]
+      projectId: ["", [Validators.required]],
+      milestoneId: [""],
+      description: ["", [Validators.required]],
+      type: [""],
+      date: [null, [Validators.required]],
+      hours: [null, [Validators.required]]
     })
   }
 
   selectType(type: string): void {
-    this.form.patchValue({ type })
-    document.querySelectorAll('.tag').forEach(tag => {
-      tag.classList.remove('selected')
-    })
-    document.querySelector(`.tag.${type.toLowerCase()}`)?.classList.add('selected')
+    console.log('Develop type selection logic')
   }
 
-  private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
-    this.modalService
-      .open(modalTemplate, options)
-      .subscribe()
+  private openModal(modalTemplate: TemplateRef<any>, options: { size: string; title: string }) {
+    this.modalService.open(modalTemplate, options).subscribe()
   }
 
   public openNewProjectModal(modalTemplate: TemplateRef<any>): void {
-    this.openModal(modalTemplate, { size: 'lg', title: 'Crear tarea' })
+    this.openModal(modalTemplate, { size: "lg", title: "Crear tarea" })
     this.resetForm()
   }
 
-  public createTask(): void {
+  public addTaskToQueue(): void {
     if (this.form.invalid) {
       this.formSubmitted = true
       return
     }
 
-    const { projectId, milestoneId, description, type, dateFrom, hours } = this.form.value
-    const from = new Date(dateFrom)
-
+    const { projectId, milestoneId, description, type, date, hours } = this.form.value
     if (!this.user) return
 
     const task: ITask = {
       projectId,
       milestoneId,
       description,
-      dateFrom: new Date(dateFrom).toLocaleString(),
+      dateFrom: new Date(date).toLocaleString(),
       hours,
       type,
       paid: false,
-      status: 'Pendiente',
-      userId: this.user.id!
+      status: "Pendiente",
+      userId: this.user.id!,
     }
 
-    if (this.editIndex !== null) {
-      this.tasks[this.editIndex] = task
-      this.editIndex = null
-    } else {
+    if (this.editIndex) {
       this.tasks.push(task)
+      return
     }
 
+    this.tasks[this.editIndex] = task
+    this.editIndex = 0
     this.resetForm()
   }
 
   public editTask(index: number): void {
     const task = this.tasks[index]
-    const selectedProject = this.projects.find(project => project.id === task.projectId)
+    const selectedProject = this.projects.find((project) => project.id == task.projectId)
     this.milestones = selectedProject?.milestones!
 
     const dateFrom = new Date(task.dateFrom)
@@ -148,12 +141,12 @@ export class DialogComponent {
   public onProjectChange(event: Event): void {
     const selectElement = event.target as HTMLSelectElement
     const projectId = Number(selectElement.value)
-    const selectedProject = this.projects.find(project => project.id === projectId)
+    const selectedProject = this.projects.find((project) => project.id === projectId)
 
     if (selectedProject) {
       this.milestones = selectedProject.milestones
-    }
   }
+    }
 
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)
@@ -163,16 +156,9 @@ export class DialogComponent {
     return input.invalid && (input.dirty || input.touched || this.formSubmitted)
   }
 
-  private getHours(dateFrom: Date, dateTo: Date): number {
-    let diff = (dateFrom.getTime() - dateTo.getTime()) / 1000
-    diff /= (60 * 60)
-    return Math.abs(Math.round(diff))
-  }
-
   private resetForm(): void {
-    this.errorMessage = ''
+    this.errorMessage = ""
     this.form.reset()
     this.formSubmitted = false
-    this.milestones = []
   }
 }

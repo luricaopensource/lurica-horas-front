@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar class="mat-toolbar"><a routerLink="/dashboard">Lurica Horas</a></mat-toolbar>
+    <mat-toolbar class="mat-toolbar"><a class="logo-wrapper" routerLink="/dashboard"><img src="assets/brand-logo.png"> Horas</a></mat-toolbar>
     <mat-action-list class="action-list">
       <div class="top-buttons-container">
         <mat-dialog-actions mat-list-item>

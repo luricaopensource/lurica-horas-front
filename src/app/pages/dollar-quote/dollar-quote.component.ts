@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { DollarQuoteService } from 'src/app/shared/services/dollar-quote/dollar-quote.service'
 
@@ -7,10 +7,13 @@ import { DollarQuoteService } from 'src/app/shared/services/dollar-quote/dollar-
   templateUrl: './dollar-quote.component.html',
   styleUrls: ['./dollar-quote.component.css']
 })
-export class DollarQuoteComponent {
+export class DollarQuoteComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
 
   constructor(private fb: FormBuilder, private service: DollarQuoteService) {
+  }
+
+  ngOnInit(): void {
     this.buildForm()
     this.getDollarQuote()
   }

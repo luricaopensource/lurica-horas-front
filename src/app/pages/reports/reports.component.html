@@ -34,40 +34,14 @@
         </div>
 
         <div class="form-group">
-          <mat-form-field>
-            <input matInput [ngxMatDatetimePicker]="dateFromPicker" placeholder="Fecha desde"
-              formControlName="dateFrom" />
-            <ngx-mat-datepicker-toggle matSuffix [for]="dateFromPicker">
-              <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-            </ngx-mat-datepicker-toggle>
-            <div class="datetime-picker-container">
-              <ngx-mat-datetime-picker #dateFromPicker [hideTime]="true">
-                <ngx-mat-datepicker-actions>
-                  <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                  <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
-                </ngx-mat-datepicker-actions>
-              </ngx-mat-datetime-picker>
-            </div>
-          </mat-form-field>
+            <label for="dateFrom">Fecha desde</label>
+            <input type="date" id="dateFrom" formControlName="dateFrom">
         </div>
 
         <div class="form-group">
-          <mat-form-field>
-            <input matInput [ngxMatDatetimePicker]="dateToPicker" placeholder="Fecha hasta" formControlName="dateTo" />
-            <ngx-mat-datepicker-toggle matSuffix [for]="dateToPicker">
-              <mat-icon ngxMatDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-            </ngx-mat-datepicker-toggle>
-            <div class="datetime-picker-container">
-              <ngx-mat-datetime-picker class="datetime-picker" #dateToPicker [hideTime]="true">
-                <ngx-mat-datepicker-actions>
-                  <button mat-button ngxMatDatepickerCancel>Cancelar</button>
-                  <button mat-raised-button color="warn" ngxMatDatepickerApply>Aplicar</button>
-                </ngx-mat-datepicker-actions>
-              </ngx-mat-datetime-picker>
-            </div>
-          </mat-form-field>
+            <label for="dateTo">Fecha hasta</label>
+            <input type="date" id="dateTo" formControlName="dateTo">
         </div>
-
         <button type="submit" class="btn">Generar Reporte</button>
       </form>
     </div>

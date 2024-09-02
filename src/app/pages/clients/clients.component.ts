@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { IClient, IClientCollapsible } from 'src/app/shared/models/clients/clients'
 import { ClientService } from 'src/app/shared/services/clients/client.service'
 import { IProject, IProjectCollapsible } from 'src/app/shared/models/projects/projects'
@@ -11,7 +11,7 @@ import { IMilestone, IMilestoneCollapsible } from 'src/app/shared/models/milesto
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.css']
 })
-export class ClientsComponent {
+export class ClientsComponent implements OnInit {
   public customers: IClientCollapsible[] = []
   public clientToEdit: IClient | null = null
   public currencies = currencies
@@ -19,6 +19,9 @@ export class ClientsComponent {
 
   constructor(
     private service: ClientService) {
+  }
+
+  ngOnInit(): void {
     this.getClients()
   }
 
