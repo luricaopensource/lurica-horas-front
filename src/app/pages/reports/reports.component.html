@@ -29,18 +29,19 @@
         <div class="form-group">
           <label for="milestone">Hito</label>
           <select id="milestone" formControlName="milestoneId">
+            <option value=""></option>
             <option *ngFor="let milestone of milestones" [value]="milestone.id">{{ milestone.name }}</option>
           </select>
         </div>
 
         <div class="form-group">
-            <label for="dateFrom">Fecha desde</label>
-            <input type="date" id="dateFrom" formControlName="dateFrom">
+          <label for="dateFrom">Fecha desde</label>
+          <input type="date" id="dateFrom" formControlName="dateFrom">
         </div>
 
         <div class="form-group">
-            <label for="dateTo">Fecha hasta</label>
-            <input type="date" id="dateTo" formControlName="dateTo">
+          <label for="dateTo">Fecha hasta</label>
+          <input type="date" id="dateTo" formControlName="dateTo">
         </div>
         <button type="submit" class="btn">Generar Reporte</button>
       </form>

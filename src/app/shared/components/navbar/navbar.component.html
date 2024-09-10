@@ -1,11 +1,13 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
-    <mat-toolbar class="mat-toolbar"><a class="logo-wrapper" routerLink="/dashboard"><img src="assets/brand-logo.png"> Horas</a></mat-toolbar>
+    <mat-toolbar class="mat-toolbar"><a class="logo-wrapper" routerLink="/dashboard"><img src="assets/brand-logo.png">
+        Horas</a></mat-toolbar>
     <mat-action-list class="action-list">
       <div class="top-buttons-container">
         <mat-dialog-actions mat-list-item>
-          <button mat-list-item (click)="openModal(createTaskTemplate, 'Crear tarea')" class="task-btn">Crear nueva
+          <button mat-list-item (click)="openModal(createTaskTemplate, 'Crear tarea', 'lg')" class="task-btn">Crear
+            nueva
             tarea</button>
         </mat-dialog-actions>
 
@@ -51,7 +53,7 @@
       </div>
       <div class="user-container" (click)="openModal(editUserTemplate, 'Editar datos de usuario')">
         <h3>{{user.username}}</h3>
-        <h4>29-05-2024 15:45:30</h4>
+        <h4><b>Último inicio de sesión:</b> {{user.lastLogin}}</h4>
       </div>
     </mat-toolbar>
 
@@ -59,7 +61,7 @@
     <ng-template #editUserTemplate>
       <form [formGroup]="form" (ngSubmit)="saveUserPassword()">
         <input [ngClass]="{'form-group-invalid' : isInvalidInput('password')}" type="password"
-          formControlName="password" placeholder="Contraseña">
+          formControlName="password" placeholder="Nueva Contraseña">
         <input [ngClass]="{'form-group-invalid' : isInvalidInput('confirmPassword')}" type="password"
           formControlName="confirmPassword" placeholder="Confirmar Contraseña">
         <p *ngIf="emptyPassword && formSubmitted" style="color: red">La contraseña no puede estar

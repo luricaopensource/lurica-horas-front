@@ -1,8 +1,8 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core'
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator'
 import { MatSort } from '@angular/material/sort'
 import { MatTable } from '@angular/material/table'
-import { DashboardDataSource, DashboardItem } from './dashboard-datasource'
+import { DashboardItem } from './dashboard-datasource'
 import { DashboardService } from 'src/app/shared/services/dashboard/dashboard.service'
 import { TaskService } from 'src/app/shared/services/task/task.service'
 import { IUser } from 'src/app/shared/models/users/user'
@@ -19,13 +19,10 @@ import { ITask } from 'src/app/shared/models/tasks/tasks'
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator
-  @ViewChild(MatSort) sort!: MatSort
-  @ViewChild(MatTable) table!: MatTable<DashboardItem>
-  dataSource: DashboardDataSource | null = null
-  data: DashboardItem[] = []
-  user: IUser | null = null
+export class DashboardComponent implements OnInit, OnDestroy {
+  public data: DashboardItem[] = []
+  public filteredData: DashboardItem[] = []
+  public user: IUser | null = null
   public form: FormGroup = new FormGroup({})
   public formSubmitted: boolean = false
   public projects: IProject[] = []
@@ -35,20 +32,9 @@ export class DashboardComponent implements OnInit {
   public isAdmin: boolean = false
   public taskToEdit: number | null = null
   public date: Date = new Date()
-
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [
-    'id',
-    'date',
-    'project',
-    'description',
-    'hours',
-    'status',
-    'hourly-amount',
-    'currency',
-    'blue-amount',
-    'official-amount'
-  ];
+  public filteredEmployee: IUser = {} as IUser
+  public employees: IUser[] = []
+  public showEmployeeFilter: boolean = false
 
   constructor(private readonly dashboardService: DashboardService,
     private readonly taskService: TaskService,
@@ -59,6 +45,29 @@ export class DashboardComponent implements OnInit {
   ) {
   }
 
+  ngOnInit(): void {
+    this.getInitialData()
+    this.user = this.userService.getUserFromLocalStorage()
+    this.getEmployees()
+    this.filteredEmployee = this.employees[0]
+    this.isAdmin = this.userIsAdmin()
+    this.buildForm()
+
+    this.taskService.taskAdded.subscribe(() => {
+      this.getInitialData()
+    })
+
+    document.addEventListener('click', this.handleClickOutside.bind(this))
+  }
+
+  ngOnDestroy(): void {
+    document.removeEventListener('click', this.handleClickOutside.bind(this))
+  }
+
+  async getEmployees(): Promise<void> {
+    this.employees = await this.userService.getUsers()
+  }
+
   getInitialData(): void {
     this.dashboardService.getDashboardData().then((data) => {
       data.forEach((item: DashboardItem) => {
@@ -66,19 +75,30 @@ export class DashboardComponent implements OnInit {
         item.createdAt = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
       })
 
-      this.dataSource!.data = data
+      this.data = data
+      this.filteredData = data
     })
   }
 
-  ngOnInit(): void {
-    this.dataSource = new DashboardDataSource(this.dashboardService)
-    this.user = this.userService.getUserFromLocalStorage()
-    this.isAdmin = this.userIsAdmin()
-    this.buildForm()
+  handleClickOutside(event: MouseEvent): void {
+    const target = event.target as HTMLElement
 
-    this.taskService.taskAdded.subscribe(() => {
-      this.getInitialData()
-    })
+    // Close the dropdown only if the click was outside both the dropdown and the icon container
+    if (!target.closest('.employee-filter-layer') && !target.closest('.toggle-icon')) {
+      this.showEmployeeFilter = false
+    }
+  }
+
+  applyEmployeeFilter(): void {
+    if (this.filteredEmployee) {
+      this.filteredData = this.data.filter(task => parseInt(task.employee.id) == this.filteredEmployee.id)
+    }
+
+    this.showEmployeeFilter = false
+  }
+
+  toggleEmployeeFilter(): void {
+    this.showEmployeeFilter = !this.showEmployeeFilter
   }
 
   private buildForm(): void {
@@ -178,7 +198,7 @@ export class DashboardComponent implements OnInit {
 
   public deleteTask(id: number, index: number): void {
     this.taskService.deleteTask(id)
-    this.dataSource!.data.splice(index, 1)
+    this.data.splice(index, 1)
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
@@ -193,7 +213,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private getTaskFromDashboard(id: number): DashboardItem {
-    return this.dataSource!.data.find(task => task.id === id)!
+    return this.data.find(task => task.id === id)!
   }
 
   private async setProjectsByUser(userId: number): Promise<void> {
@@ -201,7 +221,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private reloadTasks(): void {
-    this.dataSource!.data = []
+    this.data = []
     this.getInitialData()
   }
 }

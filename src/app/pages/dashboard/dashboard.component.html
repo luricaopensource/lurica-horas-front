@@ -8,19 +8,41 @@
             <th>Id</th>
             <th>Fecha</th>
             <th>Proyecto</th>
-            <th>Empleado</th>
+            <th *ngIf="isAdmin; else employeeColumn" style="white-space: nowrap;">
+              <span style="display: inline-block; vertical-align: middle;">
+                Empleado
+              </span>
+              <span (click)="toggleEmployeeFilter()" class="toggle-icon"
+                style="cursor: pointer; margin-left: 5px; display: inline-block; vertical-align: middle;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  style="width: 16px; height: 16px; vertical-align: middle;">
+                  <circle cx="11" cy="11" r="6.5" fill="none" stroke="#000" stroke-width="2" />
+                  <line x1="20.4" y1="20.5" x2="15.5" y2="15.7" fill="none" stroke="#000" stroke-width="2" />
+                </svg>
+              </span>
+              <div *ngIf="showEmployeeFilter" class="employee-filter-layer">
+                <select [(ngModel)]="filteredEmployee" (change)="applyEmployeeFilter()">
+                  <option *ngFor="let employee of employees" [ngValue]="employee">
+                    {{employee.firstName}} {{employee.lastName}}
+                  </option>
+                </select>
+              </div>
+            </th>
+            <ng-template #employeeColumn>
+              <th>Empleado</th>
+            </ng-template>
             <th>Descripción</th>
             <th>Horas</th>
             <th>Estado</th>
             <th>Tipo Moneda</th>
             <th>Tipo Monto</th>
             <th>Monto horario en USD</th>
-            <th>Cotizado Blue</th>
-            <th>Cotizado Oficial</th>
+            <th>Pesos a Blue</th>
+            <th>Pesos a Oficial</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of dataSource!.data; let i = index">
+          <tr *ngFor="let row of this.filteredData; let i = index">
             <td data-label="Id">{{row.id}}</td>
             <td data-label="Fecha">{{row.createdAt || "Sin fecha"}}</td>
             <td data-label="Proyecto">{{row.project.name}}</td>
@@ -41,7 +63,7 @@
           </tr>
         </tbody>
       </table>
-      <p *ngIf="!dataSource!.data.length"><b>No hay tareas para mostrar.</b></p>
+      <p *ngIf="!filteredData.length"><b>No hay tareas para mostrar.</b></p>
     </div>
   </div>
 
@@ -71,9 +93,9 @@
         <!-- <label for="type">Tipo</label> -->
         <div class="tag-selection">
           <!-- <span class="tag desarrollo" (click)="selectType('Desarrollo')">Desarrollo</span>
-          <span class="tag infraestructura" (click)="selectType('Infraestructura')">Infraestructura</span>
-          <span class="tag ciberseguridad" (click)="selectType('Ciberseguridad')">Ciberseguridad</span>
-          <span class="tag otros" (click)="selectType('Otros')">Otros</span> -->
+            <span class="tag infraestructura" (click)="selectType('Infraestructura')">Infraestructura</span>
+            <span class="tag ciberseguridad" (click)="selectType('Ciberseguridad')">Ciberseguridad</span>
+            <span class="tag otros" (click)="selectType('Otros')">Otros</span> -->
         </div>
         <input type="hidden" formControlName="type">
       </div>

@@ -1,42 +1,44 @@
-<!-- Project section -->
-
 <div class="projects">
-  <div class="project-card" *ngFor="let project of customer.projects; let i = index">
-    <form [formGroup]="form">
-      <div class="project-header" (click)="toggleFields(project)">
+  <h3 class="projects-title">Proyectos</h3>
+  <form [formGroup]="form">
+    <div formArrayName="projects">
+      <div class="project-card" *ngFor="let projectGroup of projectsFormArray.controls; let i = index"
+        [formGroupName]="i">
+        <div class="project-header" (click)="toggleFields(customer.projects[i])">
 
-        <input type="text" placeholder="Nombre del proyecto" [formControlName]="project.name + project.id"
-          (click)="stopPropagation($event)">
-        <div class="header-buttons">
-          <button *ngIf="!project.id; else editButton" class="save-button"
-            (click)="save(project, customer.id!, $event)">
-            <img src="assets/save.svg">
-          </button>
-          <ng-template #editButton>
-            <button class="edit-button" (click)="save(project, customer.id!, $event)">
-              <img src="assets/edit.svg">
+          <input type="text" placeholder="Nombre del proyecto" formControlName="name" (click)="stopPropagation($event)">
+
+          <div class="header-buttons">
+            <button *ngIf="!customer.projects[i].id; else editButton" class="save-button"
+              (click)="save(i, customer.id!, $event)">
+              <img src="assets/save.svg">
             </button>
-          </ng-template>
-          <button class="delete-button" (click)="delete(project, i, $event)">
-            <img src="assets/delete.svg" />
-          </button>
+            <ng-template #editButton>
+              <button class="edit-button" (click)="save(i, customer.id!, $event)">
+                <img src="assets/edit.svg">
+              </button>
+            </ng-template>
+            <button class="delete-button" (click)="delete(i, $event)">
+              <img src="assets/delete.svg" />
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div *ngIf="project.showMilestones" class="project-body">
-        <label for="currency">Tipo de moneda</label>
-        <div class="form-group">
-          <select [formControlName]="project.currency + project.id">
-            <option *ngFor="let currency of currencies" value={{currency.id}}>
-              {{currency.name}}
-            </option>
-          </select>
+        <div *ngIf="customer.projects[i].showMilestones" class="project-body">
+          <label for="currency">Tipo de moneda</label>
+          <div class="form-group">
+            <select formControlName="currency">
+              <option *ngFor="let currency of currencies" [value]="currency.id">
+                {{currency.name}}
+              </option>
+            </select>
+          </div>
+          <label for="amount">Monto:</label>
+          <input type="number" formControlName="amount">
         </div>
-        <label for="amount">Monto:</label>
-        <input type="number" [formControlName]="project.amountControlName!">
+        <app-milestones *ngIf="customer.projects[i].showMilestones" [project]="customer.projects[i]"></app-milestones>
       </div>
-    </form>
-    <app-milestones *ngIf="project.showMilestones" [project]="project"></app-milestones>
-  </div>
+    </div>
+  </form>
   <button class="add-button" (click)="addProject(customer)">+ Añadir proyecto</button>
 </div>

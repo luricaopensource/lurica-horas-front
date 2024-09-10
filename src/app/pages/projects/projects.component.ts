@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { Component, Input, OnInit, ViewChild } from '@angular/core'
+import { FormArray, FormBuilder, FormControlName, FormGroup, FormGroupDirective, Validators } from '@angular/forms'
 import { currencies, getCurrencyId } from 'src/app/shared/helpers/currency'
 import { IResponseModel } from 'src/app/shared/models'
 import { IClientCollapsible } from 'src/app/shared/models/clients/clients'
@@ -20,10 +20,35 @@ export class ProjectsComponent implements OnInit {
     private service: ProjectService,
     private fb: FormBuilder
   ) {
+    this.form = this.fb.group({
+      projects: this.fb.array([])
+    })
   }
 
   ngOnInit(): void {
     this.buildForm()
+  }
+
+  get projectsFormArray(): FormArray {
+    return this.form.get('projects') as FormArray
+  }
+
+  addProjectToFormArray(project: IProjectCollapsible) {
+    const projectFormGroup = this.fb.group({
+      name: [{ value: project.name, disabled: !project.editMode }],
+      currency: [{ value: getCurrencyId(project.currency), disabled: !project.editMode }],
+      amount: [{ value: project.amount, disabled: !project.editMode }]
+    })
+
+    const formProjects = this.form.get('projects') as FormArray
+    formProjects.push(projectFormGroup)
+  }
+
+  buildForm() {
+
+    this.customer.projects.forEach((project) => {
+      this.addProjectToFormArray(project)
+    })
   }
 
   stopPropagation(event: Event) {
@@ -34,79 +59,41 @@ export class ProjectsComponent implements OnInit {
     project.showMilestones = !project.showMilestones
   }
 
-  buildForm() {
-    this.form = new FormBuilder().group({})
+  toggleFormControls(index: number) {
+    const projectFormGroup = this.projectsFormArray.at(index) as FormGroup
 
-    this.customer.projects.forEach((control) => {
-      this.createFormControls(control)
-    })
-  }
+    if (this.customer.projects[index].editMode) {
 
-  createFormControlsNames(project: IProjectCollapsible) {
-    const projectName = project.name + project.id
-    const projectCurrency = project.currency + project.id
-    const projectAmount = project.amount + project.id!
-    let stringProjectAmount = String(projectAmount)
-    stringProjectAmount = stringProjectAmount.replace('.', '')
-    project.amountControlName = stringProjectAmount
-
-    return [projectName, projectCurrency, stringProjectAmount]
-  }
-
-  createFormControls(project: IProjectCollapsible) {
-    const [projectName, projectCurrency, projectAmount] = this.createFormControlsNames(project)
-
-    this.form.addControl(projectName, this.fb.control({ value: project.name, disabled: !project.editMode }))
-    this.form.addControl(projectCurrency, this.fb.control({ value: getCurrencyId(project.currency), disabled: !project.editMode }))
-    this.form.addControl(projectAmount, this.fb.control({ value: project.amount, disabled: !project.editMode }))
-  }
-
-  getFormControlsValues(project: IProjectCollapsible) {
-    const [projectName, projectCurrency, projectAmount] = this.createFormControlsNames(project)
-
-    return {
-      name: this.form.get(projectName)?.value,
-      currency: this.form.get(projectCurrency)?.value,
-      amount: this.form.get(projectAmount)?.value
-    }
-  }
-
-  addControlToForm(project: IProjectCollapsible) {
-    this.createFormControls(project)
-  }
-
-  toggleFormControls(project: IProjectCollapsible) {
-    const [controlName, controlCurrency, controlAmount] = this.createFormControlsNames(project)
-
-    if (this.form.get(controlName)?.disabled) {
-      this.form.get(controlName)?.enable()
-      this.form.get(controlCurrency)?.enable()
-      this.form.get(controlAmount)?.enable()
+      projectFormGroup.get('name')?.enable()
+      projectFormGroup.get('currency')?.enable()
+      projectFormGroup.get('amount')?.enable()
     } else {
-      this.form.get(controlName)?.disable()
-      this.form.get(controlCurrency)?.disable()
-      this.form.get(controlAmount)?.disable()
+
+      projectFormGroup.get('name')?.disable()
+      projectFormGroup.get('currency')?.disable()
+      projectFormGroup.get('amount')?.disable()
     }
+
+
+    this.customer.projects[index].editMode = !this.customer.projects[index].editMode
   }
 
   addProject(customer: IClientCollapsible): void {
-    const project: IProjectCollapsible = { name: '', currency: '', amount: 0, editMode: true, created: false, showMilestones: false, milestones: [] }
+    const project: IProjectCollapsible = { name: '', currency: '', amount: null, editMode: true, created: false, showMilestones: false, milestones: [] }
 
-    this.addControlToForm(project)
+    this.addProjectToFormArray(project)
 
     customer.projects.push(project)
   }
 
-  async save(project: IProjectCollapsible, customerId: number, event: Event): Promise<void> {
+  async save(index: number, customerId: number, event: Event): Promise<void> {
     this.stopPropagation(event)
-    if (!project.editMode) {
-      this.toggleFormControls(project)
-      project.editMode = true
-      return
-    }
 
+    const projectFormGroup = this.projectsFormArray.at(index) as FormGroup
 
-    const { name, currency, amount } = this.getFormControlsValues(project)
+    const name = projectFormGroup.get('name')?.value
+    const currency = projectFormGroup.get('currency')?.value
+    const amount = projectFormGroup.get('amount')?.value
 
     if (!name || !currency || !amount) return
 
@@ -117,30 +104,40 @@ export class ProjectsComponent implements OnInit {
       clientId: customerId
     }
 
-    if (project.id) projectToCreate.id = project.id
+    const project = this.customer.projects[index]
+    if (project.id) {
+      projectToCreate.id = project.id
+    }
 
     try {
-      const response: IResponseModel = project.id ? await this.service.editProject(projectToCreate) : await this.service.createProject(projectToCreate)
+      const response: IResponseModel = project.id
+        ? await this.service.editProject(projectToCreate)
+        : await this.service.createProject(projectToCreate)
 
       project.id = response.id
-      this.toggleFormControls(project)
+      project.editMode = false
+      this.toggleFormControls(index)
     } catch (error) {
       console.error(error)
-      // show error toast
     }
   }
 
-  async delete(project: IProjectCollapsible, projectIndex: number, event: Event): Promise<void> {
+  async delete(projectIndex: number, event: Event): Promise<void> {
     this.stopPropagation(event)
-    if (!project.name && !project.currency && !project.amount) {
+
+    const project = this.customer.projects[projectIndex]
+
+    if (!project.created) {
       this.customer.projects.splice(projectIndex, 1)
+      this.projectsFormArray.removeAt(projectIndex)
       return
     }
 
     try {
       await this.service.deleteProject(project.id!)
+      this.customer.projects.splice(projectIndex, 1)
+      this.projectsFormArray.removeAt(projectIndex)
     } catch (error) {
-      // TODO: Handle error properly
       console.error(error)
     }
   }

@@ -12,7 +12,8 @@
         </div>
       </div>
       <!-- Project section -->
-      <app-projects [customer]="customer" *ngIf="customer.showProjects"></app-projects>
+      <app-projects class="stack-container" [customer]="customer" [@enterAnimation]
+        *ngIf="customer.showProjects"></app-projects>
     </div>
   </div>
 </app-navbar>

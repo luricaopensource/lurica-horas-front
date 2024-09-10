@@ -19,7 +19,6 @@ export class DashboardService {
     const user = this.getCurrentUser()
     if (user.isAdmin) return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks`))
 
-
     return firstValueFrom(this.http.get<DashboardItem[]>(`${this.BASE_URL}/tasks/employee/${user.id}`))
   }
 

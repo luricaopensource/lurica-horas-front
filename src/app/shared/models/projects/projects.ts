@@ -4,7 +4,7 @@ export interface IProject {
   id?: number
   name: string
   currency: string
-  amount: number
+  amount: number | null
   milestones: IMilestone[]
 }
 
@@ -13,6 +13,8 @@ export interface IProjectCollapsible extends IProject {
   created: boolean
   showMilestones: boolean
   amountControlName?: string
+  currencyControlName?: string
+  nameControlName?: string
   milestones: IMilestoneCollapsible[]
 }
 

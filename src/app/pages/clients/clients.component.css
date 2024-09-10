@@ -14,14 +14,38 @@ body {
   margin: 0 auto;
 }
 
+.stack-container {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Prevents content from being displayed outside the container during scaling */
+}
+
 .customer-card,
 .project-card {
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 20px;
-  background-color: #fff;
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
+}
+
+.customer-card {
+  background-color: whitesmoke;
+}
+
+.project-card {
+  background-color: #fff;
+}
+
+.milestones-title,
+.projects-title {
+  margin-bottom: 10px;
+}
+
+.projects-title {
+  font-weight: 600;
 }
 
 .customer-header,
@@ -39,7 +63,15 @@ body {
   transition: background-color 0.3s;
 }
 
-.customer-header:hover,
+.customer-header {
+  background-color: #ffffff;
+}
+
+.customer-header:hover {
+  border-color: red;
+  transition: 0.3s ease;
+}
+
 .project-header:hover,
 .milestone-header:hover {
   background-color: #e9e9e9;
@@ -92,6 +124,10 @@ body {
 
 .header-buttons .delete-button {
   border: 1px solid #c82333;
+}
+
+.transition {
+  transition: all 0.3s ease;
 }
 
 input,

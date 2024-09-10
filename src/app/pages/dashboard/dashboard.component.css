@@ -143,7 +143,6 @@ textarea {
   background-color: #1565c0;
 }
 
-/* Styles for the currency card */
 .currency-card {
   display: inline-block;
   padding: 6px 12px;
@@ -151,13 +150,45 @@ textarea {
   background-color: #1976d2;
   color: white;
   font-weight: 500;
-  white-space: nowrap; /* Ensure the text does not wrap */
-  text-align: center; /* Center the text */
-  overflow: hidden; /* Ensure it doesn't overflow */
-  text-overflow: ellipsis; /* Add ellipsis if the text is too long */
+  white-space: nowrap;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Media Queries for Responsiveness */
+th {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+th button {
+  font-size: inherit;
+  font-weight: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  display: inline-block;
+}
+
+.employee-filter-layer {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 200px;
+}
+
+.employee-filter-layer select {
+  width: 100%;
+}
+
 @media (max-width: 768px) {
   h1 {
     font-size: 24px;
@@ -201,8 +232,8 @@ textarea {
   }
 
   .currency-card {
-    display: inline-block; /* Change from block to inline-block */
+    display: inline-block;
     margin: 0 auto;
-    width: auto; /* Change from fit-content to auto */
+    width: auto;
   }
 }

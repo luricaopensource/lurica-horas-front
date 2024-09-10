@@ -1,7 +1,7 @@
 <app-navbar>
   <div class="container">
     <h1>Usuarios</h1>
-    <button (click)="createUser(createUserTemplate)">+ Añadir usuario</button>
+    <button (click)="openCreateUserModal(createUserTemplate)">+ Añadir usuario</button>
   </div>
   <div class="container">
     <div class="table-wrapper">
@@ -17,6 +17,7 @@
             <th>Tipo de moneda</th>
             <th>Monto horario</th>
             <th>Monto mensual</th>
+            <th>Tipo de monto</th>
             <th></th>
             <th></th>
           </tr>
@@ -30,8 +31,15 @@
             <td data-label="Mail">{{user.email}}</td>
             <td data-label="Rol">{{user.roleName}}</td>
             <td data-label="Tipo de moneda">{{user.currencyName}}</td>
-            <td data-label="Monto horario">${{user.hourlyAmount || '-'}}</td>
-            <td data-label="Monto mensual">${{user.monthlyAmount || '-'}}</td>
+            <td data-label="Monto horario">$
+              <span *ngIf="user.amountType === 2; else emptyHourlyAmount">{{user.amount}}</span>
+              <ng-template #emptyHourlyAmount><span>--</span></ng-template>
+            </td>
+            <td data-label="Monto mensual">$
+              <span *ngIf="user.amountType === 1; else emptyMonthlyAmount">{{user.amount}}</span>
+              <ng-template #emptyMonthlyAmount><span>--</span></ng-template>
+            </td>
+            <td data-label="Tipo de monto">{{user.amountTypeName}}</td>
             <td data-label=""><button class="edit-btn"
                 (click)="openEditUserModal(user.id!, createUserTemplate)">Editar</button></td>
             <td data-label=""><button class="delete-btn" (click)="deleteUser(user.id!)">Borrar</button></td>
@@ -42,72 +50,90 @@
       <p *ngIf="!users.length"><b>No hay usuarios para mostrar.</b></p>
     </div>
   </div>
+
+  <ng-template #createUserTemplate>
+    <form [formGroup]="form" (ngSubmit)="isEditModal ? editUser() : register()" autocapitalize="new-password"
+      action="javascript:void(0)">
+      <label for="firstname">Nombre</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('firstName')}">
+        <input required type="text" id="firstname" name="firstname" autocomplete="new-password"
+          formControlName="firstName">
+      </div>
+
+      <label for="lastname">Apellido</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('lastName')}">
+        <input required type="text" id="lastname" name="lastname" autocomplete="new-password"
+          formControlName="lastName">
+      </div>
+
+      <label for="username">Nombre de usuario</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('username')}">
+        <input required type="text" id="username" name="username" formControlName="username">
+      </div>
+
+      <label for="password" *ngIf="showPasswordField">Contraseña</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('password')}" *ngIf="showPasswordField">
+        <input required type="password" id="password" name="password" formControlName="password">
+      </div>
+
+      <label for="email">Mail</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('email')}">
+        <input required type="email" id="email" name="email" formControlName="email">
+      </div>
+
+      <label for="currency">Tipo de moneda</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
+        <select formControlName="currency">
+          <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
+        </select>
+      </div>
+
+      <label for="role">Rol</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('role')}">
+        <select formControlName="role">
+          <option *ngFor="let role of roles" value={{role.id}}>{{role.name}}</option>
+        </select>
+      </div>
+
+      <label for="amount">Monto (En USD)</label>
+      <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('amount')}">
+        <input required type="number" id="amount" name="amount" formControlName="amount">
+      </div>
+
+
+      <div class="radio-group">
+        <label class="main-label">Tipo de monto</label>
+        <div class="radio-option">
+          <input required type="radio" id="monthly" [checked]="sameAmountType(1)" value="1"
+            formControlName="amountType">
+          <label for="monthly">Mensual</label>
+        </div>
+        <div class="radio-option">
+          <input required type="radio" id="hourly" [checked]="sameAmountType(2)" value="2" formControlName="amountType">
+          <label for="hourly">Horario</label>
+        </div>
+      </div>
+
+      <label for="projects">Proyectos</label>
+      <div class="form-group">
+        <select formControlName="projects" (change)="addProject()">
+          <option value=""></option>
+          <option *ngFor="let project of projects" [ngValue]="project">{{project.name}}</option>
+        </select>
+      </div>
+      <div *ngIf="selectedProjects.length > 0" class="selected-projects-list">
+        <ul>
+          <li *ngFor="let project of selectedProjects; let i = index">
+            {{ project.name }}
+            <button type="button" (click)="removeProject(i)">X</button>
+          </li>
+        </ul>
+      </div>
+
+      <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
+      <button type="submit" class="submit-btn">
+        {{isEditModal ? 'Editar' : 'Crear'}}
+      </button>
+    </form>
+  </ng-template>
 </app-navbar>
-
-<ng-template #createUserTemplate>
-  <form [formGroup]="form" (ngSubmit)="isEditModal ? editUser() : register()" autocapitalize="new-password"
-    action="javascript:void(0)">
-    <label for="firstname">Nombre</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('firstName')}">
-      <input required type="text" id="firstname" name="firstname" autocomplete="new-password"
-        formControlName="firstName">
-    </div>
-
-    <label for="lastname">Apellido</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('lastName')}">
-      <input required type="text" id="lastname" name="lastname" autocomplete="new-password" formControlName="lastName">
-    </div>
-
-    <label for="username">Nombre de usuario</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('username')}">
-      <input required type="text" id="username" name="username" formControlName="username">
-    </div>
-
-    <label for="password" *ngIf="showPasswordField">Contraseña</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('password')}" *ngIf="showPasswordField">
-      <input required type="password" id="password" name="password" formControlName="password">
-    </div>
-
-    <label for="email">Mail</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('email')}">
-      <input required type="email" id="email" name="email" formControlName="email">
-    </div>
-
-    <label for="currency">Tipo de moneda</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('currency')}">
-      <select formControlName="currency">
-        <option *ngFor="let currency of currencies" value={{currency.id}}>{{currency.name}}</option>
-      </select>
-    </div>
-
-    <label for="role">Rol</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('role')}">
-      <select formControlName="role">
-        <option *ngFor="let role of roles" value={{role.id}}>{{role.name}}</option>
-      </select>
-    </div>
-
-    <label for="amount">Monto (En USD)</label>
-    <div class="form-group" [ngClass]="{'form-group-invalid' : isInvalidInput('amount')}">
-      <input required type="number" id="amount" name="amount" formControlName="amount">
-    </div>
-
-
-    <div class="radio-group">
-      <label class="main-label">Tipo de monto</label>
-      <div class="radio-option">
-        <input required type="radio" id="monthly" name="amountType" value="monthly" formControlName="amountType">
-        <label for="monthly">Mensual</label>
-      </div>
-      <div class="radio-option">
-        <input required type="radio" id="hourly" name="amountType" value="hourly" formControlName="amountType">
-        <label for="hourly">Horario</label>
-      </div>
-    </div>
-
-    <p *ngIf="this.form.invalid && formSubmitted" style="color: red">Por favor complete los campos.</p>
-    <button type="submit" class="submit-btn">
-      {{isEditModal ? 'Editar' : 'Crear'}}
-    </button>
-  </form>
-</ng-template>

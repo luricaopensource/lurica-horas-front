@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core'
-import { FormGroup } from '@angular/forms'
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core'
+import { FormBuilder, FormGroup } from '@angular/forms'
 import { IResponseModel } from 'src/app/shared/models'
 import { IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
 import { IProjectCollapsible } from 'src/app/shared/models/projects/projects'
@@ -10,14 +10,31 @@ import { MilestoneService } from 'src/app/shared/services/milestones/milestones.
   templateUrl: './milestones.component.html',
   styleUrls: ['../clients/clients.component.css']
 })
-export class MilestonesComponent {
+export class MilestonesComponent implements OnInit {
   public form: FormGroup = new FormGroup({})
   @Input() project: IProjectCollapsible = {} as IProjectCollapsible
 
   constructor(
-    private service: MilestoneService
+    private service: MilestoneService,
+    private fb: FormBuilder,
   ) {
 
+  }
+
+  toggleEditMode(milestone: IMilestoneCollapsible): void {
+    milestone.editMode = !milestone.editMode
+  }
+
+  ngOnInit(): void {
+    this.buildForm()
+  }
+
+  private buildForm(): void {
+    this.form = this.fb.group({
+      name: '',
+      date: '',
+      amountPercentage: null
+    })
   }
 
   stopPropagation(event: Event): void {
@@ -30,45 +47,42 @@ export class MilestonesComponent {
 
   async saveMilestone(milestone: IMilestoneCollapsible, projectId: number, event: Event) {
     event.stopPropagation()
+    const { name, date, amountPercentage } = this.form.value
+    if (!name || !date || !amountPercentage) return
 
-    if (!milestone.editMode) {
-      milestone.editMode = true
-      return
+    this.toggleEditMode(milestone)
+
+    try {
+      const response: IResponseModel = await this.service.createMilestone({
+        name,
+        date,
+        amountPercentage,
+        projectId
+      })
+
+      milestone.id = response.id
+      milestone.editMode = false
+      milestone.created = true
+    } catch (error) {
+      // TODO: Handle error with toast notification
+      console.error(error)
     }
-
-    if (!milestone.name || !milestone.date || !milestone.amountPercentage) return
-
-    const response: IResponseModel = await this.service.createMilestone({
-      name: milestone.name,
-      date: milestone.date,
-      amountPercentage: milestone.amountPercentage,
-      projectId
-    })
-
-    milestone.id = response.id
-    milestone.editMode = false
-    milestone.created = true
   }
 
-  async deleteMilestone(milestone: IMilestoneCollapsible, event: Event): Promise<void> {
+  async deleteMilestone(milestone: IMilestoneCollapsible, milestoneIndex: number, event: Event): Promise<void> {
     event.stopPropagation()
 
     if (!milestone.amountPercentage && !milestone.date && !milestone.name) {
-      // this.deleteEntity(i, j, k, event)
+      this.project.milestones.splice(milestoneIndex, 1)
       return
     }
 
     try {
       await this.service.deleteMilestone(milestone.id!)
-      // this.getClients()
+      this.project.milestones.splice(milestoneIndex, 1)
     } catch (error) {
       // TODO: Handle error properly
       console.error(error)
     }
-  }
-
-  public isInvalidInput(input: string): boolean {
-    // TODO: Validate input
-    return false
   }
 }

@@ -8,6 +8,7 @@ import { IProject } from "src/app/shared/models/projects/projects"
 import { IMilestone } from "../../models/milestones/milestones"
 import { UserService } from "../../services/user/user.service"
 import { IUser } from "../../models/users/user"
+import { DateFormatter } from "../../helpers/date-formatter"
 
 @Component({
   selector: "app-dialog",
@@ -22,6 +23,7 @@ export class DialogComponent implements OnInit {
   public formSubmitted: boolean = false
   public tasks: ITask[] = []
   public editIndex: number = 0
+  public editMode: boolean = false
   public user: IUser | null = null
   public errorMessage: string = ""
 
@@ -33,7 +35,7 @@ export class DialogComponent implements OnInit {
     private modalService: ModalService,
     private projectService: ProjectService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.user = this.userService.getUserFromLocalStorage()
@@ -82,11 +84,13 @@ export class DialogComponent implements OnInit {
     const { projectId, milestoneId, description, type, date, hours } = this.form.value
     if (!this.user) return
 
+    console.log(date)
+
     const task: ITask = {
       projectId,
       milestoneId,
       description,
-      dateFrom: new Date(date).toLocaleString(),
+      dateFrom: DateFormatter.getDDMMYYYY(date),
       hours,
       type,
       paid: false,
@@ -94,32 +98,36 @@ export class DialogComponent implements OnInit {
       userId: this.user.id!,
     }
 
-    if (this.editIndex) {
+    console.log(task)
+
+    if (!this.editMode) {
       this.tasks.push(task)
-      return
+    } else {
+      this.tasks[this.editIndex] = task
+      this.editMode = false
     }
 
-    this.tasks[this.editIndex] = task
-    this.editIndex = 0
     this.resetForm()
   }
 
   public editTask(index: number): void {
+    this.editMode = true
+    this.editIndex = index
     const task = this.tasks[index]
     const selectedProject = this.projects.find((project) => project.id == task.projectId)
     this.milestones = selectedProject?.milestones!
 
-    const dateFrom = new Date(task.dateFrom)
+    const taskDate = new Date(task.dateFrom)
+    const formattedDate = taskDate.toISOString().split('T')[0]
 
     this.form.patchValue({
       projectId: task.projectId,
       milestoneId: task.milestoneId,
       description: task.description,
       type: task.type,
-      dateFrom: dateFrom,
+      date: formattedDate,
       hours: task.hours
     })
-    this.editIndex = index
   }
 
   public deleteTask(index: number): void {
@@ -145,8 +153,8 @@ export class DialogComponent implements OnInit {
 
     if (selectedProject) {
       this.milestones = selectedProject.milestones
-  }
     }
+  }
 
   public isInvalidInput(inputName: string): boolean {
     const input = this.form.get(inputName)

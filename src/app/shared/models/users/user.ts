@@ -1,4 +1,5 @@
 import { IUsersToCompanies } from "../companies/companies"
+import { IProject } from "../projects/projects"
 
 export interface IUser {
   id?: number,
@@ -11,12 +12,22 @@ export interface IUser {
   role?: number,
   currencyName?: string,
   currency?: number,
-  hourlyAmount?: number,
-  monthlyAmount?: number,
+  amount?: number,
+  amountType?: number,
+  amountTypeName?: string,
   companies?: IUsersToCompanies[]
+  projects?: IProject[]
+  userToProjects?: IUsersToProjects[]
   isAdmin?: boolean
+  lastLogin?: string
 }
 
 export interface IResponseUser {
   userId: number
+}
+
+export interface IUsersToProjects {
+  user: number
+  project: number
+  toDelete?: boolean
 }

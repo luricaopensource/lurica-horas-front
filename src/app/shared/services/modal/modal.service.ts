@@ -9,7 +9,8 @@ export class ModalService {
   private componentRef!: ComponentRef<ModalComponent>
   private components: ComponentRef<ModalComponent>[] = []
 
-  constructor() { }
+  constructor() {
+  }
 
   open(content: TemplateRef<any>, options?: { size?: string, title?: string }): Observable<string> {
     const componentRef = this.containerRef.createComponent(ModalComponent)

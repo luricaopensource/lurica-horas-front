@@ -22,8 +22,8 @@ export class NavbarComponent implements OnInit {
     email: '',
     roleName: '',
     currencyName: '',
-    hourlyAmount: 0,
-    monthlyAmount: 0
+    amount: 0,
+    amountType: 1
   }
 
   public form: FormGroup = new FormGroup({})
@@ -72,11 +72,11 @@ export class NavbarComponent implements OnInit {
     this.user = user
   }
 
-  public openModal(modalTemplate: TemplateRef<any>, title: string) {
+  public openModal(modalTemplate: TemplateRef<any>, title: string, size: string = 'sm'): void {
     this.form.reset()
 
     this.modalService
-      .open(modalTemplate, { size: 'lg', title })
+      .open(modalTemplate, { size, title })
       .subscribe()
   }
 

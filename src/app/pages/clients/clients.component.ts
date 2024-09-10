@@ -4,10 +4,25 @@ import { ClientService } from 'src/app/shared/services/clients/client.service'
 import { IProject, IProjectCollapsible } from 'src/app/shared/models/projects/projects'
 import { currencies } from '../../shared/helpers/currency'
 import { IMilestone, IMilestoneCollapsible } from 'src/app/shared/models/milestones/milestones'
+import { animate, style, transition, trigger } from '@angular/animations'
 
 
 @Component({
   selector: 'app-clients',
+  animations: [
+    trigger(
+      'enterAnimation', [
+      transition(':enter', [
+        style({ transform: 'scaleY(0)', transformOrigin: 'top' }), // Start from the top with no height
+        animate('150ms ease-out', style({ transform: 'scaleY(1)' })) // Slowly scale down vertically
+      ]),
+      transition(':leave', [
+        style({ transform: 'scaleY(1)', transformOrigin: 'top', display: 'hidden' }), // Start at full height, scaling from the bottom
+        animate('150ms ease-in', style({ transform: 'scaleY(0)' })) // Slowly shrink upwards
+      ])
+    ]
+    )
+  ],
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.css']
 })
