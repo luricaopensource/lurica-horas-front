@@ -61,21 +61,11 @@ export class ProjectsComponent implements OnInit {
 
   toggleFormControls(index: number) {
     const projectFormGroup = this.projectsFormArray.at(index) as FormGroup
+    const project = this.customer.projects[index]
 
-    if (this.customer.projects[index].editMode) {
+    !project.editMode ? projectFormGroup.enable() : projectFormGroup.disable()
 
-      projectFormGroup.get('name')?.enable()
-      projectFormGroup.get('currency')?.enable()
-      projectFormGroup.get('amount')?.enable()
-    } else {
-
-      projectFormGroup.get('name')?.disable()
-      projectFormGroup.get('currency')?.disable()
-      projectFormGroup.get('amount')?.disable()
-    }
-
-
-    this.customer.projects[index].editMode = !this.customer.projects[index].editMode
+    project.editMode = !project.editMode
   }
 
   addProject(customer: IClientCollapsible): void {
@@ -88,6 +78,14 @@ export class ProjectsComponent implements OnInit {
 
   async save(index: number, customerId: number, event: Event): Promise<void> {
     this.stopPropagation(event)
+
+    console.log(this.form.touched)
+    const customerProject = this.customer.projects[index]
+
+    if (!customerProject.editMode || !this.form.touched) {
+      this.toggleFormControls(index)
+      return
+    }
 
     const projectFormGroup = this.projectsFormArray.at(index) as FormGroup
 
@@ -104,7 +102,7 @@ export class ProjectsComponent implements OnInit {
       clientId: customerId
     }
 
-    const project = this.customer.projects[index]
+    const project = customerProject
     if (project.id) {
       projectToCreate.id = project.id
     }
@@ -115,8 +113,8 @@ export class ProjectsComponent implements OnInit {
         : await this.service.createProject(projectToCreate)
 
       project.id = response.id
-      project.editMode = false
       this.toggleFormControls(index)
+      this.form.markAsUntouched()
     } catch (error) {
       console.error(error)
     }

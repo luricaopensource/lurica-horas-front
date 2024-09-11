@@ -1,37 +1,38 @@
 <div class="milestones">
   <h3 class="milestones-title">Hitos</h3>
-  <div class="milestone" *ngFor="let milestone of project.milestones; let i = index">
-    <form [formGroup]="form" (ngSubmit)="saveMilestone(milestone, project.id!, $event)">
-      <div class="milestone-header" (click)="stopPropagation($event)">
-        <input [disabled]="!milestone.editMode" type="text" placeholder="Nombre del hito" formControlName="name"
-          (click)="stopPropagation($event)">
-        <div class="header-buttons">
-          <button *ngIf="!milestone.created" class="save-button" type="submit">
-            <img src="assets/save.svg">
-          </button>
-          <button class="edit-button" type="submit">
-            <img src="assets/edit.svg" />
-          </button>
-          <button class="delete-button" (click)="deleteMilestone(milestone, i, $event)">
-            <img src="assets/delete.svg" />
-          </button>
-        </div>
-      </div>
-      <div class="milestone-body">
-        <div class="milestone-row">
-          <div class="milestone-column">
-            <label for="date">Fecha de entrega:</label>
-            <input [disabled]="!milestone.editMode" type="date" formControlName="date"
-              (click)="stopPropagation($event)">
-          </div>
-          <div class="milestone-column">
-            <label for="amountPercentage">Porcentaje del hito:</label>
-            <input [disabled]="!milestone.editMode" type="number" formControlName="amountPercentage"
-              (click)="stopPropagation($event)">
+  <form [formGroup]="form">
+    <div formArrayName="milestones">
+      <div class="milestone" *ngFor="let milestoneGroup of milestonesFormArray.controls; let i = index"
+        [formGroupName]="i">
+        <div class="milestone-header" (click)="toggleFields(project.milestones[i], $event)">
+          <input type="text" placeholder="Nombre del hito" formControlName="name" (click)="stopPropagation($event)">
+          <div class="header-buttons">
+            <button *ngIf="!project.milestones[i].created" class="save-button" type="submit"
+              (click)="saveMilestone(i, project.id!, $event)">
+              <img src="assets/save.svg">
+            </button>
+            <button class="edit-button" (click)="saveMilestone(i, project.id!, $event)">
+              <img src="assets/edit.svg" />
+            </button>
+            <button class="delete-button" (click)="deleteMilestone(i, $event)">
+              <img src="assets/delete.svg" />
+            </button>
           </div>
         </div>
+        <div class="milestone-body" *ngIf="!project.milestones[i].collapsed">
+          <div class="milestone-row">
+            <div class="milestone-column">
+              <label for="date">Fecha de entrega:</label>
+              <input type="date" formControlName="date" (click)="stopPropagation($event)">
+            </div>
+            <div class="milestone-column">
+              <label for="amountPercentage">Porcentaje del hito:</label>
+              <input type="number" formControlName="amountPercentage" (click)="stopPropagation($event)">
+            </div>
+          </div>
+        </div>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
   <button class="add-button" [disabled]="!project.created" (click)="addMilestone()">+ Añadir hito</button>
 </div>

@@ -30,7 +30,7 @@ export class UsersComponent implements OnInit {
   constructor(private modalService: ModalService,
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private userService: UserService,
+    private service: UserService,
     private projectService: ProjectService,
     private changeDetector: ChangeDetectorRef
   ) {
@@ -43,7 +43,7 @@ export class UsersComponent implements OnInit {
   }
 
   private async getUsers(): Promise<void> {
-    const users = await this.userService.getUsers()
+    const users = await this.service.getUsers()
 
     this.users = users
     this.changeDetector.detectChanges()
@@ -87,9 +87,21 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  removeProject(index: number): void {
+  async removeProject(index: number): Promise<void> {
     const projectRemoved = this.selectedProjects.splice(index, 1)
     this.projects.push(projectRemoved[0])
+
+    const userToProject = this.userToEdit?.projects?.find(project => project.id === projectRemoved[0].id)
+
+    if (!userToProject) return
+
+    try {
+      await this.service.deleteUserToProject(this.userToEdit?.id!, projectRemoved[0].id!)
+      this.userToEdit!.projects?.splice(this.userToEdit!.projects?.findIndex(project => project.id === projectRemoved[0].id), 1)
+    }
+    catch (error) {
+      console.log(error)
+    }
   }
 
   private openModal(modalTemplate: TemplateRef<any>, options: { size: string, title: string }) {
@@ -134,7 +146,7 @@ export class UsersComponent implements OnInit {
     }
 
     try {
-      const response = await this.userService.createUser(user)
+      const response = await this.service.createUser(user)
       if (response.id) {
         user.id = response.id
         for (let selectedProject of this.selectedProjects) {
@@ -147,7 +159,7 @@ export class UsersComponent implements OnInit {
 
           user.userToProjects?.push(userToProject)
         }
-        await this.userService.updateUser(user)
+        await this.service.updateUser(user)
         this.getUsers()
         this.closeModal()
       }
@@ -231,7 +243,7 @@ export class UsersComponent implements OnInit {
     }
 
     try {
-      const response = await this.userService.updateUser(user)
+      const response = await this.service.updateUser(user)
 
       if (response.id) {
         this.getUsers()
@@ -245,7 +257,7 @@ export class UsersComponent implements OnInit {
   }
 
   public async deleteUser(userId: number): Promise<void> {
-    const response = await this.userService.deleteUser(userId)
+    const response = await this.service.deleteUser(userId)
 
     if (response.id) { this.getUsers() }
   }

@@ -143,7 +143,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (!this.user) return
     if (!this.user.id) return
 
-    await this.setProjectsByUser(this.user.id)
+    await this.setProjectsByUser()
 
     this.selectedProject = this.projects.find(project => project.id === currentTask.project.id) || {} as IProject
 
@@ -216,8 +216,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     return this.data.find(task => task.id === id)!
   }
 
-  private async setProjectsByUser(userId: number): Promise<void> {
-    this.projects = await this.projectService.getProjectsByEmployee(userId)
+  private async setProjectsByUser(): Promise<void> {
+    this.projects = await this.projectService.getProjects()
   }
 
   private reloadTasks(): void {

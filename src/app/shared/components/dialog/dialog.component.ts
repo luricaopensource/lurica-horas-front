@@ -44,11 +44,7 @@ export class DialogComponent implements OnInit {
   }
 
   private async getProjects(): Promise<void> {
-    this.projects = this.userIsAdmin() ? await this.projectService.getProjects() : await this.projectService.getProjectsByEmployee(this.user?.id!)
-  }
-
-  private userIsAdmin(): boolean {
-    return this.user?.role == 1
+    this.projects = await this.projectService.getProjects()
   }
 
   private buildForm(): void {
@@ -84,8 +80,6 @@ export class DialogComponent implements OnInit {
     const { projectId, milestoneId, description, type, date, hours } = this.form.value
     if (!this.user) return
 
-    console.log(date)
-
     const task: ITask = {
       projectId,
       milestoneId,
@@ -117,8 +111,10 @@ export class DialogComponent implements OnInit {
     const selectedProject = this.projects.find((project) => project.id == task.projectId)
     this.milestones = selectedProject?.milestones!
 
-    const taskDate = new Date(task.dateFrom)
+    const [day, month, year] = task.dateFrom.split('/')
+    const taskDate = new Date(`${year}-${month}-${day}`)
     const formattedDate = taskDate.toISOString().split('T')[0]
+    console.log(formattedDate)
 
     this.form.patchValue({
       projectId: task.projectId,

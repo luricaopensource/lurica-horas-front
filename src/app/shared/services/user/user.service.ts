@@ -51,6 +51,10 @@ export class UserService {
     return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/users/${userId}`))
   }
 
+  deleteUserToProject(userId: number, projectId: number): Promise<IResponseModel> {
+    return firstValueFrom(this.http.delete<IResponseModel>(`${this.BASE_URL}/users/${userId}/projects/${projectId}`))
+  }
+
   isAuthenticated(): boolean {
     return localStorage.getItem("access_token") !== null
   }

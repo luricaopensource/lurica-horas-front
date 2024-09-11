@@ -78,7 +78,8 @@ export class ClientsComponent implements OnInit {
         let milestones = project.milestones?.map<IMilestoneCollapsible>((milestone: IMilestone) => ({
           ...milestone,
           editMode: false,
-          created: true
+          created: true,
+          collapsed: true
         }))
 
         return {
