@@ -51,7 +51,7 @@
             <td data-label="Horas">{{row.hours}}</td>
             <td data-label="Estado">{{row.status}}</td>
             <td data-label="Tipo Moneda"><span class="currency-card">{{row.currency || "ARS"}}</span></td>
-            <td data-label="Tipo de Monto">--</td>
+            <td data-label="Tipo de Monto">{{row.employee.amountType}}</td>
             <td data-label="Monto horario en USD">${{row.employee.hourlyAmount || "1.00"}}</td>
             <td data-label="USD Blue">${{row.employee.blueQuoteAmount || "0.00"}}</td>
             <td data-label="USD Oficial">${{row.employee.officialQuoteAmount || "0.00"}}</td>
