@@ -97,6 +97,7 @@ export class MilestonesComponent implements OnInit {
         : await this.service.createMilestone({ name, date, amountPercentage, projectId })
 
       milestone.id = response.id
+      milestone.created = true
       this.toggleFormControls(index)
       this.form.markAsUntouched()
     } catch (error) {
