@@ -1,6 +1,17 @@
 <app-navbar>
   <div class="container">
     <h1>Tareas</h1>
+    <!-- Add two buttons to select a month and a year -->
+    <div class="date-selection">
+      <label for="monthFilter">Filtrar por mes</label>
+      <select id="monthFilter" class="select-input">
+        <option *ngFor="let month of months" [ngValue]="month">{{month}}</option>
+      </select>
+      <label for="yearFilter">Filtrar por año</label>
+      <select id="yearFilter" class=" select-input">
+        <option *ngFor="let year of years" [ngValue]="year">{{year}}</option>
+      </select>
+    </div>
     <div class="table-wrapper">
       <table class="full-width-table">
         <thead>
@@ -44,7 +55,7 @@
         <tbody>
           <tr *ngFor="let row of this.filteredData; let i = index">
             <td data-label="Id">{{row.id}}</td>
-            <td data-label="Fecha">{{row.createdAt || "Sin fecha"}}</td>
+            <td data-label="Fecha">{{row.date || "Sin fecha"}}</td>
             <td data-label="Proyecto">{{row.project.name}}</td>
             <td data-label="Empleado">{{row.employee.fullName}}</td>
             <td data-label="Descripción">{{row.description}}</td>

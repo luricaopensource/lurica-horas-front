@@ -1,6 +1,6 @@
 export interface DashboardItem {
   id: number
-  createdAt: string
+  date: string
   project: { id: number, name: string }
   milestone: { id: number, name: string }
   description: string

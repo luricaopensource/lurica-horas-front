@@ -84,7 +84,7 @@ export class DialogComponent implements OnInit {
       projectId,
       milestoneId,
       description,
-      dateFrom: DateFormatter.getDDMMYYYY(date),
+      date: DateFormatter.getDDMMYYYY(date),
       hours,
       type,
       paid: false,
@@ -111,10 +111,9 @@ export class DialogComponent implements OnInit {
     const selectedProject = this.projects.find((project) => project.id == task.projectId)
     this.milestones = selectedProject?.milestones!
 
-    const [day, month, year] = task.dateFrom.split('/')
+    const [day, month, year] = task.date.split('/')
     const taskDate = new Date(`${year}-${month}-${day}`)
     const formattedDate = taskDate.toISOString().split('T')[0]
-    console.log(formattedDate)
 
     this.form.patchValue({
       projectId: task.projectId,

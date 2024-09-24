@@ -11,6 +11,23 @@ body {
   box-sizing: border-box;
 }
 
+/* Add styles to style the two select inputs of month and year */
+.date-selection {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 50%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.select-input {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 .container {
   width: 100%;
   padding: 20px;

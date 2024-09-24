@@ -35,6 +35,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public filteredEmployee: IUser = {} as IUser
   public employees: IUser[] = []
   public showEmployeeFilter: boolean = false
+  public months: string[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+  public years: string[] = ['2024', '2025', '2026', '2027', '2028', '2029', '2030']
 
   constructor(private readonly dashboardService: DashboardService,
     private readonly taskService: TaskService,
@@ -71,8 +73,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getInitialData(): void {
     this.dashboardService.getDashboardData().then((data) => {
       data.forEach((item: DashboardItem) => {
-        const date = new Date(item.createdAt)
-        item.createdAt = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+        const date = new Date(item.date)
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        item.date = `${day}/${month}/${date.getFullYear()}`
       })
 
       this.data = data
@@ -149,11 +153,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     const milestoneId = currentTask.milestone ? currentTask.milestone.id : 0
 
+    console.log(currentTask.date)
+
+    const [day, month, year] = currentTask.date.split('/')
+    const taskDate = new Date(`${year}-${month}-${day}`)
+    const formattedDate = taskDate.toISOString().split('T')[0]
+
+    console.log(formattedDate)
+
     this.form.patchValue({
       projectId: currentTask.project.id,
       milestoneId: milestoneId,
       description: currentTask.description,
-      dateFrom: new Date(currentTask.createdAt),
+      dateFrom: formattedDate,
       hours: currentTask.hours
     })
 
@@ -167,7 +179,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     const { projectId, milestoneId, description, type, dateFrom, hours } = this.form.value
-    const from = new Date(dateFrom)
 
     if (!this.user) return
 
@@ -176,7 +187,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       projectId,
       milestoneId,
       description,
-      dateFrom: from.toLocaleString(),
+      date: "",
       hours,
       type,
       paid: false,

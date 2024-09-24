@@ -27,5 +27,4 @@ export class TaskService {
   editTask(task: ITask): Promise<IResponseModel> {
     return firstValueFrom(this.http.patch<IResponseTask>(`${this.BASE_URL}/tasks/${task.id}`, task))
   }
-
 }
